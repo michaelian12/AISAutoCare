@@ -6,7 +6,7 @@
     <string name="fragment_service">Service</string>
     <string name="fragment_vehicle">Vehicle</string>
     <string name="fragment_history">History</string>
-    <string name="fragment_profile">Proflie</string>
+    <string name="fragment_profile">Profile</string>
 
     <string name="emergency_button">Emergency</string>
     <string name="add_vehicle_button">Add Vehicle</string>
