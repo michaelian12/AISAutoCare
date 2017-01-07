@@ -1,10 +1,14 @@
 package com.aisautocare.aisautocare.fragment;
 
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +38,8 @@ public class ServiceFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_service, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
+
+
         // Create a list of vehicles
         ArrayList<Service> services = new ArrayList<Service>();
         services.add(new Service(0, "Air Conditioning"));
@@ -53,7 +59,11 @@ public class ServiceFragment extends Fragment {
         // adapter knows how to create list items for each item in the list.
         adapter = new ServiceRecyclerViewAdapter(getActivity(), services);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+//        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);

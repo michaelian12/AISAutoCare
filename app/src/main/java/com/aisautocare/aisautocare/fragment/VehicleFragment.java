@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.aisautocare.aisautocare.activity.AddVehicleActivity;
 import com.aisautocare.aisautocare.adapter.VehicleRecyclerViewAdapter;
 import com.aisautocare.aisautocare.model.Vehicle;
 import com.aisautocare.aisautocare.R;
@@ -43,10 +44,8 @@ public class VehicleFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-//                Intent intent = new Intent(MainActivity.this, NewMessageActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(getActivity(), AddVehicleActivity.class);
+                startActivity(intent);
             }
         });
 

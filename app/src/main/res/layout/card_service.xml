@@ -9,8 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
         android:layout_marginTop="5dp"
         android:elevation="3dp"
         card_view:cardCornerRadius="2dp">
@@ -18,23 +18,23 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?android:attr/selectableItemBackground"
-            android:padding="16dp" >
+            android:background="?android:attr/selectableItemBackground" >
 
             <ImageView
+                android:src="@drawable/ic_engine"
                 android:id="@+id/service_thumbnail_image_view"
                 android:layout_width="match_parent"
-                android:layout_height="160dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"/>
 
             <TextView
                 android:id="@+id/service_name_text_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_below="@id/service_thumbnail_image_view"
                 android:gravity="center"
-                android:paddingTop="16dp"
+                android:padding="16dp"
                 android:textColor="@color/primary_text"
-                android:textSize="16sp"
                 tools:text="Oil Change"/>
 
         </RelativeLayout>
