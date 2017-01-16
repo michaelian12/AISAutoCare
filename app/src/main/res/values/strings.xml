@@ -2,14 +2,25 @@
     <!-- Title for the application. [CHAR LIMIT=20] -->
     <string name="app_name">AIS Auto Care</string>
 
-    <!-- Toolbar title [CHAR LIMMIT=20] -->
-    <string name="title_activity_add_vehicle">Add Vehicle</string>
+    <!-- Title for activities. [CHAR LIMMIT=20] -->
+    <string name="activity_profile">Profil</string>
+    <string name="activity_order">Pesanan</string>
+    <string name="activity_garage">Garasi</string>
 
     <!-- Title for fragments. [CHAR LIMIT=20] -->
-    <string name="fragment_service">Service</string>
-    <string name="fragment_vehicle">Vehicle</string>
-    <string name="fragment_history">History</string>
-    <string name="fragment_profile">Profile</string>
+    <string name="fragment_care">Perawatan</string>
+    <string name="fragment_repair">Perbaikan</string>
+    <string name="fragment_emergency">Darurat</string>
+
+    <!-- Title for drawer. [CHAR LIMIT=20] -->
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+
+    <!-- String values in profile actiity. [CHAR LIMIT=20] -->
+    <string name="username">Nama Pengguna</string>
+    <string name="phone">Nomor Telepon</string>
+    <string name="email">Email</string>
+    <string name="password">Kata Sandi</string>
 
     <!-- Button. [CHAR LIMIT=20] -->
     <string name="emergency_button">Emergency</string>

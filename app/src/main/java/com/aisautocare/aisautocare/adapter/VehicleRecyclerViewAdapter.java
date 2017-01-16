@@ -7,13 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.aisautocare.aisautocare.model.Vehicle;
 import com.aisautocare.aisautocare.R;
+import com.aisautocare.aisautocare.model.Vehicle;
 
 import java.util.ArrayList;
 
 /**
- * Created by Michael on 1/5/2017.
+ * Created by Michael on 1/16/2017.
  */
 
 public class VehicleRecyclerViewAdapter extends RecyclerView.Adapter<VehicleRecyclerViewAdapter.VehicleViewHolder> {
@@ -21,7 +21,6 @@ public class VehicleRecyclerViewAdapter extends RecyclerView.Adapter<VehicleRecy
     private Context context;
     ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
 
-    // constructor
     public VehicleRecyclerViewAdapter(Context context, ArrayList<Vehicle> vehicles) {
         this.context = context;
         this.vehicles = vehicles;
@@ -30,16 +29,15 @@ public class VehicleRecyclerViewAdapter extends RecyclerView.Adapter<VehicleRecy
     @Override
     public VehicleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View viewItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_vehicle, parent, false);
-
         VehicleViewHolder view = new VehicleViewHolder(viewItem);
 
         return view;
     }
 
     @Override
-    public void onBindViewHolder(VehicleViewHolder holder, int position) {
+    public void onBindViewHolder(VehicleRecyclerViewAdapter.VehicleViewHolder holder, int position) {
         holder.vehicleYear.setText(vehicles.get(position).getYear());
-        holder.vehicleManufacturer.setText(vehicles.get(position).getManufacturer());
+        holder.vehicleManufacturer.setText(vehicles.get(position).getModel());
         holder.vehicleModel.setText(vehicles.get(position).getModel());
         holder.vehicleTransmission.setText(vehicles.get(position).getTransmission());
     }
@@ -55,11 +53,10 @@ public class VehicleRecyclerViewAdapter extends RecyclerView.Adapter<VehicleRecy
 
         public VehicleViewHolder(View itemView) {
             super(itemView);
-
-            vehicleYear = (TextView) itemView.findViewById(R.id.vehicle_year_text_view);
-            vehicleManufacturer = (TextView) itemView.findViewById(R.id.vehicle_manufacturer_text_view);
-            vehicleModel = (TextView) itemView.findViewById(R.id.vehicle_model_text_view);
-            vehicleTransmission = (TextView) itemView.findViewById(R.id.vehicle_transmission_text_view);
+            vehicleYear = (TextView) itemView.findViewById(R.id.vehicle_year_card_text_view);
+            vehicleManufacturer = (TextView) itemView.findViewById(R.id.vehicle_manufacturer_card_text_view);
+            vehicleModel = (TextView) itemView.findViewById(R.id.vehicle_model_card_text_view);
+            vehicleTransmission = (TextView) itemView.findViewById(R.id.vehicle_transmission_card_text_view);
         }
     }
 }

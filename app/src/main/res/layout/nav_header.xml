@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="192dp"
+    android:background="@color/primary_color"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:theme="@style/ThemeOverlay.AppCompat.Light">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_picture_image_view"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
+        android:src="@color/accent_color" />
+
+    <TextView
+        android:paddingTop="16dp"
+        android:id="@+id/user_name_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Farrah Khayra"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
+        android:id="@+id/user_email_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="farrahkhayra@gmail.com" />
+
+</LinearLayout>

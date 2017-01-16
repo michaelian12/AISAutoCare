@@ -14,33 +14,31 @@ import com.aisautocare.aisautocare.model.Service;
 import java.util.ArrayList;
 
 /**
- * Created by Michael on 1/5/2017.
+ * Created by Michael on 1/14/2017.
  */
 
-public class ServiceRecyclerViewAdapter extends RecyclerView.Adapter<ServiceRecyclerViewAdapter.ServiceViewHolder> {
+public class ServiceRecyclerViewAdapter extends RecyclerView.Adapter<ServiceRecyclerViewAdapter.CareViewHolder> {
 
     private Context context;
     ArrayList<Service> services = new ArrayList<Service>();
 
-    // constructor
     public ServiceRecyclerViewAdapter(Context context, ArrayList<Service> services) {
         this.context = context;
         this.services = services;
     }
 
     @Override
-    public ServiceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CareViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View viewItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_service, parent, false);
-
-        ServiceViewHolder view = new ServiceViewHolder(viewItem);
+        CareViewHolder view = new CareViewHolder(viewItem);
 
         return view;
     }
 
     @Override
-    public void onBindViewHolder(ServiceViewHolder holder, int position) {
-//        holder.serviceThumbnail.setImageResource(services.get(position).getImageResourceId());
+    public void onBindViewHolder(ServiceRecyclerViewAdapter.CareViewHolder holder, int position) {
         holder.serviceName.setText(services.get(position).getName());
+        holder.serviceIcon.setImageResource(services.get(position).getImageResourceId());
     }
 
     @Override
@@ -48,17 +46,15 @@ public class ServiceRecyclerViewAdapter extends RecyclerView.Adapter<ServiceRecy
         return services.size();
     }
 
-    public class ServiceViewHolder extends RecyclerView.ViewHolder {
+    public class CareViewHolder extends RecyclerView.ViewHolder {
 
-//        ImageView serviceThumbnail;
         TextView serviceName;
+        ImageView serviceIcon;
 
-        public ServiceViewHolder(View itemView) {
+        public CareViewHolder(View itemView) {
             super(itemView);
-
-//            serviceThumbnail = (ImageView) itemView.findViewById(R.id.service_thumbnail_image_view);
-            serviceName = (TextView) itemView.findViewById(R.id.service_name_text_view);
-
+            serviceName = (TextView) itemView.findViewById(R.id.service_name_card_text_view);
+            serviceIcon = (ImageView) itemView.findViewById(R.id.service_icon_card_image_view);
         }
     }
 }

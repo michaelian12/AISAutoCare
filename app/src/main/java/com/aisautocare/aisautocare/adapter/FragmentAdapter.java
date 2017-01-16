@@ -5,11 +5,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.aisautocare.aisautocare.fragment.ProfileFragment;
-import com.aisautocare.aisautocare.fragment.ServiceFragment;
-import com.aisautocare.aisautocare.fragment.HistoryFragment;
-import com.aisautocare.aisautocare.fragment.VehicleFragment;
 import com.aisautocare.aisautocare.R;
+import com.aisautocare.aisautocare.fragment.CareFragment;
+import com.aisautocare.aisautocare.fragment.EmergencyFragment;
+import com.aisautocare.aisautocare.fragment.RepairFragment;
 
 /**
  * Created by Michael on 1/5/2017.
@@ -18,41 +17,37 @@ import com.aisautocare.aisautocare.R;
 public class FragmentAdapter extends FragmentPagerAdapter {
 
     /** Context of the app */
-    private Context mContext;
+    private Context context;
 
     public FragmentAdapter(Context context, FragmentManager fm) {
         super(fm);
-        mContext = context;
+        this.context = context;
     }
 
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            return new ServiceFragment();
+            return new CareFragment();
         } else if (position == 1){
-            return new VehicleFragment();
-        } else if (position == 2) {
-            return new HistoryFragment();
+            return new RepairFragment();
         } else {
-            return new ProfileFragment();
+            return new EmergencyFragment();
         }
     }
 
     @Override
     public int getCount() {
-        return 4;
+        return 3;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
         if (position == 0) {
-            return mContext.getString(R.string.fragment_service);
+            return context.getString(R.string.fragment_care);
         } else if (position == 1){
-            return mContext.getString(R.string.fragment_vehicle);
-        } else if (position == 2) {
-            return mContext.getString(R.string.fragment_history);
+            return context.getString(R.string.fragment_repair);
         } else {
-            return mContext.getString(R.string.fragment_profile);
+            return context.getString(R.string.fragment_emergency);
         }
     }
 }
