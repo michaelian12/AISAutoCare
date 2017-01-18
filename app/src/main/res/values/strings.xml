@@ -6,6 +6,7 @@
     <string name="activity_profile">Profil</string>
     <string name="activity_order">Pesanan</string>
     <string name="activity_garage">Garasi</string>
+    <string name="activity_add_vehicle">Tambah Kendaraan</string>
 
     <!-- Title for fragments. [CHAR LIMIT=20] -->
     <string name="fragment_care">Perawatan</string>
@@ -21,6 +22,12 @@
     <string name="phone">Nomor Telepon</string>
     <string name="email">Email</string>
     <string name="password">Kata Sandi</string>
+
+    <!-- String values in add vehicle actiity. [CHAR LIMIT=20] -->
+    <string name="choose_manufacturer">Pilih Merk</string>
+    <string name="choose_model">Pilih Model</string>
+    <string name="choose_year">Pilih Tahun</string>
+    <string name="choose_transmission">Pilih Transmisi</string>
 
     <!-- Button. [CHAR LIMIT=20] -->
     <string name="emergency_button">Emergency</string>

@@ -25,16 +25,26 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.aisautocare.aisautocare.MainActivity" />
+                android:value=".MainActivity" />
         </activity>
-        <activity android:name=".activity.GarageActivity"
+        <activity
+            android:name=".activity.GarageActivity"
             android:label="@string/activity_garage"
             android:parentActivityName=".MainActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.aisautocare.aisautocare.MainActivity" />
+                android:value=".MainActivity" />
+        </activity>
+        <activity android:name=".activity.AddVehicleActivity"
+            android:label="@string/activity_add_vehicle"
+            android:parentActivityName=".activity.GarageActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.GarageActivity" />
         </activity>
     </application>
 
