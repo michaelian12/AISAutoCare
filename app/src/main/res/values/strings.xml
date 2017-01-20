@@ -1,13 +1,13 @@
 <resources>
-    <string name="app_name">Notifications</string>
-    <string name="title_main_activity">Firebase Notifications</string>
+    <!-- Title for the application. [CHAR LIMIT=20] -->
+    <string name="app_name">AIS Auto Care</string>
 
     <!-- Title for activities. [CHAR LIMMIT=20] -->
     <string name="activity_profile">Profil</string>
-    <string name="activity_history">Riwayat</string>
+    <string name="activity_order">Pesanan</string>
     <string name="activity_garage">Garasi</string>
     <string name="activity_add_vehicle">Tambah Kendaraan</string>
-    <string name="activity_order">Pesanan</string>
+    <string name="activity_address">Daftar Alamat</string>
 
     <!-- Title for fragments. [CHAR LIMIT=20] -->
     <string name="fragment_care">Perawatan</string>
@@ -23,6 +23,7 @@
     <string name="phone">Nomor Telepon</string>
     <string name="email">Email</string>
     <string name="password">Kata Sandi</string>
+    <string name="address">Alamat</string>
 
     <!-- String values in add vehicle actiity. [CHAR LIMIT=20] -->
     <string name="choose_manufacturer">Pilih Merk</string>
@@ -32,4 +33,5 @@
 
     <!-- Button. [CHAR LIMIT=20] -->
     <string name="emergency_button">Emergency</string>
+
 </resources>

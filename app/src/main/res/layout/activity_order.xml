@@ -5,21 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.aisautocare.mobile.activity.OrderActivity">
+    tools:context="com.aisautocare.aisautocare.activity.OrderActivity">
 
     <include layout="@layout/toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:gravity="center"
+            android:textAllCaps="true"
+            android:textColor="@color/primary_text"
+            android:background="@color/accent_color"
+            tools:text="Layanan Ganti Oli" />
 
         <LinearLayout
             android:layout_width="match_parent"
