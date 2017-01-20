@@ -24,17 +24,11 @@
             android:hint="@string/choose_manufacturer"
             app:met_floatingLabel="normal" />
 
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"></Spinner>
-
         <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
             android:id="@+id/transmission_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/choose_transmission"
-            android:textColorHint="#05ab9a"
             app:met_floatingLabel="normal" />
 
         <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
@@ -42,7 +36,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/choose_year"
-            android:textColorHint="#05ab9a"
             app:met_floatingLabel="normal" />
     </LinearLayout>
 

@@ -35,9 +35,9 @@ public class RepairFragment extends Fragment {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         ArrayList<Service> repairs = new ArrayList<Service>();
-        repairs.add(new Service(R.drawable.ic_engine, "Tune Up"));
-        repairs.add(new Service(R.drawable.ic_engine, "Ganti Oli"));
-        repairs.add(new Service(R.drawable.ic_engine, "Ganti Aki"));
+        repairs.add(new Service(R.drawable.ic_engine, "Tune Up", "Rp 180.000"));
+        repairs.add(new Service(R.drawable.ic_engine, "Ganti Oli", "Rp 45.000"));
+        repairs.add(new Service(R.drawable.ic_engine, "Ganti Aki", "Gratis Ongkos Kirim"));
 
         adapter = new ServiceRecyclerViewAdapter(getActivity(), repairs);
 

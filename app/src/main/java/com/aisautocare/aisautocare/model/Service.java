@@ -8,10 +8,12 @@ public class Service {
 
     private int imageResourceId; // service image
     private String name; // service name
+    private String price; // service price
 
-    public Service(int imageResourceId, String name) {
+    public Service(int imageResourceId, String name, String price) {
         this.imageResourceId = imageResourceId;
         this.name = name;
+        this.price = price;
     }
 
     public int getImageResourceId() {
@@ -20,5 +22,9 @@ public class Service {
 
     public String getName() {
         return name;
+    }
+
+    public String getPrice() {
+        return price;
     }
 }

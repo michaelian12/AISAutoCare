@@ -36,9 +36,9 @@ public class CareFragment extends Fragment {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         ArrayList<Service> cares = new ArrayList<Service>();
-        cares.add(new Service(R.drawable.ic_engine, "Wash"));
-        cares.add(new Service(R.drawable.ic_engine, "Wash & Wax"));
-        cares.add(new Service(R.drawable.ic_engine, "Wash, Wax & Window Treatment"));
+        cares.add(new Service(R.drawable.ic_engine, "Wash", "Rp 40.000"));
+        cares.add(new Service(R.drawable.ic_engine, "Wash & Wax", "Rp 60.000"));
+        cares.add(new Service(R.drawable.ic_engine, "Wash, Wax & Window Treatment", "Rp 140.000"));
 
         adapter = new ServiceRecyclerViewAdapter(getActivity(), cares);
 

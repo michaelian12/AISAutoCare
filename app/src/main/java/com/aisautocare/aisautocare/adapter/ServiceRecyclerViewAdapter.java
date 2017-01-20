@@ -38,6 +38,7 @@ public class ServiceRecyclerViewAdapter extends RecyclerView.Adapter<ServiceRecy
     @Override
     public void onBindViewHolder(ServiceRecyclerViewAdapter.CareViewHolder holder, int position) {
         holder.serviceName.setText(services.get(position).getName());
+        holder.servicePrice.setText(services.get(position).getPrice());
         holder.serviceIcon.setImageResource(services.get(position).getImageResourceId());
     }
 
@@ -48,12 +49,13 @@ public class ServiceRecyclerViewAdapter extends RecyclerView.Adapter<ServiceRecy
 
     public class CareViewHolder extends RecyclerView.ViewHolder {
 
-        TextView serviceName;
+        TextView serviceName, servicePrice;
         ImageView serviceIcon;
 
         public CareViewHolder(View itemView) {
             super(itemView);
             serviceName = (TextView) itemView.findViewById(R.id.service_name_card_text_view);
+            servicePrice = (TextView) itemView.findViewById(R.id.service_price_card_text_view);
             serviceIcon = (ImageView) itemView.findViewById(R.id.service_icon_card_image_view);
         }
     }

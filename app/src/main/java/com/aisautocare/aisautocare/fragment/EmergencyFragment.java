@@ -35,9 +35,9 @@ public class EmergencyFragment extends Fragment {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         ArrayList<Service> emergencies = new ArrayList<Service>();
-        emergencies.add(new Service(R.drawable.ic_engine, "Towing"));
-        emergencies.add(new Service(R.drawable.ic_engine, "Battery Jumper"));
-        emergencies.add(new Service(R.drawable.ic_engine, "Spare Tire Change"));
+        emergencies.add(new Service(R.drawable.ic_engine, "Towing", "Rp 450.000"));
+        emergencies.add(new Service(R.drawable.ic_engine, "Battery Jumper", "Rp 70.000"));
+        emergencies.add(new Service(R.drawable.ic_engine, "Spare Tire Change", "Rp 70.000"));
 
         adapter = new ServiceRecyclerViewAdapter(getActivity(), emergencies);
 
