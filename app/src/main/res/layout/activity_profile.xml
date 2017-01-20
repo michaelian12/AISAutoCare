@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.aisautocare.aisautocare.activity.ProfileActivity">
+    tools:context="com.aisautocare.mobile.activity.ProfileActivity">
 
     <include layout="@layout/toolbar" />
 
@@ -24,7 +24,6 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/user_name_profile_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
@@ -52,7 +51,6 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/user_name_profile_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Farrah Khayra" />
@@ -62,7 +60,6 @@
         <include layout="@layout/divider" />
 
         <LinearLayout
-            android:id="@+id/user_phone_profile_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
@@ -90,7 +87,6 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/user_phone_profile_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="+6285811112222" />
@@ -100,7 +96,6 @@
         <include layout="@layout/divider" />
 
         <LinearLayout
-            android:id="@+id/user_email_profile_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
@@ -128,7 +123,6 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/user_email_profile_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="farrah.khayra@gmail.com" />
@@ -138,7 +132,6 @@
         <include layout="@layout/divider" />
 
         <LinearLayout
-            android:id="@+id/user_password_profile_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
@@ -166,7 +159,6 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/user_password_profile_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="********" />
@@ -176,7 +168,6 @@
         <include layout="@layout/divider" />
 
         <LinearLayout
-            android:id="@+id/user_add_profile_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
@@ -194,7 +185,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="24dp"
-                android:text="@string/address"
+                android:text="Alamat"
                 android:textColor="@color/primary_text"
                 android:textSize="16sp" />
         </LinearLayout>

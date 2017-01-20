@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.aisautocare.aisautocare">
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    package="info.androidhive.firebasenotifications">
 
     <application
         android:allowBackup="true"
@@ -12,7 +8,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name="com.aisautocare.mobile.activity.MainActivity"
+            android:label="@string/title_main_activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,56 +18,61 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCmbVzjbZhjRl4P33n8rrHwhAQyuy7LeSw" />
+        <!-- Firebase Notifications -->
+        <service android:name="com.aisautocare.mobile.service.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name="com.aisautocare.mobile.service.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <!-- ./Firebase Notifications -->
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
 
         <!-- A child of the main activity -->
         <activity
-            android:name=".activity.ProfileActivity"
+            android:name="com.aisautocare.mobile.activity.ProfileActivity"
             android:label="@string/activity_profile"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName="com.aisautocare.mobile.activity.MainActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.aisautocare.mobile.activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.GarageActivity"
+            android:name="com.aisautocare.mobile.activity.GarageActivity"
             android:label="@string/activity_garage"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName="com.aisautocare.mobile.activity.MainActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.aisautocare.mobile.activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.AddVehicleActivity"
+            android:name="com.aisautocare.mobile.activity.AddVehicleActivity"
             android:label="@string/activity_add_vehicle"
-            android:parentActivityName=".activity.GarageActivity">
+            android:parentActivityName="com.aisautocare.mobile.activity.GarageActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.GarageActivity" />
+                android:value="com.aisautocare.mobile.activity.GarageActivity" />
         </activity>
         <activity
-            android:name=".activity.AddressActivity"
-            android:label="@string/activity_address"
-            android:parentActivityName=".activity.ProfileActivity">
+            android:name="com.aisautocare.mobile.activity.OrderActivity"
+            android:label="@string/activity_order"
+            android:parentActivityName="com.aisautocare.mobile.activity.MainActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.ProfileActivity" />
+                android:value="com.aisautocare.mobile.activity.MainActivity" />
         </activity>
-        <activity android:name=".activity.OrderActivity"></activity>
     </application>
 
 </manifest>

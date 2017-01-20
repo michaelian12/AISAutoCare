@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.aisautocare.aisautocare.activity.AddVehicleActivity">
+    tools:context="com.aisautocare.mobile.activity.AddVehicleActivity">
 
     <include layout="@layout/toolbar" />
 
@@ -29,6 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/choose_transmission"
+            android:textColorHint="#05ab9a"
             app:met_floatingLabel="normal" />
 
         <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
@@ -36,6 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/choose_year"
+            android:textColorHint="#05ab9a"
             app:met_floatingLabel="normal" />
     </LinearLayout>
 
