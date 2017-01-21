@@ -61,7 +61,7 @@ public class OrderActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
                 String toastMsg = String.format(
-                        "Place: %s \n" + "Alamat: %s \n", place.getName(), place.getAddress());
+                        "Place: %s,%s \n" + "Alamat: %s \n", String.valueOf(place.getLatLng().latitude), String.valueOf(place.getLatLng().longitude), place.getAddress());
                 addressTextView.setText(toastMsg);
             }
         }

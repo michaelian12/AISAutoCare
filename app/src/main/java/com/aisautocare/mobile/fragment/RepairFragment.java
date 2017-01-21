@@ -61,7 +61,7 @@ public class RepairFragment extends Fragment {
         new RepairFragment.GETRepair().execute("");
         return rootView;
     }
-    private String URLServiceRepair = "http://192.168.1.6:8080/API/public/api/service_type?category=3";
+    private String URLServiceRepair = "http://192.168.8.101:8080/API/public/api/service_type?category=3";
     public class GETRepair extends AsyncTask<String, Void, List<Service>> {
 
         private final String LOG_TAG = RepairFragment.GETRepair.class.getSimpleName();
@@ -167,7 +167,7 @@ public class RepairFragment extends Fragment {
         protected void onPostExecute(List<Service> services) {
 
             if (services != null) {
-
+                repairs.clear();
                 repairs.addAll(services);
                 System.out.println("Service ketika set adapter : " +  services.toString());
 
