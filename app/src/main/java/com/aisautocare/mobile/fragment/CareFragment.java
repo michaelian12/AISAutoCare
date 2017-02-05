@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import info.androidhive.firebasenotifications.R;
+
+import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.adapter.ServiceRecyclerViewAdapter;
 import com.aisautocare.mobile.model.Service;
 
@@ -62,7 +64,7 @@ public class CareFragment extends Fragment {
         return rootView;
     }
 
-    private String URLServiceCare = "http://192.168.8.101:8080/API/public/api/service_type?category=2";
+    private String URLServiceCare = new GlobalVar().hostAPI + "/service_type?category=2";
     public class GETCare extends AsyncTask<String, Void, List<Service>> {
 
         private final String LOG_TAG = CareFragment.GETCare.class.getSimpleName();

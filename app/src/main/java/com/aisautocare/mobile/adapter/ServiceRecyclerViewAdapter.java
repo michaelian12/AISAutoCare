@@ -48,6 +48,7 @@ public class ServiceRecyclerViewAdapter extends RecyclerView.Adapter<ServiceRecy
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), OrderActivity.class);
+                //intent.putExtra("Order", order)
                 view.getContext().startActivity(intent);
             }
         });

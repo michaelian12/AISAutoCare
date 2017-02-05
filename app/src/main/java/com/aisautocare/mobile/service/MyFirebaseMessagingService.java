@@ -6,6 +6,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.aisautocare.mobile.activity.ConfirmOrderActivity;
+import com.aisautocare.mobile.activity.WaitOrderActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -79,6 +81,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String imageUrl = data.getString("image");
             String timestamp = data.getString("timestamp");
             JSONObject payload = data.getJSONObject("payload");
+            String nama = data.getString("nama");
+            String total = data.getString("total");
+            String lamaPerjalanan = data.getString("lama_perjalanan");
 
             Log.e(TAG, "title: " + title);
             Log.e(TAG, "message: " + message);
@@ -90,8 +95,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
                 // app is in foreground, broadcast the push message
-                Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
+                Intent pushNotification = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
                 pushNotification.putExtra("message", message);
+                pushNotification.putExtra("nama", nama);
+                pushNotification.putExtra("total", total);
+                pushNotification .putExtra("lama_perjalanan", lamaPerjalanan);
+                getApplicationContext().startActivities(new Intent[]{pushNotification});
                 LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
                 // play notification sound
@@ -99,8 +108,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 notificationUtils.playNotificationSound();
             } else {
                 // app is in background, show the notification in notification tray
-                Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent resultIntent = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
                 resultIntent.putExtra("message", message);
+                resultIntent.putExtra("nama", nama);
+                resultIntent.putExtra("total", total);
+                resultIntent.putExtra("lama_perjalanan", lamaPerjalanan);
 
                 // check for image attachment
                 if (TextUtils.isEmpty(imageUrl)) {

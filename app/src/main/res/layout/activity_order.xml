@@ -213,7 +213,8 @@
             android:elevation="4dp"
             android:gravity="center"
             android:orientation="horizontal"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:id="@+id/buttonOrder">
 
             <TextView
                 android:layout_width="wrap_content"

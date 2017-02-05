@@ -16,12 +16,13 @@ import info.androidhive.firebasenotifications.R;
  */
 
 public class Service implements Parcelable {
-
+    private String id ;
     private int imageResourceId = R.drawable.ic_engine; // service image
     private String name; // service name
     private String price = "1000"; // service price
 
     public Service(int imageResourceId, String name, String price) {
+
         this.imageResourceId = imageResourceId;
         this.name = name;
         this.price = price;
@@ -32,6 +33,7 @@ public class Service implements Parcelable {
         //R.drawable.ic_engine;
         //Field idField = Drawable.class.getDeclaredField(service.getString("imageResourceId").toString());
         //this.imageResourceId = idField.getInt(idField);
+        this.id = service.getString("id");
         this.name = service.getString("name");
 
     }
@@ -69,10 +71,11 @@ public class Service implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(String.valueOf(this.imageResourceId));
         parcel.writeString(this.name);
+        parcel.writeString(this.id);
         //parcel.writeString(this.price);
     }
     protected Service(Parcel in) {
-
+        this.id = in.readString();
         this.name = in.readString();
         this.imageResourceId = Integer.valueOf(in.readString());
         //parcel.writeString(this.price);
