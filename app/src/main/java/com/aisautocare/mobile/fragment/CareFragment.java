@@ -64,7 +64,7 @@ public class CareFragment extends Fragment {
         return rootView;
     }
 
-    private String URLServiceCare = new GlobalVar().hostAPI + "/service_type?category=2";
+    private String URLServiceCare = new GlobalVar().hostAPI + "/service_type?category=3";
     public class GETCare extends AsyncTask<String, Void, List<Service>> {
 
         private final String LOG_TAG = CareFragment.GETCare.class.getSimpleName();

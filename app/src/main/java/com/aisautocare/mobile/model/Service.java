@@ -31,8 +31,7 @@ public class Service implements Parcelable {
     public Service(JSONObject service) throws JSONException, NoSuchFieldException, IllegalAccessException {
         //Drawable.class.getDeclaredField("ic_engine.png");
         //R.drawable.ic_engine;
-        //Field idField = Drawable.class.getDeclaredField(service.getString("imageResourceId").toString());
-        //this.imageResourceId = idField.getInt(idField);
+        this.imageResourceId = getResId(service.getString("imageResourceId"), R.drawable.class);
         this.id = service.getString("id");
         this.name = service.getString("name");
 
@@ -79,5 +78,15 @@ public class Service implements Parcelable {
         this.name = in.readString();
         this.imageResourceId = Integer.valueOf(in.readString());
         //parcel.writeString(this.price);
+    }
+    public static int getResId(String resName, Class<?> c) {
+
+        try {
+            Field idField = c.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 }
