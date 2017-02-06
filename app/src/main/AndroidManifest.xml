@@ -24,6 +24,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCmbVzjbZhjRl4P33n8rrHwhAQyuy7LeSw" />
+        <!--<meta-data-->
+            <!--android:name="com.google.android.geo.API_KEY"-->
+            <!--android:value="AIzaSyBDv7B62-bLvjbdWZCXyIl4dxiLmSR4vB0" />-->
         <!-- ./Place Picker -->
         <activity
             android:name="com.aisautocare.mobile.activity.MainActivity"
@@ -103,6 +106,18 @@
         </activity>
         <activity
             android:name="com.aisautocare.mobile.activity.ConfirmOrderActivity"
+            android:launchMode="singleTop"
+
+            android:label="@string/activity_order"
+            android:parentActivityName="com.aisautocare.mobile.activity.MainActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.aisautocare.mobile.activity.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.aisautocare.mobile.activity.TrackEmployeeActivity"
             android:launchMode="singleTop"
 
             android:label="@string/activity_order"

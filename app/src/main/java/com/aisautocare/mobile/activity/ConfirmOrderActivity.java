@@ -3,8 +3,11 @@ package com.aisautocare.mobile.activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +26,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
     private TextView tvName;
     private TextView tvDistance;
     private TextView tvPrice;
+    private LinearLayout btnConfirmOrder;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,14 +35,26 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         tvName = (TextView) findViewById(R.id.nameEmployee);
         tvDistance = (TextView) findViewById(R.id.distanceOrder);
         tvPrice = (TextView) findViewById(R.id.priceOrder);
+        btnConfirmOrder = (LinearLayout) findViewById(R.id.btnConfirmOrder);
 
         String name = getIntent().getStringExtra("nama");
         String distance = getIntent().getStringExtra("lama_perjalanan");
         String price = getIntent().getStringExtra("total");
+        //dummy
+        name = "John Smith";
+        distance = "4 Km";
+        price = "Rp 500.000";   
 
         tvName.setText(tvName.getText() + " " + name);
         tvDistance.setText(tvDistance.getText() + " " + distance);
         tvPrice.setText(tvPrice.getText() + " " + price);
+        btnConfirmOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), TrackEmployeeActivity.class);
+                startActivity(intent);
+            }
+        });
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {

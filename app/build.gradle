@@ -41,6 +41,9 @@ dependencies {
     compile 'com.google.android.gms:play-services-places:10.0.1'
     compile 'com.google.android.gms:play-services-location:10.0.1'
     compile 'com.wefika:horizontal-picker:1.1.1'
+
+    //for map direction
+    compile 'com.akexorcist:googledirectionlibrary:1.0.5'
 }
 
 // ADD THIS AT THE BOTTOM
