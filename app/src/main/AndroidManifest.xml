@@ -21,12 +21,12 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCmbVzjbZhjRl4P33n8rrHwhAQyuy7LeSw" />
         <!--<meta-data-->
             <!--android:name="com.google.android.geo.API_KEY"-->
-            <!--android:value="AIzaSyBDv7B62-bLvjbdWZCXyIl4dxiLmSR4vB0" />-->
+            <!--android:value="AIzaSyCmbVzjbZhjRl4P33n8rrHwhAQyuy7LeSw" />-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBDv7B62-bLvjbdWZCXyIl4dxiLmSR4vB0" />
         <!-- ./Place Picker -->
         <activity
             android:name="com.aisautocare.mobile.activity.MainActivity"

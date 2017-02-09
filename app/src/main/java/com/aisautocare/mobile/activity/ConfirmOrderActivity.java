@@ -43,7 +43,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         //dummy
         name = "John Smith";
         distance = "4 Km";
-        price = "Rp 500.000";   
+        price = "Rp 50.000";
 
         tvName.setText(tvName.getText() + " " + name);
         tvDistance.setText(tvDistance.getText() + " " + distance);

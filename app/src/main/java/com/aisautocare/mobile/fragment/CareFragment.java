@@ -50,9 +50,11 @@ public class CareFragment extends Fragment {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
 
-        //cares.add(new Service(R.drawable.ic_engine, "Wash", "Rp 40.000"));
-        //cares.add(new Service(R.drawable.ic_engine, "Wash & Wax", "Rp 60.000"));
-        //cares.add(new Service(R.drawable.ic_engine, "Wash, Wax & Window Treatment", "Rp 140.000"));
+        cares.add(new Service(R.drawable.ic_aki, "Ganti Aki/Acuu", "Rp 40.000"));
+        cares.add(new Service(R.drawable.ic_car_wash, "Cuci/Salon Mobil", "Rp 60.000"));
+        cares.add(new Service(R.drawable.ic_tire_repair, "Ganti Ban", "Rp 140.000"));
+        cares.add(new Service(R.drawable.ic_emergency, "Bengkel Darurat", "Rp 140.000"));
+        cares.add(new Service(R.drawable.ic_backup_car, "Mobil Cadangan", "Rp 140.000"));
 
         adapter = new ServiceRecyclerViewAdapter(getActivity(), cares);
 
@@ -60,7 +62,7 @@ public class CareFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
-        new CareFragment.GETCare().execute("");
+        //new CareFragment.GETCare().execute("");
         return rootView;
     }
 

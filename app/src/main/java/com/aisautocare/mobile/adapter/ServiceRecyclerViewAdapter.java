@@ -43,7 +43,7 @@ public class ServiceRecyclerViewAdapter extends RecyclerView.Adapter<ServiceRecy
     }
 
     @Override
-    public void onBindViewHolder(ServiceRecyclerViewAdapter.CareViewHolder holder, int position) {
+    public void onBindViewHolder(ServiceRecyclerViewAdapter.CareViewHolder holder, final int position) {
         holder.serviceName.setText(services.get(position).getName());
         holder.servicePrice.setText(services.get(position).getPrice());
         holder.servicePrice.setVisibility(View.INVISIBLE);
@@ -53,7 +53,7 @@ public class ServiceRecyclerViewAdapter extends RecyclerView.Adapter<ServiceRecy
             public void onClick(View view) {
                 if (new GlobalVar().isVehicleSelected){
                     Intent intent = new Intent(view.getContext(), OrderActivity.class);
-                    //intent.putExtra("Order", order)
+                    intent.putExtra("service", services.get(position).getName());
                     view.getContext().startActivity(intent);
                 } else {
                     new AlertDialog.Builder(context)

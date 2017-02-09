@@ -4,12 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.aisautocare.mobile.GlobalVar;
@@ -17,6 +22,7 @@ import com.aisautocare.mobile.fragment.RepairFragment;
 import com.aisautocare.mobile.model.Order;
 import com.aisautocare.mobile.model.POSTResponse;
 import com.aisautocare.mobile.model.Service;
+import com.akexorcist.googledirection.model.Line;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -25,6 +31,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -44,6 +51,7 @@ public class OrderActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     LinearLayout addressLayout;
+
     TextView addressTextView;
     LinearLayout buttonOrder;
     // konstanta untuk mendeteksi hasil balikan dari place picker
@@ -51,19 +59,25 @@ public class OrderActivity extends AppCompatActivity {
     private  Context mContext;
     private Place place;
 
+    //Subservice
+    private LinearLayout subServiceLayout;
+    private TextView selectedSubService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
 
+        String service = getIntent().getStringExtra("service");
         /* Set Toolbar */
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        subServiceLayout = (LinearLayout) findViewById(R.id.sub_service_layout);
         addressTextView = (TextView) findViewById(R.id.address_order_text_view);
         buttonOrder = (LinearLayout) findViewById(R.id.buttonOrder);
         addressLayout = (LinearLayout) findViewById(R.id.address_order_layout);
+        selectedSubService = (TextView) findViewById(R.id.selected_sub_service);
         addressLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,10 +94,52 @@ public class OrderActivity extends AppCompatActivity {
                 }
             }
         });
+
+        String[] subService = new String[0];
+        if (service.toLowerCase().contains("aki")){
+            subService = new String[] {"Cek","Ganti","Stroom Aki"};
+        }else if (service.toLowerCase().contains("cuci")){
+            subService = new String[]{"Cuci Cepat","Cuci Lengkap"};
+        } else if (service.toLowerCase().contains("ban")){
+            subService = new String[]{"Tambal","Ganti", "Kirim Bensin"};
+        } else if (service.toLowerCase().contains("bengkel")){
+            subService = new String[]{"Cek Mesin","Ganto Oli", "Kirim Bensin/BBM"};
+        } else if (service.toLowerCase().contains("cadangan")){
+            subService = new String[]{"By Driver","No Driver"};
+        }
+
+        selectedSubService.setText(selectedSubService.getText() + subService[0]);
+        final String[] finalSubService = subService;
+        subServiceLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(OrderActivity.this);
+                LayoutInflater inflater = getLayoutInflater();
+                View convertView = (View) inflater.inflate(R.layout.list_view_sub_service, null);
+                alertDialog.setView(convertView);
+                alertDialog.setTitle("Pilih Sub Service");
+                ListView lv = (ListView) convertView.findViewById(R.id.list_sub_service);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(OrderActivity.this,android.R.layout.simple_list_item_1, finalSubService);
+                lv.setAdapter(adapter);
+                final AlertDialog alert = alertDialog.create();
+                alert.show();
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        alert.dismiss();
+                        selectedSubService.setText(finalSubService[i]);
+                    }
+                });
+            }
+        });
         buttonOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new OrderActivity.POSTOrder().execute("");
+                //new OrderActivity.POSTOrder().execute("");
+                finish();
+                Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
             }
         });
     }

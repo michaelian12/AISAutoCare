@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         pilihKendaraan.setVisibility(View.INVISIBLE);
         btnAddVehicle = (LinearLayout) findViewById(R.id.btnAddVehicle);
         fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setVisibility(View.INVISIBLE);
+        fab.setVisibility(View.INVISIBLE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
