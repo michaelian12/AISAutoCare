@@ -1,5 +1,6 @@
 package com.aisautocare.mobile.activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.aisautocare.mobile.GlobalVar;
@@ -56,12 +58,13 @@ public class OrderActivity extends AppCompatActivity {
     LinearLayout buttonOrder;
     // konstanta untuk mendeteksi hasil balikan dari place picker
     private int PLACE_PICKER_REQUEST = 1;
-    private  Context mContext;
+    private Context mContext;
     private Place place;
 
     //Subservice
     private LinearLayout subServiceLayout;
     private TextView selectedSubService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,18 +97,24 @@ public class OrderActivity extends AppCompatActivity {
                 }
             }
         });
+        buttonOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         String[] subService = new String[0];
-        if (service.toLowerCase().contains("aki")){
-            subService = new String[] {"Cek","Ganti","Stroom Aki"};
-        }else if (service.toLowerCase().contains("cuci")){
-            subService = new String[]{"Cuci Cepat","Cuci Lengkap"};
-        } else if (service.toLowerCase().contains("ban")){
-            subService = new String[]{"Tambal","Ganti", "Kirim Bensin"};
-        } else if (service.toLowerCase().contains("bengkel")){
-            subService = new String[]{"Cek Mesin","Ganto Oli", "Kirim Bensin/BBM"};
-        } else if (service.toLowerCase().contains("cadangan")){
-            subService = new String[]{"By Driver","No Driver"};
+        if (service.toLowerCase().contains("aki")) {
+            subService = new String[]{"Cek", "Ganti", "Stroom Aki"};
+        } else if (service.toLowerCase().contains("cuci")) {
+            subService = new String[]{"Cuci Cepat", "Cuci Lengkap"};
+        } else if (service.toLowerCase().contains("ban")) {
+            subService = new String[]{"Tambal", "Ganti", "Kirim Bensin"};
+        } else if (service.toLowerCase().contains("bengkel")) {
+            subService = new String[]{"Cek Mesin", "Ganto Oli", "Kirim Bensin/BBM"};
+        } else if (service.toLowerCase().contains("cadangan")) {
+            subService = new String[]{"By Driver", "No Driver"};
         }
 
         selectedSubService.setText(selectedSubService.getText() + subService[0]);
@@ -119,7 +128,7 @@ public class OrderActivity extends AppCompatActivity {
                 alertDialog.setView(convertView);
                 alertDialog.setTitle("Pilih Sub Service");
                 ListView lv = (ListView) convertView.findViewById(R.id.list_sub_service);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(OrderActivity.this,android.R.layout.simple_list_item_1, finalSubService);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(OrderActivity.this, android.R.layout.simple_list_item_1, finalSubService);
                 lv.setAdapter(adapter);
                 final AlertDialog alert = alertDialog.create();
                 alert.show();
@@ -158,6 +167,7 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     private String URLOrder = new GlobalVar().hostAPI + "/order";
+
     public class POSTOrder extends AsyncTask<String, Void, List<POSTResponse>> {
 
         private final String LOG_TAG = RepairFragment.GETRepair.class.getSimpleName();
@@ -233,7 +243,6 @@ public class OrderActivity extends AppCompatActivity {
                 URL url = new URL(builtUri.toString());
 
 
-
                 //URL url = new URL(URLServiceRepair );
 
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -296,13 +305,13 @@ public class OrderActivity extends AppCompatActivity {
             if (responses != null) {
                 //repairs.clear();
                 //repairs.addAll(services);
-                System.out.println("responses ketika set adapter : " +  responses.toString());
+                System.out.println("responses ketika set adapter : " + responses.toString());
                 if (Integer.valueOf(responses.get(0).getApi_status()) == 1) {
                     finish();
                     Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getApplicationContext().startActivity(intent);
-                }else{
+                } else {
                     Log.e("AIS", "Error POST Order");
                     Log.e("AIS", "API Message : " + responses.get(0).getApi_message().toString());
                 }
@@ -322,11 +331,12 @@ public class OrderActivity extends AppCompatActivity {
             }
         }
     }
+
     public Context getContext() {
         return mContext;
     }
 
-    public  void setContext(Context mContext) {
+    public void setContext(Context mContext) {
         this.mContext = mContext;
     }
 }

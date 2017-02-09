@@ -1,39 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/rank_dialog_text1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:text="Doctor's Name"
-        android:textSize="24dp" />
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="@string/thank_you"
+        android:textColor="#3897F0"
+        android:textSize="24sp" />
 
-    <RatingBar
-        android:id="@+id/dialog_ratingbar"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#3897F0" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:clickable="true"
-        android:isIndicator="false"
-        android:numStars="5"
-        android:rating="2"
-        android:stepSize="1.0" />
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="We hope you have enjoyed your ride. For comments, compliments or enquiries, please write to us below."
+            android:textColor="@color/secondary_text"
+            android:textSize="20sp" />
+
+        <RatingBar
+            android:id="@+id/dialog_rating_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:clickable="true"
+            android:isIndicator="false"
+            android:numStars="5"
+            android:rating="5"
+            android:stepSize="1.0" />
+
+        <TextView
+            android:id="@+id/dialog_rating_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textAllCaps="true"
+            android:textColor="@color/primary_text"
+            android:textSize="20sp"
+            tools:text="Perfect" />
+
+        <EditText
+            android:id="@+id/comment_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@color/primary_dark_color"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="Feedback or comments?"
+            android:inputType="textMultiLine"
+            android:padding="16dp" />
+
+    </LinearLayout>
 
     <Button
-        android:id="@+id/rank_dialog_button"
-        android:layout_width="fill_parent"
+        android:id="@+id/submit_button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dip"
-        android:focusable="false"
-        android:text="Update"
-        android:textColor="#FFF8C6"
-        android:textSize="20dip" />
+        android:background="@color/accent_color"
+        android:padding="16dp"
+        android:text="@string/submit"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
 </LinearLayout>

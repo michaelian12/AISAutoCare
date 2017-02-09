@@ -34,6 +34,10 @@
     <!-- Button. [CHAR LIMIT=20] -->
     <string name="emergency_button">Emergency</string>
 
+    <!-- Rating Dialog -->
+    <string name="thank_you">Terima Kasih</string>
+    <string name="submit">Kirim</string>
+
     <string-array name="values">
         <item>Item 1</item>
         <item>Item 2</item>
