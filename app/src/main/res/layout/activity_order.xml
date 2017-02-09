@@ -9,16 +9,20 @@
     tools:context="com.aisautocare.mobile.activity.OrderActivity">
 
     <include layout="@layout/toolbar" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -168,8 +172,8 @@
                                 android:text="Tunai" />
                         </LinearLayout>
                     </LinearLayout>
-
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
@@ -198,14 +202,15 @@
                         android:text="Rp 45.000"
                         android:textSize="16sp" />
                 </LinearLayout>
+
                 <CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Saya menyetujui syarat dan ketentuan" />
             </LinearLayout>
-
         </ScrollView>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
