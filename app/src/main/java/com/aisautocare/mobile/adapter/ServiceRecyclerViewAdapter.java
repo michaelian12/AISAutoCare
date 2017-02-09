@@ -1,7 +1,9 @@
 package com.aisautocare.mobile.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import info.androidhive.firebasenotifications.R;
 
+import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.activity.OrderActivity;
 import com.aisautocare.mobile.model.Service;
 
@@ -40,15 +43,32 @@ public class ServiceRecyclerViewAdapter extends RecyclerView.Adapter<ServiceRecy
     }
 
     @Override
-    public void onBindViewHolder(ServiceRecyclerViewAdapter.CareViewHolder holder, int position) {
+    public void onBindViewHolder(ServiceRecyclerViewAdapter.CareViewHolder holder, final int position) {
         holder.serviceName.setText(services.get(position).getName());
         holder.servicePrice.setText(services.get(position).getPrice());
+        holder.servicePrice.setVisibility(View.INVISIBLE);
         holder.serviceIcon.setImageResource(services.get(position).getImageResourceId());
         holder.serviceCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), OrderActivity.class);
-                view.getContext().startActivity(intent);
+                if (new GlobalVar().isVehicleSelected){
+                    Intent intent = new Intent(view.getContext(), OrderActivity.class);
+                    intent.putExtra("service", services.get(position).getName());
+                    view.getContext().startActivity(intent);
+                } else {
+                    new AlertDialog.Builder(context)
+                            .setTitle("Data Kendaraan Belum Diisi")
+                            .setMessage("Silahkan tambah kendaraan terlebih dahulu.")
+
+                            .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+
             }
         });
     }

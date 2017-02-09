@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import info.androidhive.firebasenotifications.R;
+
+import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.adapter.ServiceRecyclerViewAdapter;
 import com.aisautocare.mobile.model.Service;
 
@@ -48,9 +50,11 @@ public class CareFragment extends Fragment {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
 
-        //cares.add(new Service(R.drawable.ic_engine, "Wash", "Rp 40.000"));
-        //cares.add(new Service(R.drawable.ic_engine, "Wash & Wax", "Rp 60.000"));
-        //cares.add(new Service(R.drawable.ic_engine, "Wash, Wax & Window Treatment", "Rp 140.000"));
+        cares.add(new Service(R.drawable.ic_aki, "Ganti Aki/Acuu", "Rp 40.000"));
+        cares.add(new Service(R.drawable.ic_car_wash, "Cuci/Salon Mobil", "Rp 60.000"));
+        cares.add(new Service(R.drawable.ic_tire_repair, "Ganti Ban", "Rp 140.000"));
+        cares.add(new Service(R.drawable.ic_emergency, "Bengkel Darurat", "Rp 140.000"));
+        cares.add(new Service(R.drawable.ic_backup_car, "Mobil Cadangan", "Rp 140.000"));
 
         adapter = new ServiceRecyclerViewAdapter(getActivity(), cares);
 
@@ -58,11 +62,11 @@ public class CareFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
-        new CareFragment.GETCare().execute("");
+        //new CareFragment.GETCare().execute("");
         return rootView;
     }
 
-    private String URLServiceCare = "http://192.168.8.101:8080/API/public/api/service_type?category=2";
+    private String URLServiceCare = new GlobalVar().hostAPI + "/service_type?category=3";
     public class GETCare extends AsyncTask<String, Void, List<Service>> {
 
         private final String LOG_TAG = CareFragment.GETCare.class.getSimpleName();

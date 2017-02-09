@@ -28,26 +28,30 @@ public class FragmentAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         if (position == 0) {
             return new CareFragment();
-        } else if (position == 1){
-            return new RepairFragment();
-        } else {
-            return new EmergencyFragment();
         }
+//        else if (position == 1){
+//            return new RepairFragment();
+//        } else {
+//            return new EmergencyFragment();
+//        }
+        return null;
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return 1;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
         if (position == 0) {
-            return context.getString(R.string.fragment_care);
-        } else if (position == 1){
-            return context.getString(R.string.fragment_repair);
-        } else {
-            return context.getString(R.string.fragment_emergency);
+            return context.getString(R.string.fragment_service);
         }
+//        else if (position == 1){
+//            return context.getString(R.string.fragment_repair);
+//        } else {
+//            return context.getString(R.string.fragment_emergency);
+//        }
+        return null;
     }
 }

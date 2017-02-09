@@ -10,6 +10,7 @@
     <string name="activity_order">Pesanan</string>
 
     <!-- Title for fragments. [CHAR LIMIT=20] -->
+    <string name="fragment_service">Pelayanan</string>
     <string name="fragment_care">Perawatan</string>
     <string name="fragment_repair">Perbaikan</string>
     <string name="fragment_emergency">Darurat</string>

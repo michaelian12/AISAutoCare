@@ -28,6 +28,7 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
     compile 'com.google.firebase:firebase-messaging:10.0.1'
+    compile 'com.google.firebase:firebase-database:10.0.1'
 
 
     compile 'com.android.support:appcompat-v7:25.1.0'
@@ -40,6 +41,10 @@ dependencies {
     compile 'com.google.android.gms:play-services-places:10.0.1'
     compile 'com.google.android.gms:play-services-location:10.0.1'
     compile 'com.wefika:horizontal-picker:1.1.1'
+
+    //for map direction
+    compile 'com.akexorcist:googledirectionlibrary:1.0.5'
+    compile 'com.github.jd-alexander:library:1.1.0'
 }
 
 // ADD THIS AT THE BOTTOM

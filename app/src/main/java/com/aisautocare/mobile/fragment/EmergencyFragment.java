@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import info.androidhive.firebasenotifications.R;
+
+import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.adapter.ServiceRecyclerViewAdapter;
 import com.aisautocare.mobile.model.Service;
 
@@ -37,7 +39,7 @@ public class EmergencyFragment extends Fragment {
     private View rootView;
     private RecyclerView recyclerView;
     private ServiceRecyclerViewAdapter adapter;
-    ArrayList<Service> emergencies = new ArrayList<Service>();
+    ArrayList<Service> emergencies = new ArrayList<>();
     public EmergencyFragment() {
         // Required empty public constructor
     }
@@ -48,9 +50,9 @@ public class EmergencyFragment extends Fragment {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         ArrayList<Service> emergencies = new ArrayList<Service>();
-        emergencies.add(new Service(R.drawable.ic_engine, "Towing", "Rp 450.000"));
-        emergencies.add(new Service(R.drawable.ic_engine, "Battery Jumper", "Rp 70.000"));
-        emergencies.add(new Service(R.drawable.ic_engine, "Spare Tire Change", "Rp 70.000"));
+//        emergencies.add(new Service(R.drawable.ic_engine, "Towing", "Rp 450.000"));
+//        emergencies.add(new Service(R.drawable.ic_engine, "Battery Jumper", "Rp 70.000"));
+//        emergencies.add(new Service(R.drawable.ic_engine, "Spare Tire Change", "Rp 70.000"));
 
         adapter = new ServiceRecyclerViewAdapter(getActivity(), emergencies);
 
@@ -58,28 +60,28 @@ public class EmergencyFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
-
+        new EmergencyFragment.GetEmergency().execute("");
         return rootView;
     }
 
-    private String URLServiceEmergency = "http://192.168.8.101:8080/API/public/api/service_type?category=1";
-    public class GETCare extends AsyncTask<String, Void, List<Service>> {
+    private String URLServiceEmergency = new GlobalVar().hostAPI + "/service_type?category=1";
+    public class GetEmergency extends AsyncTask<String, Void, List<Service>> {
 
         private final String LOG_TAG = CareFragment.GETCare.class.getSimpleName();
 
-        private List<Service> getRepairDataFromJson(String jsonStr) throws JSONException, NoSuchFieldException, IllegalAccessException {
+        private List<Service> getEmergencyDataFromJson(String jsonStr) throws JSONException, NoSuchFieldException, IllegalAccessException {
             //jsonStr = jsonStr.substring(23);
 //            jsonStr = jsonStr.substring(23, jsonStr.length()-3);
 //            System.out.println("JSON STR : " + jsonStr);
             JSONObject movieJson = new JSONObject(jsonStr);
-            JSONArray movieArray = movieJson.getJSONArray("data");
+            JSONArray emergencyArray = movieJson.getJSONArray("data");
 //            System.out.println("movie json : " + movieJson  );
 //            System.out.println("itemsarray : " + movieArray  );
             // System.out.println(" Data JSON Items" + jsonStr);
             List<Service> results = new ArrayList<>();
 
-            for(int i = 0; i < movieArray.length(); i++) {
-                JSONObject berita = movieArray.getJSONObject(i);
+            for(int i = 0; i < emergencyArray.length(); i++) {
+                JSONObject berita = emergencyArray.getJSONObject(i);
                 Service beritaModel = new Service(berita);
                 results.add(beritaModel);
             }
@@ -150,7 +152,7 @@ public class EmergencyFragment extends Fragment {
             }
 
             try {
-                return getRepairDataFromJson(jsonStr);
+                return getEmergencyDataFromJson(jsonStr);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
@@ -170,7 +172,7 @@ public class EmergencyFragment extends Fragment {
             if (services != null) {
                 emergencies.clear();
                 emergencies.addAll(services);
-                System.out.println("Service ketika set adapter : " +  services.toString());
+                System.out.println("Service ketika set adapter Emergency: " +  services.toString());
 
                 //rcAdapter = new RecyclerViewAdapterBerita(getActivity(), movies);
                 //adapter = new ServiceRecyclerViewAdapter();

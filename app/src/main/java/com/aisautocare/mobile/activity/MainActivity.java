@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
@@ -16,13 +17,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.adapter.FragmentAdapter;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -47,6 +50,15 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+
+    private LinearLayout btnAddVehicle;
+    private LinearLayout selectedVehicle;
+    private TextView pilihKendaraan;
+    private LinearLayout tambahKendaraan;
+
+    private static int RESULT_ADD_VEHICLE=1;
+
+    private FloatingActionButton fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +66,30 @@ public class MainActivity extends AppCompatActivity {
 
         //txtRegId = (TextView) findViewById(R.id.txt_reg_id);
         //txtMessage = (TextView) findViewById(R.id.txt_push_message);
+        selectedVehicle = (LinearLayout) findViewById(R.id.selected_vehicle);
+        //selectedVehicle.removeViewInLayout();
+        pilihKendaraan = (TextView) findViewById(R.id.tvChooseVehicle);
+        pilihKendaraan.setVisibility(View.INVISIBLE);
+        btnAddVehicle = (LinearLayout) findViewById(R.id.btnAddVehicle);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.INVISIBLE);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), TrackEmployeeActivity.class);
 
+                startActivityForResult(intent, 1);
+            }
+        });
+
+        btnAddVehicle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AddVehicleActivity.class);
+
+                startActivityForResult(intent, 1);
+            }
+        });
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -112,6 +147,26 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.category_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_ADD_VEHICLE ) {//
+            selectedVehicle = (LinearLayout) findViewById(R.id.selected_vehicle);
+
+            LayoutInflater inflater;
+            inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.view_selected_vehicle, null);
+            selectedVehicle.removeAllViews();
+            selectedVehicle.addView(layout);
+            pilihKendaraan.setVisibility(View.VISIBLE);
+            btnAddVehicle.removeAllViews();
+
+            GlobalVar.isVehicleSelected = true;
+        }
     }
 
     // Fetches reg id from shared preferences

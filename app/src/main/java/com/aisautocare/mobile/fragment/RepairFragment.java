@@ -12,8 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import info.androidhive.firebasenotifications.R;
+
+import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.adapter.ServiceRecyclerViewAdapter;
 import com.aisautocare.mobile.model.Service;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,6 +45,12 @@ public class RepairFragment extends Fragment {
     private RecyclerView recyclerView;
     private ServiceRecyclerViewAdapter adapter;
     ArrayList<Service> repairs = new ArrayList<Service>();
+
+    private DatabaseReference mFirebaseDatabase;
+    private FirebaseDatabase mFirebaseInstance;
+
+    private static String TAG = "AIS";
+
     public RepairFragment() {
         // Required empty public constructor
     }
@@ -47,7 +60,31 @@ public class RepairFragment extends Fragment {
         rootView = inflater.inflate(R.layout.list_view, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
+        mFirebaseInstance = FirebaseDatabase.getInstance();
 
+        // get reference to 'users' node
+        mFirebaseDatabase = mFirebaseInstance.getReference("users");
+        // store app title to 'app_title' node
+        mFirebaseInstance.getReference("app_title").setValue("Realtime Database");
+
+        // app_title change listener
+        mFirebaseInstance.getReference("app_title").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.e(TAG, "App title updated");
+
+                //String appTitle = dataSnapshot.getValue(String.class);
+
+                // update toolbar title
+                //getSupportActionBar().setTitle(appTitle);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.e(TAG, "Failed to read app title value.", error.toException());
+            }
+        });
         //repairs.add(new Service(R.drawable.ic_engine, "Tune Up", "Rp 180.000"));
         //repairs.add(new Service(R.drawable.ic_engine, "Ganti Oli", "Rp 45.000"));
         //repairs.add(new Service(R.drawable.ic_engine, "Ganti Aki", "Gratis Ongkos Kirim"));
@@ -61,7 +98,7 @@ public class RepairFragment extends Fragment {
         new RepairFragment.GETRepair().execute("");
         return rootView;
     }
-    private String URLServiceRepair = "http://192.168.8.101:8080/API/public/api/service_type?category=3";
+    private String URLServiceRepair = new GlobalVar().hostAPI + "/service_type?category=3";
     public class GETRepair extends AsyncTask<String, Void, List<Service>> {
 
         private final String LOG_TAG = RepairFragment.GETRepair.class.getSimpleName();
