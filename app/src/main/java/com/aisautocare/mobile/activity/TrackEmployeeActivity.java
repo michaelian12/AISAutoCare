@@ -25,6 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -75,15 +76,13 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng dago = new LatLng(-6.8919607, 107.6156134);
-        LatLng start = new LatLng(-6.8897026, 107.6147551);
-        LatLng end = new LatLng(-6.8919607, 107.6156134);
+        LatLng start = new LatLng(-6.8890725, 107.6173804);
+        LatLng end = new LatLng(-6.8983939, 107.6198499);
 
-        mMap.addMarker(new MarkerOptions().position(dago).title("Marker in Sydney"));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start, 15.0f));
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.addMarker(new MarkerOptions().position(end).title("Lokasi Kendaraan anda").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_car)));
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start, 12.0f));
-
-        mMap.addMarker(new MarkerOptions().position(end).title("Lokasi Kendaraan anda"));
         mMap.addMarker(new MarkerOptions().position(start).title("Lokasi Keberangkatan Montir"));
         GoogleDirection.withServerKey("AIzaSyBDv7B62-bLvjbdWZCXyIl4dxiLmSR4vB0")
                 .from(start)
