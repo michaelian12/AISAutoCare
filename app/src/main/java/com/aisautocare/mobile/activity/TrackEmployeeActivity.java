@@ -76,14 +76,18 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
 
         // Add a marker in Sydney and move the camera
         LatLng dago = new LatLng(-6.8919607, 107.6156134);
+        LatLng start = new LatLng(-6.8897026, 107.6147551);
+        LatLng end = new LatLng(-6.8919607, 107.6156134);
+
         mMap.addMarker(new MarkerOptions().position(dago).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(dago));
-//
-//        mMap.animateCamera(CameraUpdateFactory.newLatLng(dago));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(dago, 12.0f));
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start, 12.0f));
+
+        mMap.addMarker(new MarkerOptions().position(end).title("Lokasi Kendaraan anda"));
+        mMap.addMarker(new MarkerOptions().position(start).title("Lokasi Keberangkatan Montir"));
         GoogleDirection.withServerKey("AIzaSyBDv7B62-bLvjbdWZCXyIl4dxiLmSR4vB0")
-                .from(new LatLng(-6.8897026, 107.6147551))
-                .to(new LatLng(-6.8919607, 107.6156134))
+                .from(start)
+                .to(end)
                 .avoid(AvoidType.FERRIES)
                 .avoid(AvoidType.HIGHWAYS)
                 .execute(new DirectionCallback() {
@@ -93,7 +97,6 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
                             // Do something
                             Route route = direction.getRouteList().get(0);
                             Leg leg = route.getLegList().get(0);
-                            List<Step> stepList= leg.getStepList();
 
                             ArrayList<LatLng> directionPositionList = leg.getDirectionPoint();
                             PolylineOptions polylineOptions = DirectionConverter.createPolyline(TrackEmployeeActivity.this, directionPositionList, 5, Color.RED);
