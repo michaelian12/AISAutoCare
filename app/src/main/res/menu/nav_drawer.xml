@@ -13,5 +13,13 @@
             android:id="@+id/nav_garage"
             android:icon="@drawable/ic_garage"
             android:title="@string/activity_garage" />
+        <item
+            android:id="@+id/nav_login"
+            android:icon="@drawable/ic_garage"
+            android:title="Login" />
+        <item
+            android:id="@+id/nav_register"
+            android:icon="@drawable/ic_garage"
+            android:title="Register" />
     </group>
 </menu>
