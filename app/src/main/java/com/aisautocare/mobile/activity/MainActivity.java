@@ -222,9 +222,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     return true;
                 case R.id.nav_history:
-                    Toast.makeText(getApplicationContext(), "Pesanan", Toast.LENGTH_SHORT).show();
-//                    intent = new Intent(MainActivity.this, OrderActivity.class);
-//                    startActivity(intent);
+                    intent = new Intent(MainActivity.this, HistoryActivity.class);
+                    startActivity(intent);
                     return true;
                 case R.id.nav_garage:
                     intent = new Intent(MainActivity.this, GarageActivity.class);
