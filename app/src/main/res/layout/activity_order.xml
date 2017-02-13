@@ -39,10 +39,9 @@
                         android:padding="16dp">
 
                         <ImageView
-
                             android:layout_width="30dp"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_engine" />
+                            android:src="@drawable/ic_wrench" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -78,10 +77,9 @@
                         android:padding="16dp">
 
                         <ImageView
-                            android:layout_width="wrap_content"
+                            android:layout_width="30dp"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_garage"
-                            android:background="@drawable/ic_garage"/>
+                            android:src="@drawable/ic_marker"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -118,7 +116,7 @@
                         <ImageView
                             android:layout_width="30dp"
                             android:layout_height="wrap_content"
-                            android:src="@android:drawable/ic_menu_my_calendar" />
+                            android:src="@drawable/ic_calendar" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -152,9 +150,9 @@
                         android:padding="16dp">
 
                         <ImageView
-                            android:layout_width="wrap_content"
+                            android:layout_width="30dp"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_payment" />
+                            android:src="@drawable/ic_wallet" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
