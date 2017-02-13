@@ -230,6 +230,14 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent(MainActivity.this, GarageActivity.class);
                     startActivity(intent);
                     return true;
+                case R.id.nav_login:
+                    intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    return true;
+                case R.id.nav_register:
+                    intent = new Intent(MainActivity.this, RegisterActivity.class);
+                    startActivity(intent);
+                    return true;
                 default:
                     return true;
             }
