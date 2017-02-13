@@ -17,12 +17,20 @@ import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
 import com.akexorcist.googledirection.constant.AvoidType;
 import com.akexorcist.googledirection.model.Direction;
+import com.akexorcist.googledirection.model.Leg;
+import com.akexorcist.googledirection.model.Route;
+import com.akexorcist.googledirection.model.Step;
+import com.akexorcist.googledirection.util.DirectionConverter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import info.androidhive.firebasenotifications.R;
 
@@ -31,6 +39,8 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
     private GoogleMap mMap;
 
     private LinearLayout timer;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,12 +75,15 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        GoogleDirection.withServerKey("AIzaSyCmbVzjbZhjRl4P33n8rrHwhAQyuy7LeSw")
-                .from(new LatLng(37.7681994, -122.444538))
-                .to(new LatLng(37.7749003,-122.4034934))
+        LatLng dago = new LatLng(-6.8919607, 107.6156134);
+        mMap.addMarker(new MarkerOptions().position(dago).title("Marker in Sydney"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(dago));
+//
+//        mMap.animateCamera(CameraUpdateFactory.newLatLng(dago));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(dago, 12.0f));
+        GoogleDirection.withServerKey("AIzaSyBDv7B62-bLvjbdWZCXyIl4dxiLmSR4vB0")
+                .from(new LatLng(-6.8897026, 107.6147551))
+                .to(new LatLng(-6.8919607, 107.6156134))
                 .avoid(AvoidType.FERRIES)
                 .avoid(AvoidType.HIGHWAYS)
                 .execute(new DirectionCallback() {
@@ -78,6 +91,13 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
                     public void onDirectionSuccess(Direction direction, String rawBody) {
                         if(direction.isOK()) {
                             // Do something
+                            Route route = direction.getRouteList().get(0);
+                            Leg leg = route.getLegList().get(0);
+                            List<Step> stepList= leg.getStepList();
+
+                            ArrayList<LatLng> directionPositionList = leg.getDirectionPoint();
+                            PolylineOptions polylineOptions = DirectionConverter.createPolyline(TrackEmployeeActivity.this, directionPositionList, 5, Color.RED);
+                            mMap.addPolyline(polylineOptions);
                         } else {
                             // Do something
                         }

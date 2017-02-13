@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="We hope you have enjoyed your ride. For comments, compliments or enquiries, please write to us below."
+            android:text="Terimakasih telah menggunakan layanan lami. Untuk meningkatkan kualitas pelayanan, silakan memasukkan penilaian dan masukan berikut."
             android:textColor="@color/secondary_text"
             android:textSize="20sp" />
 
@@ -55,7 +55,7 @@
             android:textAllCaps="true"
             android:textColor="@color/primary_text"
             android:textSize="20sp"
-            tools:text="Perfect" />
+            tools:text="Sangat PUAS" />
 
         <EditText
             android:id="@+id/comment_edit_text"
@@ -64,7 +64,7 @@
             android:background="@color/primary_dark_color"
             android:ems="10"
             android:gravity="top"
-            android:hint="Feedback or comments?"
+            android:hint="adakah komentar atau masukan terhadap kami?"
             android:inputType="textMultiLine"
             android:padding="16dp" />
 
