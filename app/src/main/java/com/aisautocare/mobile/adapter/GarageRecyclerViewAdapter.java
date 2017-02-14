@@ -29,8 +29,6 @@ public class GarageRecyclerViewAdapter extends RecyclerView.Adapter<GarageRecycl
         this.garages = garages;
     }
 
-
-
     @Override
     public GarageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View viewItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_garage, parent, false);

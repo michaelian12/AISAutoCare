@@ -21,12 +21,12 @@
                 android:id="@+id/garage_icon_card_image_view"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:src="@drawable/ic_car"/>
+                android:src="@drawable/ic_car" />
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
