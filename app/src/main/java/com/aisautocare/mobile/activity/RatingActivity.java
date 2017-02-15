@@ -23,7 +23,7 @@ public class RatingActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_rating);
-        btnSubmit = (Button) findViewById(R.id.submit_button);
+        btnSubmit = (Button) findViewById(R.id.rating_submit_button);
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override

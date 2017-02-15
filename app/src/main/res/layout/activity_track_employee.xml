@@ -15,14 +15,14 @@
         android:textSize="20dp" />
 
     <fragment
-        android:id="@+id/track_map"
+        android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         tools:context="review.kakatu.web.id.myapplication.MapsActivity" />
 
     <LinearLayout
-        android:id="@+id/track_timer"
+        android:id="@+id/timer"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:gravity="center"
@@ -37,53 +37,26 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/layout_arrive"
-        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/track_arrive_button"
             android:layout_width="wrap_content"
+            android:layout_margin="8dp"
             android:layout_height="60dp"
             android:background="@color/accent_color"
             android:textStyle="bold"
             android:padding="16dp"
-            android:layout_margin="8dp"
             android:text="Sudah Sampai"/>
 
-<<<<<<< HEAD
         <Button
-            android:id="@+id/track_finish_button"
-=======
-        <LinearLayout
-
-            android:id="@+id/finished_service"
-<<<<<<< HEAD
->>>>>>> origin/master
-=======
->>>>>>> origin/master
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:background="@color/accent_color"
             android:textStyle="bold"
             android:padding="16dp"
             android:text="Sudah Selesai"/>
-
-<<<<<<< HEAD
-=======
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="18dp"
-                android:text="Sudah Selesai"
-                android:textAllCaps="true"
-                android:textColor="@color/primary_text"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-        </LinearLayout>
->>>>>>> origin/master
     </LinearLayout>
 </LinearLayout>
