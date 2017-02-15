@@ -1,5 +1,6 @@
 package com.aisautocare.mobile.activity;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -166,6 +167,11 @@ public class MainActivity extends AppCompatActivity {
             btnAddVehicle.removeAllViews();
 
             GlobalVar.isVehicleSelected = true;
+        } else {
+            final Dialog dialog = new Dialog(this);
+            dialog.setContentView(R.layout.dialog_rating);
+            dialog.setTitle("Penilaian");
+            dialog.show();
         }
     }
 

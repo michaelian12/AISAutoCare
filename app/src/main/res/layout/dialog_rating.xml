@@ -19,61 +19,65 @@
         android:layout_height="2dp"
         android:background="#3897F0" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="Terimakasih telah menggunakan layanan lami. Untuk meningkatkan kualitas pelayanan, silakan memasukkan penilaian dan masukan berikut."
-            android:textColor="@color/secondary_text"
-            android:textSize="20sp" />
-
-        <RatingBar
-            android:id="@+id/dialog_rating_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:clickable="true"
-            android:isIndicator="false"
-            android:numStars="5"
-            android:rating="5"
-            android:stepSize="1.0" />
-
-        <TextView
-            android:id="@+id/dialog_rating_status"
+        android:layout_height="wrap_content">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="16dp"
-            android:textAllCaps="true"
-            android:textColor="@color/primary_text"
-            android:textSize="20sp"
-            tools:text="Sangat PUAS" />
+            android:orientation="vertical"
+            android:padding="24dp">
 
-        <EditText
-            android:id="@+id/comment_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/primary_dark_color"
-            android:ems="10"
-            android:gravity="top"
-            android:hint="adakah komentar atau masukan terhadap kami?"
-            android:inputType="textMultiLine"
-            android:padding="16dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Terimakasih telah menggunakan layanan lami. Untuk meningkatkan kualitas pelayanan, silakan memasukkan penilaian dan masukan berikut."
+                android:textColor="@color/secondary_text"
+                android:textSize="20sp" />
 
-    </LinearLayout>
+            <RatingBar
+                android:id="@+id/dialog_rating_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:isIndicator="false"
+                android:numStars="5"
+                android:rating="5"
+                android:stepSize="1.0" />
+
+            <TextView
+                android:id="@+id/dialog_rating_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="16dp"
+                android:textAllCaps="true"
+                android:textColor="@color/primary_text"
+                android:textSize="20sp"
+                tools:text="Sangat PUAS" />
+
+            <EditText
+                android:id="@+id/comment_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@color/primary_dark_color"
+                android:ems="10"
+                android:gravity="top"
+                android:hint="adakah komentar atau masukan terhadap kami?"
+                android:inputType="textMultiLine"
+                android:padding="16dp" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/submit_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:background="@color/accent_color"
         android:padding="16dp"
         android:text="@string/submit"
