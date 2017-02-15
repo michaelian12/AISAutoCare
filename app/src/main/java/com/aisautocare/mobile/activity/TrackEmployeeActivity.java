@@ -16,7 +16,12 @@ import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import android.widget.Button;
+=======
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
+>>>>>>> origin/master
 =======
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
@@ -64,12 +69,15 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_employee);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
         timer = (LinearLayout) findViewById(R.id.track_timer);
         arriveButton = (Button) findViewById(R.id.track_arrive_button);
         finishButton = (Button) findViewById(R.id.track_finish_button);
 
 =======
+=======
+>>>>>>> origin/master
         btnFinished = (LinearLayout) findViewById(R.id.finished_service);
         layoutArrive = (LinearLayout) findViewById(R.id.layout_arrive);
         timer = (LinearLayout) findViewById(R.id.timer);
@@ -135,7 +143,10 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
                             Route route = direction.getRouteList().get(0);
                             Leg leg = route.getLegList().get(0);
 <<<<<<< HEAD
+<<<<<<< HEAD
                             List<Step> stepList = leg.getStepList();
+=======
+>>>>>>> origin/master
 =======
 >>>>>>> origin/master
 
@@ -321,8 +332,13 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
             canvas.drawArc(circleBounds, -90, (float) (progress * 360), false, progressPaint);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             int menit = (((int) maxTime - (int) progressMillisecond / 100) / 1000) / 60;
             int detik = (((int) maxTime - (int) progressMillisecond / 100) % 1000) / 60;
+=======
+            int menit = (((int)maxTime - (int)progressMillisecond)/1000)/60;
+            int detik = (((int)maxTime - (int)progressMillisecond)/1000)%60;
+>>>>>>> origin/master
 =======
             int menit = (((int)maxTime - (int)progressMillisecond)/1000)/60;
             int detik = (((int)maxTime - (int)progressMillisecond)/1000)%60;

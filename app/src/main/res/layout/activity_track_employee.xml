@@ -61,6 +61,9 @@
         <LinearLayout
 
             android:id="@+id/finished_service"
+<<<<<<< HEAD
+>>>>>>> origin/master
+=======
 >>>>>>> origin/master
             android:layout_width="wrap_content"
             android:layout_height="60dp"
