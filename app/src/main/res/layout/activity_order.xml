@@ -19,7 +19,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -29,18 +29,18 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/sub_service_layout"
+                        android:id="@+id/order_sub_service_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?android:attr/selectableItemBackground"
                         android:clickable="true"
-                        android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:padding="16dp">
 
                         <ImageView
-                            android:layout_width="30dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:src="@drawable/ic_wrench" />
 
                         <LinearLayout
@@ -51,35 +51,37 @@
 
                             <TextView
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
                                 android:text="Sub Pelayanan"
                                 android:textColor="@color/primary_text"
                                 android:textSize="16sp" />
 
                             <TextView
-                                android:id="@+id/selected_sub_service"
+                                android:id="@+id/order_sub_service_text_view"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Contoh : " />
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:text="Pilih" />
                         </LinearLayout>
                     </LinearLayout>
 
                     <include layout="@layout/divider" />
 
                     <LinearLayout
-                        android:id="@+id/address_order_layout"
+                        android:id="@+id/order_address_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?android:attr/selectableItemBackground"
                         android:clickable="true"
-                        android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:padding="16dp">
 
                         <ImageView
-                            android:layout_width="30dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_marker"/>
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_marker" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -89,33 +91,36 @@
 
                             <TextView
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
                                 android:text="Alamat"
                                 android:textColor="@color/primary_text"
                                 android:textSize="16sp" />
 
                             <TextView
-                                android:id="@+id/address_order_text_view"
+                                android:id="@+id/order_address_text_view"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Klik untuk memilih alamat" />
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:text="Alamat belum dipilih" />
                         </LinearLayout>
                     </LinearLayout>
 
                     <include layout="@layout/divider" />
 
                     <LinearLayout
+                        android:id="@+id/order_date_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?android:attr/selectableItemBackground"
                         android:clickable="true"
-                        android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:padding="16dp">
 
                         <ImageView
-                            android:layout_width="30dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:src="@drawable/ic_calendar" />
 
                         <LinearLayout
@@ -126,14 +131,17 @@
 
                             <TextView
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
                                 android:text="Tanggal &amp; Waktu Pengiriman"
                                 android:textColor="@color/primary_text"
                                 android:textSize="16sp" />
 
                             <TextView
+                                android:id="@+id/order_date_text_view"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
                                 android:text="Hari ini" />
                         </LinearLayout>
                     </LinearLayout>
@@ -141,17 +149,18 @@
                     <include layout="@layout/divider" />
 
                     <LinearLayout
+                        android:id="@+id/order_payment_method_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?android:attr/selectableItemBackground"
                         android:clickable="true"
-                        android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:padding="16dp">
 
                         <ImageView
-                            android:layout_width="30dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:src="@drawable/ic_wallet" />
 
                         <LinearLayout
@@ -162,14 +171,17 @@
 
                             <TextView
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
                                 android:text="Metode Pembayaran"
                                 android:textColor="@color/primary_text"
                                 android:textSize="16sp" />
 
                             <TextView
+                                android:id="@+id/order_payment_method_text_view"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
                                 android:text="Tunai" />
                         </LinearLayout>
                     </LinearLayout>
@@ -186,7 +198,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/accent_color"
-                        android:gravity="center_horizontal"
+                        android:gravity="center"
                         android:padding="16dp"
                         android:text="Total Biaya"
                         android:textAllCaps="true"
@@ -195,16 +207,20 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/confirm_order_price_text_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/white"
-                        android:gravity="center_horizontal"
+                        android:gravity="center"
                         android:padding="16dp"
                         android:text="Rp 45.000"
-                        android:textSize="16sp" />
+                        android:textColor="@color/primary_text"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <CheckBox
+                    android:id="@+id/order_checkbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -213,23 +229,20 @@
         </ScrollView>
 
         <LinearLayout
+            android:id="@+id/order_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/accent_color"
-            android:elevation="4dp"
-            android:gravity="center"
-            android:orientation="horizontal"
+            android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            android:id="@+id/buttonOrder">
+            android:background="@color/accent_color"
+            android:clickable="true">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="18dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="Pesan"
                 android:textAllCaps="true"
                 android:textColor="@color/primary_text"
-                android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </RelativeLayout>

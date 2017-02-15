@@ -10,13 +10,12 @@
     <include layout="@layout/toolbar" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
         <EditText
-            android:id="@+id/input_name"
+            android:id="@+id/register_name_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nama"
@@ -24,14 +23,13 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
         <EditText
-            android:id="@+id/input_email"
+            android:id="@+id/register_email_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email"
@@ -39,13 +37,12 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
         <EditText
-            android:id="@+id/input_password"
+            android:id="@+id/register_password_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
@@ -53,14 +50,13 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_password_retype"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
         <EditText
-            android:id="@+id/input_password_retype"
+            android:id="@+id/register_password_retype_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Ulangi Password"
@@ -68,13 +64,12 @@
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_tel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
         <EditText
-            android:id="@+id/input_tel"
+            android:id="@+id/register_phone_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nomor Ponsel"

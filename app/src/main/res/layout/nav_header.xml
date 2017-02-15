@@ -9,7 +9,7 @@
     android:theme="@style/ThemeOverlay.AppCompat.Light">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_picture_image_view"
+        android:id="@+id/profile_user_image"
         android:layout_width="76dp"
         android:layout_height="76dp"
         android:src="@color/accent_color" />

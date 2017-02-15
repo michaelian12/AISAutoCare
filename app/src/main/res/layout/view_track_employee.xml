@@ -16,7 +16,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:layout_alignParentBottom="true"
-            android:id="@+id/btnConfirmOrder"
+            android:id="@+id/confirm_order_confirm_button"
             android:layout_marginRight="10dp">
 
             <TextView
@@ -40,7 +40,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:layout_alignParentBottom="true"
-            android:id="@+id/buttonOrder">
+            android:id="@+id/order_button">
 
             <TextView
                 android:layout_width="wrap_content"

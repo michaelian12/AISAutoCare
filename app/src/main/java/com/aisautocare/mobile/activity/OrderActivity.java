@@ -1,6 +1,5 @@
 package com.aisautocare.mobile.activity;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,24 +15,19 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.fragment.RepairFragment;
 import com.aisautocare.mobile.model.Order;
 import com.aisautocare.mobile.model.POSTResponse;
-import com.aisautocare.mobile.model.Service;
-import com.akexorcist.googledirection.model.Line;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -51,59 +45,51 @@ import info.androidhive.firebasenotifications.R;
 
 public class OrderActivity extends AppCompatActivity {
 
-    Toolbar toolbar;
-    LinearLayout addressLayout;
+    private Toolbar toolbar;
 
-    TextView addressTextView;
-    LinearLayout buttonOrder;
+    // Layout
+    private LinearLayout subServiceLayout, addressLayout, dateLayout, paymentMethodLayout;
+
+    // Text View
+    private TextView subService, address, date, paymentMethod;
+
+    // Button
+    private LinearLayout orderButton;
+
     // konstanta untuk mendeteksi hasil balikan dari place picker
     private int PLACE_PICKER_REQUEST = 1;
     private Context mContext;
     private Place place;
-
-    //Subservice
-    private LinearLayout subServiceLayout;
-    private TextView selectedSubService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
 
+        /* Get Intent */
         String service = getIntent().getStringExtra("service");
+
         /* Set Toolbar */
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        subServiceLayout = (LinearLayout) findViewById(R.id.sub_service_layout);
-        addressTextView = (TextView) findViewById(R.id.address_order_text_view);
-        buttonOrder = (LinearLayout) findViewById(R.id.buttonOrder);
-        addressLayout = (LinearLayout) findViewById(R.id.address_order_layout);
-        selectedSubService = (TextView) findViewById(R.id.selected_sub_service);
-        addressLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                try {
-                    //menjalankan place picker
-                    startActivityForResult(builder.build(OrderActivity.this), PLACE_PICKER_REQUEST);
+        /* Layout */
+        subServiceLayout = (LinearLayout) findViewById(R.id.order_sub_service_layout);
+        addressLayout = (LinearLayout) findViewById(R.id.order_address_layout);
+        dateLayout = (LinearLayout) findViewById(R.id.order_date_layout);
+        paymentMethodLayout = (LinearLayout) findViewById(R.id.order_payment_method_layout);
 
-                    // check apabila <a title="Solusi Tidak Bisa Download Google Play Services di Android" href="http://www.twoh.co/2014/11/solusi-tidak-bisa-download-google-play-services-di-android/" target="_blank">Google Play Services tidak terinstall</a> di HP
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        buttonOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        /* Text View */
+        subService = (TextView) findViewById(R.id.order_sub_service_text_view);
+        address = (TextView) findViewById(R.id.order_address_text_view);
+        date = (TextView) findViewById(R.id.order_date_text_view);
+        paymentMethod = (TextView) findViewById(R.id.order_payment_method_text_view);
 
-            }
-        });
+        /* Button */
+        orderButton = (LinearLayout) findViewById(R.id.order_button);
 
+        /* Initial Value */
         String[] subService = new String[0];
         if (service.toLowerCase().contains("aki")) {
             subService = new String[]{"Cek", "Ganti", "Stroom Aki"};
@@ -117,8 +103,10 @@ public class OrderActivity extends AppCompatActivity {
             subService = new String[]{"By Driver", "No Driver"};
         }
 
-        selectedSubService.setText(selectedSubService.getText() + subService[0]);
+        this.subService.setText(this.subService.getText() + subService[0]);
         final String[] finalSubService = subService;
+
+        /* On Click Listener */
         subServiceLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -136,12 +124,30 @@ public class OrderActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         alert.dismiss();
-                        selectedSubService.setText(finalSubService[i]);
+                        OrderActivity.this.subService.setText(finalSubService[i]);
                     }
                 });
             }
         });
-        buttonOrder.setOnClickListener(new View.OnClickListener() {
+
+        addressLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                try {
+                    //menjalankan place picker
+                    startActivityForResult(builder.build(OrderActivity.this), PLACE_PICKER_REQUEST);
+
+                    // check apabila <a title="Solusi Tidak Bisa Download Google Play Services di Android" href="http://www.twoh.co/2014/11/solusi-tidak-bisa-download-google-play-services-di-android/" target="_blank">Google Play Services tidak terinstall</a> di HP
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //new OrderActivity.POSTOrder().execute("");
@@ -161,7 +167,7 @@ public class OrderActivity extends AppCompatActivity {
                 place = PlacePicker.getPlace(data, this);
                 String toastMsg = String.format(
                         "Place: %s,%s \n" + "Alamat: %s \n", String.valueOf(place.getLatLng().latitude), String.valueOf(place.getLatLng().longitude), place.getAddress());
-                addressTextView.setText(toastMsg);
+                address.setText(toastMsg);
             }
         }
     }
@@ -212,7 +218,7 @@ public class OrderActivity extends AppCompatActivity {
                 order.setOrder_time(timeFormat.format(date));
                 order.setService_date("2003-02-01");
                 order.setService_time("00:00:00");
-                order.setService_location(addressTextView.getText().toString());
+                order.setService_location(address.getText().toString());
                 order.setLatitude(String.valueOf(place.getLatLng().latitude));
                 order.setLongitude(String.valueOf(place.getLatLng().longitude));
                 order.setArea_id("14");

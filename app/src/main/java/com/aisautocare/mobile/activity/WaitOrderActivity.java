@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,20 +22,27 @@ import info.androidhive.firebasenotifications.R;
  */
 
 public class WaitOrderActivity extends AppCompatActivity {
+
+    private Button cancelButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wait_order);
+
+        cancelButton = (Button) findViewById(R.id.wait_order_cancel_button);
+
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable(){
+        handler.postDelayed(new Runnable() {
             @Override
-            public void run(){
+            public void run() {
                 Intent intent = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
                 startActivity(intent);
             }
         }, 5000);
         //new WaitOrderActivity.WaitSplash().execute();
     }
+
     class WaitSplash extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... params) {
             try {

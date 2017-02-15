@@ -1,31 +1,47 @@
 package com.aisautocare.mobile.activity;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.media.Rating;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
+<<<<<<< HEAD
+import android.widget.Button;
+=======
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
+>>>>>>> origin/master
 import android.widget.LinearLayout;
 
+import com.aisautocare.mobile.GlobalVar;
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
 import com.akexorcist.googledirection.constant.AvoidType;
 import com.akexorcist.googledirection.model.Direction;
+import com.akexorcist.googledirection.model.Info;
 import com.akexorcist.googledirection.model.Leg;
+import com.akexorcist.googledirection.model.Line;
 import com.akexorcist.googledirection.model.Route;
 import com.akexorcist.googledirection.model.Step;
 import com.akexorcist.googledirection.util.DirectionConverter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -37,27 +53,49 @@ import info.androidhive.firebasenotifications.R;
 public class TrackEmployeeActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-
     private LinearLayout timer;
+    private Button arriveButton, finishButton;
 
+    private LinearLayout btnFinished;
+    private LinearLayout layoutArrive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_employee);
+<<<<<<< HEAD
+
+        timer = (LinearLayout) findViewById(R.id.track_timer);
+        arriveButton = (Button) findViewById(R.id.track_arrive_button);
+        finishButton = (Button) findViewById(R.id.track_finish_button);
+
+=======
+        btnFinished = (LinearLayout) findViewById(R.id.finished_service);
+        layoutArrive = (LinearLayout) findViewById(R.id.layout_arrive);
         timer = (LinearLayout) findViewById(R.id.timer);
+>>>>>>> origin/master
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.track_map);
         mapFragment.getMapAsync(this);
-        timer.addView(new CircularCountdown(this));
+//        timer.addView(new CircularCountdown(this));
         LayoutInflater inflater;
         inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.view_track_employee, null);
 
-        timer.addView(layout);
+        //timer.addView(layout);
+
 //        setContentView();
+
+        btnFinished.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getApplicationContext(), RatingActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -75,29 +113,47 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng dago = new LatLng(-6.8919607, 107.6156134);
-        mMap.addMarker(new MarkerOptions().position(dago).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(dago));
-//
-//        mMap.animateCamera(CameraUpdateFactory.newLatLng(dago));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(dago, 12.0f));
+        LatLng start = new LatLng(-6.8890725, 107.6173804);
+        LatLng end = new LatLng(-6.8983939, 107.6198499);
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start, 15.0f));
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+
+         mMap.addMarker(new MarkerOptions().position(end).title("Lokasi Kendaraan anda").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_car)));
+
+        final Marker customerLoc = mMap.addMarker(new MarkerOptions().position(start).title("Lokasi Keberangkatan Montir"));
         GoogleDirection.withServerKey("AIzaSyBDv7B62-bLvjbdWZCXyIl4dxiLmSR4vB0")
-                .from(new LatLng(-6.8897026, 107.6147551))
-                .to(new LatLng(-6.8919607, 107.6156134))
+                .from(start)
+                .to(end)
                 .avoid(AvoidType.FERRIES)
                 .avoid(AvoidType.HIGHWAYS)
                 .execute(new DirectionCallback() {
                     @Override
                     public void onDirectionSuccess(Direction direction, String rawBody) {
-                        if(direction.isOK()) {
+                        if (direction.isOK()) {
                             // Do something
                             Route route = direction.getRouteList().get(0);
                             Leg leg = route.getLegList().get(0);
-                            List<Step> stepList= leg.getStepList();
+<<<<<<< HEAD
+                            List<Step> stepList = leg.getStepList();
+=======
+>>>>>>> origin/master
 
-                            ArrayList<LatLng> directionPositionList = leg.getDirectionPoint();
+                            final ArrayList<LatLng> directionPositionList = leg.getDirectionPoint();
                             PolylineOptions polylineOptions = DirectionConverter.createPolyline(TrackEmployeeActivity.this, directionPositionList, 5, Color.RED);
                             mMap.addPolyline(polylineOptions);
+                            //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(directionPositionList.get(0), 10));
+                            Handler handler = new Handler();
+                            Info distanceInfo = leg.getDistance();
+                            final Info durationInfo = leg.getDuration();
+                            String distance = distanceInfo.getText();
+                            final String duration = durationInfo.getValue();
+                            GlobalVar.waktuTempuh = Integer.valueOf(durationInfo.getValue());
+                            System.out.println("Jarak dan waktu " + distance + " " + duration);
+                            timer.addView(new CircularCountdown(TrackEmployeeActivity.this));
+                            layoutArrive.setVisibility(View.VISIBLE);
+                            animateMarker(mMap, customerLoc, directionPositionList, false, Integer.valueOf(durationInfo.getValue()));
+
                         } else {
                             // Do something
                         }
@@ -108,7 +164,48 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
                         // Do something
                     }
                 });
+
+
     }
+    private static void animateMarker(GoogleMap myMap, final Marker marker, final List<LatLng> directionPoint,
+                                      final boolean hideMarker, int duration ) {
+        final Handler handler = new Handler();
+        final long start = SystemClock.uptimeMillis();
+        Projection proj = myMap.getProjection();
+        //final long duration = 720000;
+        duration = (duration) *1000;
+
+        final Interpolator interpolator = new LinearInterpolator();
+
+        final int finalDuration = duration;
+        handler.post(new Runnable() {
+            int i = 0;
+
+            @Override
+            public void run() {
+                long elapsed = SystemClock.uptimeMillis() - start;
+                float t = interpolator.getInterpolation((float) elapsed
+                        / finalDuration);
+                if (i < directionPoint.size())
+                    marker.setPosition(directionPoint.get(i));
+                i++;
+
+                handler.postDelayed(this, finalDuration /directionPoint.size());
+//                if (t < 1.0) {
+//                    // Post again 16ms later.
+//
+//                } else {
+//                    handler.postDelayed(this,  (finalDuration *60)*1000/directionPoint.size());
+//                    if (hideMarker) {
+//                        marker.setVisible(false);
+//                    } else {
+//                        marker.setVisible(true);
+//                    }
+//                }
+            }
+        });
+    }
+
     private static class CircularCountdown extends View {
 
         private final Paint backgroundPaint;
@@ -142,7 +239,7 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
             handleRadius = 10;
 
             // limit the counter to go up to maxTime ms
-            maxTime = 720000;
+            maxTime = GlobalVar.waktuTempuh * 1000;
 
             // start and current time
             startTime = System.currentTimeMillis();
@@ -176,11 +273,13 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
             textOffset = (textHeight / 2) - textPaint.descent();
 
 
+
+
             // This will ensure the animation will run periodically
             viewHandler = new Handler();
-            updateView = new Runnable(){
+            updateView = new Runnable() {
                 @Override
-                public void run(){
+                public void run() {
                     // update current time
                     currentTime = System.currentTimeMillis();
 
@@ -191,14 +290,12 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
                     progress = (double) progressMillisecond / maxTime;
 
 
-
                     CircularCountdown.this.invalidate();
                     viewHandler.postDelayed(updateView, 1000);
                 }
             };
             viewHandler.post(updateView);
         }
-
 
 
         @Override
@@ -221,24 +318,29 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
             canvas.drawCircle(centerWidth, centerHeight, radius, backgroundPaint);
 
             // we want to start at -90°, 0° is pointing to the right
-            canvas.drawArc(circleBounds, -90, (float)(progress*360), false, progressPaint);
+            canvas.drawArc(circleBounds, -90, (float) (progress * 360), false, progressPaint);
 
-            int menit = (((int)maxTime - (int)progressMillisecond/100) / 1000)/60;
-            int detik = (((int)maxTime - (int)progressMillisecond/100) % 1000)/60;
+<<<<<<< HEAD
+            int menit = (((int) maxTime - (int) progressMillisecond / 100) / 1000) / 60;
+            int detik = (((int) maxTime - (int) progressMillisecond / 100) % 1000) / 60;
+=======
+            int menit = (((int)maxTime - (int)progressMillisecond)/1000)/60;
+            int detik = (((int)maxTime - (int)progressMillisecond)/1000)%60;
+>>>>>>> origin/master
 
             // display text inside the circle
 //            canvas.drawText((double)(maxTime - progressMillisecond/100)/10 + "S",
 //                    centerWidth,
 //                    centerHeight + textOffset,
 //                    textPaint);
-            canvas.drawText(menit+ ":" +detik   ,
+            canvas.drawText(menit + ":" + detik,
                     centerWidth,
                     centerHeight + textOffset,
                     textPaint);
 
             // draw handle or the circle
-            canvas.drawCircle((float)(centerWidth  + (Math.sin(progress * 2 * Math.PI) * radius)),
-                    (float)(centerHeight - (Math.cos(progress * 2 * Math.PI) * radius)),
+            canvas.drawCircle((float) (centerWidth + (Math.sin(progress * 2 * Math.PI) * radius)),
+                    (float) (centerHeight - (Math.cos(progress * 2 * Math.PI) * radius)),
                     handleRadius,
                     progressPaint);
         }
