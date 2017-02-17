@@ -34,6 +34,8 @@ import info.androidhive.firebasenotifications.R;
 import com.aisautocare.mobile.app.Config;
 import com.aisautocare.mobile.util.NotificationUtils;
 
+import org.w3c.dom.Text;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -161,6 +163,11 @@ public class MainActivity extends AppCompatActivity {
             inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.view_selected_vehicle, null);
+            TextView vehicleManufacture = (TextView) layout.findViewById(R.id.selected_vehicle_manufacture);
+            TextView vehicleManufactureType = (TextView) layout.findViewById(R.id.selected_vehicle_manufacture_type);
+            System.out.println("MERK "  + data.getStringExtra("Merk"));
+            vehicleManufacture.setText(data.getStringExtra("Merk"));
+            vehicleManufactureType.setText(data.getStringExtra("MerkType"));
             selectedVehicle.removeAllViews();
             selectedVehicle.addView(layout);
             pilihKendaraan.setVisibility(View.VISIBLE);

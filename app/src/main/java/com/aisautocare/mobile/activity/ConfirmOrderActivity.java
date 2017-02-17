@@ -32,7 +32,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
 
         mechanicImage = (CircleImageView) findViewById(R.id.confrim_order_mechanic_image);
         garageName = (TextView) findViewById(R.id.confirm_order_garage_name);
-        mechanicName = (TextView) findViewById(R.id.confirm_order_mechanic_name_text_view);
+//        mechanicName = (TextView) findViewById(R.id.confirm_order_mechanic_name_text_view);
         mechanicPhone = (TextView) findViewById(R.id.confirm_order_mechanic_phone_text_view);
         orderPrice = (TextView) findViewById(R.id.confirm_order_price_text_view);
         orderDistance = (TextView) findViewById(R.id.confirm_order_distance_text_view);
@@ -43,11 +43,11 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         String distance = getIntent().getStringExtra("lama_perjalanan");
         String price = getIntent().getStringExtra("total");
         //dummy
-        name = "John Smith";
+//        name = "John Smith";
         distance = "4 Km";
         price = "Rp 50.000";
 
-        mechanicName.setText(mechanicName.getText() + " " + name);
+//        mechanicName.setText(mechanicName.getText() + " " + name);
         orderDistance.setText(orderDistance.getText() + " " + distance);
         orderPrice.setText(orderPrice.getText() + " " + price);
 

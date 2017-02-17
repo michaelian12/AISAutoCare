@@ -1,13 +1,11 @@
 package com.aisautocare.mobile.activity;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.media.Rating;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -15,17 +13,12 @@ import android.support.v4.app.FragmentActivity;
 import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 import android.widget.Button;
-=======
+
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
->>>>>>> origin/master
-=======
-import android.view.animation.Interpolator;
-import android.view.animation.LinearInterpolator;
->>>>>>> origin/master
+
 import android.widget.LinearLayout;
 
 import com.aisautocare.mobile.GlobalVar;
@@ -35,7 +28,6 @@ import com.akexorcist.googledirection.constant.AvoidType;
 import com.akexorcist.googledirection.model.Direction;
 import com.akexorcist.googledirection.model.Info;
 import com.akexorcist.googledirection.model.Leg;
-import com.akexorcist.googledirection.model.Line;
 import com.akexorcist.googledirection.model.Route;
 import com.akexorcist.googledirection.model.Step;
 import com.akexorcist.googledirection.util.DirectionConverter;
@@ -62,29 +54,22 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
     private Button arriveButton, finishButton;
 
     private LinearLayout btnFinished;
-    private LinearLayout layoutArrive;
+    private LinearLayout layoutButtons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_employee);
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-        timer = (LinearLayout) findViewById(R.id.track_timer);
+
         arriveButton = (Button) findViewById(R.id.track_arrive_button);
         finishButton = (Button) findViewById(R.id.track_finish_button);
-
-=======
-=======
->>>>>>> origin/master
-        btnFinished = (LinearLayout) findViewById(R.id.finished_service);
-        layoutArrive = (LinearLayout) findViewById(R.id.layout_arrive);
         timer = (LinearLayout) findViewById(R.id.timer);
->>>>>>> origin/master
+        layoutButtons = (LinearLayout) findViewById(R.id.layout_button_track);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.track_map);
+                .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 //        timer.addView(new CircularCountdown(this));
         LayoutInflater inflater;
@@ -96,7 +81,7 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
 
 //        setContentView();
 
-        btnFinished.setOnClickListener(new View.OnClickListener() {
+        finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -142,13 +127,9 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
                             // Do something
                             Route route = direction.getRouteList().get(0);
                             Leg leg = route.getLegList().get(0);
-<<<<<<< HEAD
-<<<<<<< HEAD
+
                             List<Step> stepList = leg.getStepList();
-=======
->>>>>>> origin/master
-=======
->>>>>>> origin/master
+
 
                             final ArrayList<LatLng> directionPositionList = leg.getDirectionPoint();
                             PolylineOptions polylineOptions = DirectionConverter.createPolyline(TrackEmployeeActivity.this, directionPositionList, 5, Color.RED);
@@ -162,7 +143,7 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
                             GlobalVar.waktuTempuh = Integer.valueOf(durationInfo.getValue());
                             System.out.println("Jarak dan waktu " + distance + " " + duration);
                             timer.addView(new CircularCountdown(TrackEmployeeActivity.this));
-                            layoutArrive.setVisibility(View.VISIBLE);
+                            layoutButtons.setVisibility(View.VISIBLE);
                             animateMarker(mMap, customerLoc, directionPositionList, false, Integer.valueOf(durationInfo.getValue()));
 
                         } else {
@@ -331,18 +312,15 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
             // we want to start at -90°, 0° is pointing to the right
             canvas.drawArc(circleBounds, -90, (float) (progress * 360), false, progressPaint);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-            int menit = (((int) maxTime - (int) progressMillisecond / 100) / 1000) / 60;
-            int detik = (((int) maxTime - (int) progressMillisecond / 100) % 1000) / 60;
-=======
+//            int menit = (((int) maxTime - (int) progressMillisecond / 100) / 1000) / 60;
+//            int detik = (((int) maxTime - (int) progressMillisecond / 100) % 1000) / 60;
+//
+//            int menit = (((int)maxTime - (int)progressMillisecond)/1000)/60;
+//            int detik = (((int)maxTime - (int)progressMillisecond)/1000)%60;
+
             int menit = (((int)maxTime - (int)progressMillisecond)/1000)/60;
             int detik = (((int)maxTime - (int)progressMillisecond)/1000)%60;
->>>>>>> origin/master
-=======
-            int menit = (((int)maxTime - (int)progressMillisecond)/1000)/60;
-            int detik = (((int)maxTime - (int)progressMillisecond)/1000)%60;
->>>>>>> origin/master
+
 
             // display text inside the circle
 //            canvas.drawText((double)(maxTime - progressMillisecond/100)/10 + "S",

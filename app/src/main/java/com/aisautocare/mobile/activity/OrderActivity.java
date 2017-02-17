@@ -103,7 +103,7 @@ public class OrderActivity extends AppCompatActivity {
             subService = new String[]{"By Driver", "No Driver"};
         }
 
-        this.subService.setText(this.subService.getText() + subService[0]);
+        this.subService.setText(this.subService.getText() + " : " + subService[0]);
         final String[] finalSubService = subService;
 
         /* On Click Listener */
@@ -114,7 +114,7 @@ public class OrderActivity extends AppCompatActivity {
                 LayoutInflater inflater = getLayoutInflater();
                 View convertView = (View) inflater.inflate(R.layout.list_view_sub_service, null);
                 alertDialog.setView(convertView);
-                alertDialog.setTitle("Pilih Sub Service");
+                alertDialog.setTitle("Pilih Sub Pelayanan");
                 ListView lv = (ListView) convertView.findViewById(R.id.list_sub_service);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(OrderActivity.this, android.R.layout.simple_list_item_1, finalSubService);
                 lv.setAdapter(adapter);
@@ -164,7 +164,7 @@ public class OrderActivity extends AppCompatActivity {
         // menangkap hasil balikan dari Place Picker, dan menampilkannya pada TextView
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                place = PlacePicker.getPlace(data, this);
+                place = PlacePicker.getPlace(this, data);
                 String toastMsg = String.format(
                         "Place: %s,%s \n" + "Alamat: %s \n", String.valueOf(place.getLatLng().latitude), String.valueOf(place.getLatLng().longitude), place.getAddress());
                 address.setText(toastMsg);
