@@ -85,6 +85,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String total = data.getString("total");
             String lamaPerjalanan = data.getString("lama_perjalanan");
 
+
             Log.e(TAG, "title: " + title);
             Log.e(TAG, "message: " + message);
             Log.e(TAG, "isBackground: " + isBackground);
@@ -93,35 +94,43 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.e(TAG, "timestamp: " + timestamp);
 
 
-            if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
-                // app is in foreground, broadcast the push message
-                Intent pushNotification = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
-                pushNotification.putExtra("message", message);
-                pushNotification.putExtra("nama", nama);
-                pushNotification.putExtra("total", total);
-                pushNotification .putExtra("lama_perjalanan", lamaPerjalanan);
-                getApplicationContext().startActivities(new Intent[]{pushNotification});
-                LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
-                // play notification sound
-                NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-                notificationUtils.playNotificationSound();
-            } else {
-                // app is in background, show the notification in notification tray
-                Intent resultIntent = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
-                resultIntent.putExtra("message", message);
-                resultIntent.putExtra("nama", nama);
-                resultIntent.putExtra("total", total);
-                resultIntent.putExtra("lama_perjalanan", lamaPerjalanan);
+            if (nama.equalsIgnoreCase("sukiyem")){
+                if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+                    // app is in foreground, broadcast the push message
+                    Intent pushNotification = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
+                    pushNotification.putExtra("message", message);
+                    pushNotification.putExtra("nama", nama);
+                    pushNotification.putExtra("total", total);
+                    pushNotification .putExtra("lama_perjalanan", lamaPerjalanan);
 
-                // check for image attachment
-                if (TextUtils.isEmpty(imageUrl)) {
-                    showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
+
+                    // play notification sound
+                    NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+                    notificationUtils.playNotificationSound();
+                    Log.e(TAG,  "NOTIFIKASI DITERIMA AKAN DIARAHKAN KE CONFIRM ORDER");
+                    pushNotification.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getApplicationContext().startActivity(pushNotification);
                 } else {
-                    // image is present, show notification with image
-                    showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl);
+                    // app is in background, show the notification in notification tray
+                    Intent resultIntent = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
+                    resultIntent.putExtra("message", message);
+                    resultIntent.putExtra("nama", nama);
+                    resultIntent.putExtra("total", total);
+                    resultIntent.putExtra("lama_perjalanan", lamaPerjalanan);
+
+                    // check for image attachment
+                    if (TextUtils.isEmpty(imageUrl)) {
+                        showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
+                    } else {
+                        // image is present, show notification with image
+                        showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl);
+                    }
                 }
             }
+
+
         } catch (JSONException e) {
             Log.e(TAG, "Json Exception: " + e.getMessage());
         } catch (Exception e) {

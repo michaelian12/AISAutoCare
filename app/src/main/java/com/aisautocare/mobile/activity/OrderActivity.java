@@ -150,11 +150,9 @@ public class OrderActivity extends AppCompatActivity {
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //new OrderActivity.POSTOrder().execute("");
-                finish();
-                Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
+                new OrderActivity.POSTOrder().execute("");
+                //finish();
+
             }
         });
     }
@@ -165,6 +163,9 @@ public class OrderActivity extends AppCompatActivity {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 place = PlacePicker.getPlace(this, data);
+                GlobalVar.selectedLat = place.getLatLng().latitude;
+                GlobalVar.selectedLon = place.getLatLng().longitude;
+
                 String toastMsg = String.format(
                         "Place: %s,%s \n" + "Alamat: %s \n", String.valueOf(place.getLatLng().latitude), String.valueOf(place.getLatLng().longitude), place.getAddress());
                 address.setText(toastMsg);
@@ -221,6 +222,8 @@ public class OrderActivity extends AppCompatActivity {
                 order.setService_location(address.getText().toString());
                 order.setLatitude(String.valueOf(place.getLatLng().latitude));
                 order.setLongitude(String.valueOf(place.getLatLng().longitude));
+//                order.setLatitude("6");
+//                order.setLongitude("6");
                 order.setArea_id("14");
                 order.setIs_emergency("false");
                 order.setLicense_plate("AB100CA");
@@ -291,6 +294,7 @@ public class OrderActivity extends AppCompatActivity {
             }
 
             try {
+                System.out.println("DATA BALIKAN " + jsonStr);
                 return getRepairDataFromJson(jsonStr);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
@@ -312,15 +316,15 @@ public class OrderActivity extends AppCompatActivity {
                 //repairs.clear();
                 //repairs.addAll(services);
                 System.out.println("responses ketika set adapter : " + responses.toString());
-                if (Integer.valueOf(responses.get(0).getApi_status()) == 1) {
-                    finish();
-                    Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getApplicationContext().startActivity(intent);
-                } else {
-                    Log.e("AIS", "Error POST Order");
-                    Log.e("AIS", "API Message : " + responses.get(0).getApi_message().toString());
-                }
+//                if (Integer.valueOf(responses.get(0).getApi_status()) == 1) {
+//                    finish();
+//                    Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    getApplicationContext().startActivity(intent);
+//                } else {
+//                    Log.e("AIS", "Error POST Order");
+//                    Log.e("AIS", "API Message : " + responses.get(0).getApi_message().toString());
+//                }
                 //rcAdapter = new RecyclerViewAdapterBerita(getActivity(), movies);
                 //adapter = new ServiceRecyclerViewAdapter();
 
@@ -334,6 +338,9 @@ public class OrderActivity extends AppCompatActivity {
                 //adapter.setLoaded();
 
                 //pageBerita++;
+                Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
             }
         }
     }

@@ -31,6 +31,11 @@ import com.akexorcist.googledirection.model.Leg;
 import com.akexorcist.googledirection.model.Route;
 import com.akexorcist.googledirection.model.Step;
 import com.akexorcist.googledirection.util.DirectionConverter;
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.snapshot.DoubleNode;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -44,6 +49,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import info.androidhive.firebasenotifications.R;
 
@@ -55,7 +61,8 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
 
     private LinearLayout btnFinished;
     private LinearLayout layoutButtons;
-
+    private Firebase trackFirebase;
+    private Marker customerLoc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +96,41 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
                 startActivity(intent);
             }
         });
+
+        String name = "andoyo";
+        Firebase.setAndroidContext(this);
+        trackFirebase = new Firebase("https://devais-b06d4.firebaseio.com/messages/" + name);
+        trackFirebase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Map map = dataSnapshot.getValue(Map.class);
+                String lat = map.get("lat").toString();
+                String lon = map.get("lon").toString();
+                LatLng locCurrent = new LatLng(Double.valueOf(lat), Double.valueOf(lon));
+                customerLoc.setPosition(locCurrent);
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 
 
@@ -106,15 +148,15 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng start = new LatLng(-6.8890725, 107.6173804);
-        LatLng end = new LatLng(-6.8983939, 107.6198499);
+        LatLng start = new LatLng(-6.8869372,107.6149806);
+        LatLng end = new LatLng(GlobalVar.selectedLat,GlobalVar.selectedLon);
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start, 15.0f));
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
          mMap.addMarker(new MarkerOptions().position(end).title("Lokasi Kendaraan anda").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_car)));
 
-        final Marker customerLoc = mMap.addMarker(new MarkerOptions().position(start).title("Lokasi Keberangkatan Montir"));
+        customerLoc = mMap.addMarker(new MarkerOptions().position(start).title("Lokasi Keberangkatan Montir"));
         GoogleDirection.withServerKey("AIzaSyBDv7B62-bLvjbdWZCXyIl4dxiLmSR4vB0")
                 .from(start)
                 .to(end)
@@ -144,7 +186,7 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
                             System.out.println("Jarak dan waktu " + distance + " " + duration);
                             timer.addView(new CircularCountdown(TrackEmployeeActivity.this));
                             layoutButtons.setVisibility(View.VISIBLE);
-                            animateMarker(mMap, customerLoc, directionPositionList, false, Integer.valueOf(durationInfo.getValue()));
+                            //animateMarker(mMap, customerLoc, directionPositionList, false, Integer.valueOf(durationInfo.getValue()));
 
                         } else {
                             // Do something
