@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -28,6 +29,10 @@ import android.widget.Toast;
 
 import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.adapter.FragmentAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+
+
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import info.androidhive.firebasenotifications.R;
@@ -62,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
     private static int RESULT_ADD_VEHICLE=1;
 
     private FloatingActionButton fab;
+
+    private FirebaseAuth.AuthStateListener authListener;
+    private FirebaseAuth auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,6 +157,24 @@ public class MainActivity extends AppCompatActivity {
         // Find the tab layout that shows the tabs
         tabLayout = (TabLayout) findViewById(R.id.category_tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        auth = FirebaseAuth.getInstance();
+
+        //get current user
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    // user auth state is changed - user is null
+                    // launch login activity
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
+                }
+            }
+        };
 
     }
 
@@ -250,6 +276,12 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent(MainActivity.this, RegisterActivity.class);
                     startActivity(intent);
                     return true;
+                case R.id.nav_logout:
+                    Toast.makeText(MainActivity.this, getString(R.string.auth_logout), Toast.LENGTH_LONG).show();
+                    auth.signOut();
+
+                    return true;
+
                 default:
                     return true;
             }

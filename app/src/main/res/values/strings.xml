@@ -42,6 +42,10 @@
 
     <string name="login">Masuk</string>
     <string name="register">Daftar</string>
+    <string name="minimum_password">Password minimal 6 karakter</string>
+    <string name="auth_failed">Login gagal</string>
+    <string name="auth_logout">Anda telah Keluar</string>
+    <string name="logout">Keluar</string>
 
     <string-array name="values">
         <item>Item 1</item>

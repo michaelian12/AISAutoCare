@@ -85,5 +85,11 @@
         android:background="@color/accent_color"
         android:text="Daftar"
         android:textColor="@color/primary_text" />
+    <ProgressBar
+        android:id="@+id/progress_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible"/>
 
 </LinearLayout>
