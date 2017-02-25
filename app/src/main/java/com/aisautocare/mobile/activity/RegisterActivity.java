@@ -76,11 +76,15 @@ public class RegisterActivity extends AppCompatActivity {
                                 // If sign in fails, display a message to the user. If sign in succeeds
                                 // the auth state listener will be notified and logic to handle the
                                 // signed in user can be handled in the listener.
+
                                 if (!task.isSuccessful()) {
                                     Toast.makeText(RegisterActivity.this, "Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
-                                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                    Intent returnIntent = new Intent();
+                                    setResult(2, returnIntent);
+                                    startActivity(returnIntent);
+
                                     finish();
                                 }
                             }
@@ -88,5 +92,8 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
+
 }

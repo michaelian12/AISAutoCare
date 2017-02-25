@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,6 +30,10 @@ import android.widget.Toast;
 
 import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.adapter.FragmentAdapter;
+import com.aisautocare.mobile.fragment.RepairFragment;
+import com.aisautocare.mobile.model.Order;
+import com.aisautocare.mobile.model.POSTResponse;
+import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 
 
@@ -39,12 +44,24 @@ import info.androidhive.firebasenotifications.R;
 import com.aisautocare.mobile.app.Config;
 import com.aisautocare.mobile.util.NotificationUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -65,11 +82,15 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout tambahKendaraan;
 
     private static int RESULT_ADD_VEHICLE=1;
+    private static int RESULT_REGISTER=2;
 
     private FloatingActionButton fab;
 
     private FirebaseAuth.AuthStateListener authListener;
     private FirebaseAuth auth;
+
+
+    private Firebase postUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,14 +188,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
+
                 if (user == null) {
                     // user auth state is changed - user is null
                     // launch login activity
+                    Log.i(TAG, "kedeetek blm login");
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                     finish();
                 }
             }
         };
+        Firebase.setAndroidContext(this);
+
+
 
     }
 
@@ -200,11 +226,16 @@ public class MainActivity extends AppCompatActivity {
             btnAddVehicle.removeAllViews();
 
             GlobalVar.isVehicleSelected = true;
-        } else {
-            final Dialog dialog = new Dialog(this);
-            dialog.setContentView(R.layout.dialog_rating);
-            dialog.setTitle("Penilaian");
-            dialog.show();
+        } else if (resultCode == RESULT_REGISTER){
+
+            postUser = new Firebase("https://devais-b06d4.firebaseio.com/users/" + auth.getCurrentUser().getUid());
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("type", "1");
+            postUser.push().setValue(map);
+//            final Dialog dialog = new Dialog(this);
+//            dialog.setContentView(R.layout.dialog_rating);
+//            dialog.setTitle("Penilaian");
+//            dialog.show();
         }
     }
 
@@ -243,6 +274,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         super.onPause();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        auth.addAuthStateListener(authListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (authListener != null) {
+            auth.removeAuthStateListener(authListener);
+        }
     }
 
     NavigationView.OnNavigationItemSelectedListener navItemSelect = new NavigationView.OnNavigationItemSelectedListener() {
@@ -288,55 +333,174 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    class PostClient extends AsyncTask<String, Void, String> {
-        public String doInBackground(String... IO) {
+    private String URLRegister = new GlobalVar().hostAPI + "/register";
+    public class POSTRegister extends AsyncTask<String, Void, List<POSTResponse>> {
 
-            // Predefine variables
-            String io = new String(IO[0]);
-            URL url;
+        private final String LOG_TAG = RepairFragment.GETRepair.class.getSimpleName();
 
-            try {
-                // Stuff variables
-                url = new URL("https://api.spark.io/v1/devices/YOURCOREID/SCL/");
-                String param = "access_token=YOURACCESSTOKEN&params=d7,"+io;
-                Log.d(TAG, "param:" + param);
+        private List<POSTResponse> getRepairDataFromJson(String jsonStr) throws JSONException, NoSuchFieldException, IllegalAccessException {
+            //jsonStr = jsonStr.substring(23);
+//            jsonStr = jsonStr.substring(23, jsonStr.length()-3);
+//            System.out.println("JSON STR : " + jsonStr);
+            JSONObject movieJson = new JSONObject(jsonStr);
+            //JSONArray movieArray = movieJson.getJSONArray();
+//            System.out.println("movie json : " + movieJson  );
+//            System.out.println("itemsarray : " + movieArray  );
+            // System.out.println(" Data JSON Items" + jsonStr);
+            List<POSTResponse> results = new ArrayList<>();
+            JSONObject berita = movieJson;
+            POSTResponse beritaModel = new POSTResponse(berita);
+            results.add(beritaModel);
+            return results;
+        }
 
-                // Open a connection using HttpURLConnection
-                HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+        @Override
+        protected List<POSTResponse> doInBackground(String... params) {
 
-                con.setReadTimeout(7000);
-                con.setConnectTimeout(7000);
-                con.setDoOutput(true);
-                con.setDoInput(true);
-                con.setInstanceFollowRedirects(false);
-                con.setRequestMethod("POST");
-                con.setFixedLengthStreamingMode(param.getBytes().length);
-                con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-                // Send
-                PrintWriter out = new PrintWriter(con.getOutputStream());
-                out.print(param);
-                out.close();
-
-                con.connect();
-
-                BufferedReader in = null;
-                if (con.getResponseCode() != 200) {
-                    in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-                    Log.d(TAG, "!=200: " + in);
-                } else {
-                    in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                    Log.d(TAG, "POST request send successful: " + in);
-                };
-
-
-            } catch (Exception e) {
-                Log.d(TAG, "Exception");
-                e.printStackTrace();
+            if (params.length == 0) {
                 return null;
             }
-            // Set null and we´e good to go
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            String jsonStr = null;
+
+            try {
+
+                Order order = new Order();
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+                Date date = new Date();
+                System.out.println(dateFormat.format(date));
+                order.setCustomer_id("1");
+                order.setOrder_date(dateFormat.format(date));
+                order.setOrder_time(timeFormat.format(date));
+                order.setService_date("2003-02-01");
+//                order.setService_time("00:00:00");
+//                order.setService_location(address.getText().toString());
+//                order.setLatitude(String.valueOf(place.getLatLng().latitude));
+//                order.setLongitude(String.valueOf(place.getLatLng().longitude));
+//                order.setLatitude("6");
+//                order.setLongitude("6");
+                order.setArea_id("14");
+                order.setIs_emergency("false");
+                order.setLicense_plate("AB100CA");
+                order.setRef_service_id("1");
+                order.setStatus("1");
+                order.setMethod("3");
+                order.setPayment_status("1");
+                Uri builtUri = Uri.parse(URLRegister).buildUpon()
+                        .appendQueryParameter("customer_id", order.getCustomer_id())
+                        .appendQueryParameter("order_date", order.getOrder_date())
+                        .appendQueryParameter("order_time", order.getOrder_time())
+                        .appendQueryParameter("service_date", order.getService_date())
+                        .appendQueryParameter("service_time", order.getService_time())
+                        .appendQueryParameter("service_location", order.getService_location())
+                        .appendQueryParameter("latitude", order.getLatitude())
+                        .appendQueryParameter("longitude", order.getLongitude())
+                        .appendQueryParameter("area_id", order.getArea_id())
+                        .appendQueryParameter("is_emergency", order.getIs_emergency())
+                        .appendQueryParameter("license_plate", order.getLicense_plate())
+                        .appendQueryParameter("ref_service_id", order.getRef_service_id())
+                        .appendQueryParameter("status", order.getStatus())
+                        .appendQueryParameter("method", order.getMethod())
+                        .appendQueryParameter("payment_status", order.getPayment_status())
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+
+
+                //URL url = new URL(URLServiceRepair );
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("POST");
+                urlConnection.connect();
+
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    return null;
+                }
+                jsonStr = buffer.toString();
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error ", e);
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
+                }
+            }
+
+            try {
+                System.out.println("DATA BALIKAN " + jsonStr);
+                return getRepairDataFromJson(jsonStr);
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+
+            // This will only happen if there was an error getting or parsing the forecast.
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<POSTResponse> responses) {
+
+            if (responses != null) {
+                //repairs.clear();
+                //repairs.addAll(services);
+                System.out.println("responses ketika set adapter : " + responses.toString());
+//                if (Integer.valueOf(responses.get(0).getApi_status()) == 1) {
+//                    finish();
+//                    Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    getApplicationContext().startActivity(intent);
+//                } else {
+//                    Log.e("AIS", "Error POST Order");
+//                    Log.e("AIS", "API Message : " + responses.get(0).getApi_message().toString());
+//                }
+                //rcAdapter = new RecyclerViewAdapterBerita(getActivity(), movies);
+                //adapter = new ServiceRecyclerViewAdapter();
+
+                //rcAdapter.notifyDataSetChanged();
+
+                //recyclerView.setAdapter(adapter);
+                //adapter.notifyDataSetChanged();
+                //progressBar.setVisibility(View.GONE);
+                //swipeContainer.setRefreshing(false);
+
+                //adapter.setLoaded();
+
+                //pageBerita++;
+                Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+            }
         }
     }
 

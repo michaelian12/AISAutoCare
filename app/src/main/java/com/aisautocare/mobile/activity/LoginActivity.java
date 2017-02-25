@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         /* Set Toolbar */
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         email = (EditText) findViewById(R.id.login_email_edit_text);
         password = (EditText) findViewById(R.id.login_password_edit_text);
