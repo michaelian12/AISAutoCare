@@ -23,12 +23,17 @@ import info.androidhive.firebasenotifications.R;
 
 public class WaitOrderActivity extends AppCompatActivity {
 
+    private Toolbar toolbar;
     private Button cancelButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wait_order);
+
+        /* Set Toolbar */
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         cancelButton = (Button) findViewById(R.id.wait_order_cancel_button);
 

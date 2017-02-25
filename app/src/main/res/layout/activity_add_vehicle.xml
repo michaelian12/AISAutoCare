@@ -22,34 +22,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/choose_type"
-            app:met_floatingLabel="normal" />
+            app:met_floatingLabel="normal"
+            app:met_primaryColor="@color/accent_color" />
 
         <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
             android:id="@+id/vehicle_manufacture_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/choose_manufacturer"
-            android:textColorHint="#05ab9a"
-            app:met_floatingLabel="normal" />
+            app:met_floatingLabel="normal"
+            app:met_primaryColor="@color/accent_color" />
 
         <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
             android:id="@+id/vehicle_manufacture_type_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/choose_manufacturer_type"
-            android:textColorHint="#05ab9a"
-            app:met_floatingLabel="normal" />
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            app:met_floatingLabel="normal"
+            app:met_primaryColor="@color/accent_color" />
 
-            <EditText
-                android:id="@+id/profile_name_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Tahun"
-                android:inputType="number" />
-        </android.support.design.widget.TextInputLayout>
+        <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+            android:id="@+id/vehicle_year_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/choose_year"
+            app:met_floatingLabel="normal"
+            app:met_primaryColor="@color/accent_color" />
     </LinearLayout>
 
     <Button
@@ -57,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/accent_color"
-        android:textStyle="bold"
-        android:text="Submit"/>
+        android:text="Simpan"
+        android:textStyle="bold" />
 
 </LinearLayout>
