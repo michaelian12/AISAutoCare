@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -54,7 +55,7 @@ public class OrderActivity extends AppCompatActivity {
     private TextView subService, address, date, paymentMethod;
 
     // Button
-    private LinearLayout orderButton;
+    private Button orderButton;
 
     // konstanta untuk mendeteksi hasil balikan dari place picker
     private int PLACE_PICKER_REQUEST = 1;
@@ -87,7 +88,7 @@ public class OrderActivity extends AppCompatActivity {
         paymentMethod = (TextView) findViewById(R.id.order_payment_method_text_view);
 
         /* Button */
-        orderButton = (LinearLayout) findViewById(R.id.order_button);
+        orderButton = (Button) findViewById(R.id.order_button);
 
         /* Initial Value */
         String[] subService = new String[0];

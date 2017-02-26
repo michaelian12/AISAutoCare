@@ -15,6 +15,9 @@ import info.androidhive.firebasenotifications.R;
 
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+
 public class AddVehicleActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
@@ -26,10 +29,13 @@ public class AddVehicleActivity extends AppCompatActivity {
             "Yamaha", "Others"};
     private static String[] TRANSMISSION = {"Auto", "Manual"};
     private static String[] YEAR = {"2001", "2010"};
+    private ArrayList<String> years = new ArrayList<String>();
+    private int thisYear = Calendar.getInstance().get(Calendar.YEAR);
 
-    private MaterialBetterSpinner vehicleType;
+    private MaterialBetterSpinner vehicleTypeSpinner;
     private MaterialBetterSpinner vehicleManufactureSpinner;
     private MaterialBetterSpinner vehicleManufactureTypeSpinner;
+    private MaterialBetterSpinner vehicleYearSpinner;
 
     private Button vehicleSubmitButton;
 
@@ -42,9 +48,10 @@ public class AddVehicleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_vehicle);
 
-        vehicleType = (MaterialBetterSpinner) findViewById(R.id.vehicle_type);
+        vehicleTypeSpinner = (MaterialBetterSpinner) findViewById(R.id.vehicle_type);
         vehicleManufactureSpinner = (MaterialBetterSpinner) findViewById(R.id.vehicle_manufacture_spinner);
         vehicleManufactureTypeSpinner = (MaterialBetterSpinner) findViewById(R.id.vehicle_manufacture_type_spinner);
+        vehicleYearSpinner = (MaterialBetterSpinner) findViewById(R.id.vehicle_year_spinner);
         vehicleSubmitButton = (Button) findViewById(R.id.vehicle_submit_button);
 
         /* Set Toolbar */
@@ -52,23 +59,51 @@ public class AddVehicleActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        /* Set Vehicle Type Spinner */
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, VEHICLE_TYPE);
-        vehicleType.setAdapter(arrayAdapter);
+        vehicleTypeSpinner.setAdapter(arrayAdapter);
+
+        /* Set Vehicle Manufacturer Spinner */
         arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER);
         vehicleManufactureSpinner.setAdapter(arrayAdapter);
-
-        vehicleSubmitButton.setOnClickListener(new View.OnClickListener() {
+        vehicleManufactureSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
-//                String[] result = new String[0];
-//                result[0] = CAR_MANUFACTURER_TYPE[selectedManufactureType];
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("MerkType", CAR_MANUFACTURER_TYPE[selectedManufactureType]);
-                returnIntent.putExtra("Merk", CAR_MANUFACTURER[selectedManufacture]);
-                setResult(1, returnIntent);
-                finish();
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedManufacture = i;
+
+                if (i == 0 ){
+                    CAR_MANUFACTURER_TYPE = new String[]{"Camry", "Altis", "Vios", "Agya", "Etios Valco", "Yaris", "Yaris Heykers", "Kijang Innova", "Kijang", "Sienta", "Alphard", "Avanza", "Cayla", "NAV1", "Venturer", "Vellfire", "Veloz", "Fortuner", "Land Cruiser", "Rush", "Hiace", "Hilux", "Toyota 86"};
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
+                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
+                } else if (i == 1){
+                    CAR_MANUFACTURER_TYPE = new String[]{"Accord","BR-V","Brio","City","Civic","CR-V","CR-Z","Stream","Freed"};
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
+                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
+                } else if (i == 2){
+                    CAR_MANUFACTURER_TYPE = new String[]{"Ayla","Ceria","Charade","Classy","Espasss","Feroza","Granmax","Luxio","Rocky","Sigra","Hijet","Taft","Sirion","Taruna","Xenia","YRV","Zebra"};
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
+                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
+                } else if (i == 3){
+                    CAR_MANUFACTURER_TYPE = new String[]{"Aerio","APV","Baleno","Carry","Ertiga","Escudo","Esteem","Forza","Futura","Grand Vitara","Jimny","Karimun","Katana","Sidekick","Splash","Swift","SX-4","Vitara"};
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
+                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
+                } else if (i == 4){
+                    CAR_MANUFACTURER_TYPE = new String[]{"Colt","Delica","Galant","Grandis","Kuda","L300","Lancer","Maven","Mirage","Outlander","Pajero","Strada","Triton"};
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
+                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
+                }else if (i == 5){
+                    CAR_MANUFACTURER_TYPE = new String[]{"Terrano","X-Trail","Serena","Grand Livinia","March"};
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
+                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
+                }
+                if (chooseBefore != i)
+                    vehicleManufactureTypeSpinner.setSelection(0);
+
+                chooseBefore = i;
             }
         });
+
+        /* Set Vehicle Manufacturer Model Spinner */
         vehicleManufactureTypeSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,57 +124,31 @@ public class AddVehicleActivity extends AppCompatActivity {
             }
         });
 
-        vehicleManufactureSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedManufacture = i;
-                if (i == 0 ){
-                    CAR_MANUFACTURER_TYPE = new String[]{"Camry", "Altis", "Vios", "Agya", "Etios Valco", "Yaris", "Yaris Heykers", "Kijang Innova", "Kijang", "Sienta", "Alphard", "Avanza", "Cayla", "NAV1", "Venturer", "Vellfire", "Veloz", "Fortuner", "Land Cruiser", "Rush", "Hiace", "Hilux", "Toyota 86"};
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
-
-
-                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
-                } else if (i == 1){
-                    CAR_MANUFACTURER_TYPE = new String[]{"Accord","BR-V","Brio","City","Civic","CR-V","CR-Z","Stream","Freed"};
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
-
-
-                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
-                } else if (i == 2){
-                    CAR_MANUFACTURER_TYPE = new String[]{"Ayla","Ceria","Charade","Classy","Espasss","Feroza","Granmax","Luxio","Rocky","Sigra","Hijet","Taft","Sirion","Taruna","Xenia","YRV","Zebra"};
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
-
-
-                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
-                } else if (i == 3){
-                    CAR_MANUFACTURER_TYPE = new String[]{"Aerio","APV","Baleno","Carry","Ertiga","Escudo","Esteem","Forza","Futura","Grand Vitara","Jimny","Karimun","Katana","Sidekick","Splash","Swift","SX-4","Vitara"};
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
-
-
-                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
-                } else if (i == 4){
-                    CAR_MANUFACTURER_TYPE = new String[]{"Colt","Delica","Galant","Grandis","Kuda","L300","Lancer","Maven","Mirage","Outlander","Pajero","Strada","Triton"};
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
-
-
-                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
-                }else if (i == 5){
-                    CAR_MANUFACTURER_TYPE = new String[]{"Terrano","X-Trail","Serena","Grand Livinia","March"};
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
-
-
-                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
-                }
-                if (chooseBefore != i)
-                    vehicleManufactureTypeSpinner.setSelection(0);
-
-                chooseBefore = i;
-            }
-        });
         vehicleManufactureTypeSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 selectedManufactureType = i;
+            }
+        });
+
+        /* Set Vehicle Year Spinner */
+        for (int i = 1950; i <= thisYear; i++) {
+            years.add(Integer.toString(i));
+        }
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, years);
+        vehicleYearSpinner.setAdapter(arrayAdapter);
+
+        /* Set Submit Button */
+        vehicleSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                String[] result = new String[0];
+//                result[0] = CAR_MANUFACTURER_TYPE[selectedManufactureType];
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("MerkType", CAR_MANUFACTURER_TYPE[selectedManufactureType]);
+                returnIntent.putExtra("Merk", CAR_MANUFACTURER[selectedManufacture]);
+                setResult(1, returnIntent);
+                finish();
             }
         });
     }

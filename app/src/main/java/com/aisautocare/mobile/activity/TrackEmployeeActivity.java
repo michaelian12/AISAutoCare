@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,14 +55,15 @@ import java.util.Map;
 
 import info.androidhive.firebasenotifications.R;
 
-public class TrackEmployeeActivity extends FragmentActivity implements OnMapReadyCallback {
+public class TrackEmployeeActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private Toolbar toolbar;
     private GoogleMap mMap;
     private LinearLayout timer;
     private Button arriveButton, finishButton;
 
     private LinearLayout btnFinished;
-    private LinearLayout layoutButtons;
+//    private LinearLayout layoutButtons;
     private Firebase trackFirebase;
     private Marker customerLoc;
     @Override
@@ -68,34 +71,37 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_employee);
 
+        /* Set Toolbar */
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         arriveButton = (Button) findViewById(R.id.track_arrive_button);
-        finishButton = (Button) findViewById(R.id.track_finish_button);
+//        finishButton = (Button) findViewById(R.id.track_finish_button);
         timer = (LinearLayout) findViewById(R.id.timer);
-        layoutButtons = (LinearLayout) findViewById(R.id.layout_button_track);
+//        layoutButtons = (LinearLayout) findViewById(R.id.layout_button_track);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 //        timer.addView(new CircularCountdown(this));
-        LayoutInflater inflater;
-        inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.view_track_employee, null);
+//        LayoutInflater inflater;
+//        inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//
+//        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.view_track_employee, null);
 
         //timer.addView(layout);
 
 //        setContentView();
 
-        finishButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(getApplicationContext(), RatingActivity.class);
-                startActivity(intent);
-            }
-        });
+//        finishButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                Intent intent = new Intent(TrackEmployeeActivity.this, RatingActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         String name = "andoyo";
         Firebase.setAndroidContext(this);
@@ -185,7 +191,7 @@ public class TrackEmployeeActivity extends FragmentActivity implements OnMapRead
                             GlobalVar.waktuTempuh = Integer.valueOf(durationInfo.getValue());
                             System.out.println("Jarak dan waktu " + distance + " " + duration);
                             timer.addView(new CircularCountdown(TrackEmployeeActivity.this));
-                            layoutButtons.setVisibility(View.VISIBLE);
+//                            layoutButtons.setVisibility(View.VISIBLE);
                             //animateMarker(mMap, customerLoc, directionPositionList, false, Integer.valueOf(durationInfo.getValue()));
 
                         } else {

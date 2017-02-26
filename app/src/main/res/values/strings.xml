@@ -25,7 +25,7 @@
     <string name="email">Email</string>
     <string name="password">Kata Sandi</string>
 
-    <!-- String values in add vehicle actiity. [CHAR LIMIT=20] -->
+    <!-- String values in add vehicle activity. [CHAR LIMIT=20] -->
     <string name="choose_type">Jenis Kendaraan</string>
     <string name="choose_manufacturer">Pilih Merk</string>
     <string name="choose_manufacturer_type">Pilih Tipe Merk</string>

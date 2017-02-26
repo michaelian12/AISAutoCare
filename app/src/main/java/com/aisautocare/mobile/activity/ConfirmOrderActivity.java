@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,14 +23,19 @@ import info.androidhive.firebasenotifications.R;
 
 public class ConfirmOrderActivity extends AppCompatActivity {
 
+    private Toolbar toolbar;
     private CircleImageView mechanicImage;
     private TextView garageName, mechanicName, mechanicPhone, orderPrice, orderDistance;
-    private LinearLayout confirmButton, cancelButton;
+    private Button confirmButton, cancelButton;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_order);
+
+        /* Set Toolbar */
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         mechanicImage = (CircleImageView) findViewById(R.id.confrim_order_mechanic_image);
         garageName = (TextView) findViewById(R.id.confirm_order_garage_name);
@@ -36,8 +43,8 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         mechanicPhone = (TextView) findViewById(R.id.confirm_order_mechanic_phone_text_view);
         orderPrice = (TextView) findViewById(R.id.confirm_order_price_text_view);
         orderDistance = (TextView) findViewById(R.id.confirm_order_distance_text_view);
-        confirmButton = (LinearLayout) findViewById(R.id.confirm_order_confirm_button);
-        cancelButton = (LinearLayout) findViewById(R.id.confirm_order_cancel_button);
+        confirmButton = (Button) findViewById(R.id.confirm_order_confirm_button);
+        cancelButton = (Button) findViewById(R.id.confirm_order_cancel_button);
 
         String name = getIntent().getStringExtra("nama");
         String distance = getIntent().getStringExtra("lama_perjalanan");
