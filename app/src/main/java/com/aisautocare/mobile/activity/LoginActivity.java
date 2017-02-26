@@ -11,10 +11,12 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.googledirection.model.Line;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -29,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
+    private LinearLayout registerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +48,21 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = (Button) findViewById(R.id.login_button);
         progressBar = (ProgressBar) findViewById(R.id.progress_login);
         auth = FirebaseAuth.getInstance();
+        registerButton = (LinearLayout) findViewById(R.id.button_register);
 
         if (auth.getCurrentUser() != null) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                //finish();
+            }
+        });
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

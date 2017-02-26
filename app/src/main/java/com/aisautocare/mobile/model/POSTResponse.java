@@ -11,6 +11,7 @@ import org.json.JSONObject;
  */
 
 public class POSTResponse implements Parcelable {
+    private String id;
     private String api_status;
     private String api_message;
 
@@ -26,6 +27,14 @@ public class POSTResponse implements Parcelable {
         return api_message;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public void setApi_message(String api_message) {
         this.api_message = api_message;
     }
@@ -34,6 +43,11 @@ public class POSTResponse implements Parcelable {
         //R.drawable.ic_engine;
         //Field idField = Drawable.class.getDeclaredField(service.getString("imageResourceId").toString());
         //this.imageResourceId = idField.getInt(idField);
+        try {
+            this.id = service.getString("id");
+        }catch (Exception e){
+
+        }
         this.api_message = service.getString("api_message");
         this.api_status = service.getString("api_status");
 

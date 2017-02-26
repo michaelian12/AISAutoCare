@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -33,6 +34,7 @@ import com.aisautocare.mobile.adapter.FragmentAdapter;
 import com.aisautocare.mobile.fragment.RepairFragment;
 import com.aisautocare.mobile.model.Order;
 import com.aisautocare.mobile.model.POSTResponse;
+import com.aisautocare.mobile.model.User;
 import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -62,8 +64,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import static android.R.attr.order;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -91,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private Firebase postUser;
+    public String regId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -199,7 +205,18 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         Firebase.setAndroidContext(this);
-
+        String result = "";
+        result = getIntent().getStringExtra("register");
+        if ( result != null){
+            if(result.equalsIgnoreCase("1")){
+                new MainActivity.POSTDeviceid().execute("");
+                postUser = new Firebase("https://devais-b06d4.firebaseio.com/users/" );
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("type", "1");
+                postUser.child(auth.getCurrentUser().getUid()).updateChildren(map);
+                Log.i(TAG, "masuk ke hasil Register");
+            }
+        }
 
 
     }
@@ -208,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
+        Log.i(TAG, "On result code " + resultCode);
         if (resultCode == RESULT_ADD_VEHICLE ) {//
             selectedVehicle = (LinearLayout) findViewById(R.id.selected_vehicle);
 
@@ -228,10 +246,7 @@ public class MainActivity extends AppCompatActivity {
             GlobalVar.isVehicleSelected = true;
         } else if (resultCode == RESULT_REGISTER){
 
-            postUser = new Firebase("https://devais-b06d4.firebaseio.com/users/" + auth.getCurrentUser().getUid());
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("type", "1");
-            postUser.push().setValue(map);
+
 //            final Dialog dialog = new Dialog(this);
 //            dialog.setContentView(R.layout.dialog_rating);
 //            dialog.setTitle("Penilaian");
@@ -243,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
     // and displays on the screen
     private void displayFirebaseRegId() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
-        String regId = pref.getString("regId", null);
+        regId = pref.getString("regId", null);
 
         Log.e(TAG, "Firebase reg id: " + regId);
 
@@ -333,8 +348,8 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private String URLRegister = new GlobalVar().hostAPI + "/register";
-    public class POSTRegister extends AsyncTask<String, Void, List<POSTResponse>> {
+    private String URLRegister = new GlobalVar().hostAPI + "/updatedevice";
+    public class POSTDeviceid extends AsyncTask<String, Void, List<POSTResponse>> {
 
         private final String LOG_TAG = RepairFragment.GETRepair.class.getSimpleName();
 
@@ -367,45 +382,13 @@ public class MainActivity extends AppCompatActivity {
             String jsonStr = null;
 
             try {
-
-                Order order = new Order();
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-                Date date = new Date();
-                System.out.println(dateFormat.format(date));
-                order.setCustomer_id("1");
-                order.setOrder_date(dateFormat.format(date));
-                order.setOrder_time(timeFormat.format(date));
-                order.setService_date("2003-02-01");
-//                order.setService_time("00:00:00");
-//                order.setService_location(address.getText().toString());
-//                order.setLatitude(String.valueOf(place.getLatLng().latitude));
-//                order.setLongitude(String.valueOf(place.getLatLng().longitude));
-//                order.setLatitude("6");
-//                order.setLongitude("6");
-                order.setArea_id("14");
-                order.setIs_emergency("false");
-                order.setLicense_plate("AB100CA");
-                order.setRef_service_id("1");
-                order.setStatus("1");
-                order.setMethod("3");
-                order.setPayment_status("1");
+                SharedPreferences sharedPreferences;
+                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
+                String id = sharedPreferences.getString("id", "");
+                Log.i(TAG, "id setelah register"+ id);
                 Uri builtUri = Uri.parse(URLRegister).buildUpon()
-                        .appendQueryParameter("customer_id", order.getCustomer_id())
-                        .appendQueryParameter("order_date", order.getOrder_date())
-                        .appendQueryParameter("order_time", order.getOrder_time())
-                        .appendQueryParameter("service_date", order.getService_date())
-                        .appendQueryParameter("service_time", order.getService_time())
-                        .appendQueryParameter("service_location", order.getService_location())
-                        .appendQueryParameter("latitude", order.getLatitude())
-                        .appendQueryParameter("longitude", order.getLongitude())
-                        .appendQueryParameter("area_id", order.getArea_id())
-                        .appendQueryParameter("is_emergency", order.getIs_emergency())
-                        .appendQueryParameter("license_plate", order.getLicense_plate())
-                        .appendQueryParameter("ref_service_id", order.getRef_service_id())
-                        .appendQueryParameter("status", order.getStatus())
-                        .appendQueryParameter("method", order.getMethod())
-                        .appendQueryParameter("payment_status", order.getPayment_status())
+                        .appendQueryParameter("id", id)
+                        .appendQueryParameter("device_id", regId)
                         .build();
 
                 URL url = new URL(builtUri.toString());
@@ -497,9 +480,9 @@ public class MainActivity extends AppCompatActivity {
                 //adapter.setLoaded();
 
                 //pageBerita++;
-                Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(intent);
+//                Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                getApplicationContext().startActivity(intent);
             }
         }
     }

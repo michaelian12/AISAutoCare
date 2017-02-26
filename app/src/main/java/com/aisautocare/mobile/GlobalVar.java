@@ -9,6 +9,7 @@ public class GlobalVar {
     public static boolean isVehicleSelected = false;
     public static double selectedLat;
     public static double selectedLon;
+    public static final String MyPREFERENCES = "MyPrefs" ;
     public static int waktuTempuh = 900; //second
     public boolean isVehicleSelected() {
         return isVehicleSelected;
