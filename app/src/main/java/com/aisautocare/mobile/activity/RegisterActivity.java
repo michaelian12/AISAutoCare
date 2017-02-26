@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aisautocare.mobile.GlobalVar;
@@ -29,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,10 +49,11 @@ import info.androidhive.firebasenotifications.R;
 public class RegisterActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private EditText name, email, password, passwordRetype, phone;
+    private EditText name, email, password, phone;
     private Button registerButton;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
+    private TextView loginHere;
 
     private String uid;
 
@@ -61,18 +64,17 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         /* Set Toolbar */
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         name = (EditText) findViewById(R.id.register_name_edit_text);
         email = (EditText) findViewById(R.id.register_email_edit_text);
         password = (EditText) findViewById(R.id.register_password_edit_text);
-        passwordRetype = (EditText) findViewById(R.id.register_password_retype_edit_text);
         phone = (EditText) findViewById(R.id.register_phone_edit_text);
         registerButton = (Button) findViewById(R.id.register_button);
-        progressBar = (ProgressBar) findViewById(R.id.progress_register) ;
-
+        progressBar = (ProgressBar) findViewById(R.id.progress_register);
+        loginHere = (TextView) findViewById(R.id.register_login_text_view);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,8 +120,14 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-
+        loginHere.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            }
+        });
     }
+
     private String URLRegister = new GlobalVar().hostAPI + "/register";
 
     public class POSTOrder extends AsyncTask<String, Void, List<POSTResponse>> {

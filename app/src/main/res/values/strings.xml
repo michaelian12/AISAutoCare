@@ -19,7 +19,7 @@
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
 
-    <!-- String values in profile actiity. [CHAR LIMIT=20] -->
+    <!-- String values in profile activity. [CHAR LIMIT=20] -->
     <string name="username">Nama Pengguna</string>
     <string name="phone">Nomor Telepon</string>
     <string name="email">Email</string>
@@ -33,6 +33,18 @@
     <string name="choose_year">Pilih Tahun</string>
     <string name="choose_transmission">Pilih Transmisi</string>
 
+    <!-- String values in LoginActivity -->
+    <string name="login">Masuk</string>
+    <string name="forgot_password">Lupa Kata Sandi?</string>
+    <string name="dont_have_account">Belum punya akun?</string>
+    <string name="create_account">Buat akun</string>
+
+    <!-- String values in RegisterActivity -->
+    <string name="retype_password">Ulangi Kata Sandi</string>
+    <string name="register">Daftar</string>
+    <string name="have_account">Sudah punya akun?</string>
+    <string name="login_here">Masuk</string>
+
     <!-- Button. [CHAR LIMIT=20] -->
     <string name="emergency_button">Emergency</string>
 
@@ -40,8 +52,6 @@
     <string name="thank_you">Terima Kasih</string>
     <string name="submit">Kirim</string>
 
-    <string name="login">Masuk</string>
-    <string name="register">Daftar</string>
     <string name="minimum_password">Password minimal 6 karakter</string>
     <string name="auth_failed">Login gagal</string>
     <string name="auth_logout">Anda telah Keluar</string>

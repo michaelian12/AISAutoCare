@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
-    private LinearLayout registerButton;
+    private TextView registerHere;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +39,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         /* Set Toolbar */
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         email = (EditText) findViewById(R.id.login_email_edit_text);
@@ -48,14 +48,14 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = (Button) findViewById(R.id.login_button);
         progressBar = (ProgressBar) findViewById(R.id.progress_login);
         auth = FirebaseAuth.getInstance();
-        registerButton = (LinearLayout) findViewById(R.id.button_register);
+        registerHere = (TextView) findViewById(R.id.login_register_text_view);
 
         if (auth.getCurrentUser() != null) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
+        registerHere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
