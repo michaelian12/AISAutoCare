@@ -66,7 +66,7 @@ public class OrderActivity extends AppCompatActivity {
     private Place place;
 
     private FirebaseAuth auth;
-
+    final String[] selectedIdService = {new String()};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,22 +97,29 @@ public class OrderActivity extends AppCompatActivity {
 
         /* Initial Value */
         String[] subService = new String[0];
+        String[] idService = new String[0];
         if (service.toLowerCase().contains("aki")) {
             subService = new String[]{"Cek", "Ganti", "Stroom Aki"};
+            idService = new String[]{"10", "12", "13"};
         } else if (service.toLowerCase().contains("cuci")) {
             subService = new String[]{"Cuci Cepat", "Cuci Lengkap"};
+            idService = new String[]{"30", "31"};
         } else if (service.toLowerCase().contains("ban")) {
             subService = new String[]{"Tambal", "Ganti", "Kirim Bensin"};
+            idService = new String[]{"1", "18", "19"};
         } else if (service.toLowerCase().contains("bengkel")) {
             subService = new String[]{"Cek Mesin", "Ganto Oli", "Kirim Bensin/BBM"};
+            idService = new String[]{"23", "24", "26"};
         } else if (service.toLowerCase().contains("cadangan")) {
             subService = new String[]{"By Driver", "No Driver"};
+            idService = new String[]{"32", "33"};
         }
 
         this.subService.setText(this.subService.getText() + " : " + subService[0]);
         final String[] finalSubService = subService;
 
         /* On Click Listener */
+        final String[] finalIdService = idService;
         subServiceLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,6 +138,7 @@ public class OrderActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         alert.dismiss();
                         OrderActivity.this.subService.setText(finalSubService[i]);
+                        selectedIdService[0] = finalIdService[i];
                     }
                 });
             }
@@ -275,6 +283,7 @@ public class OrderActivity extends AppCompatActivity {
                         .appendQueryParameter("car_manufacture", GlobalVar.selectedCar)
                         .appendQueryParameter("car_manufacture_type", GlobalVar.selectedCarType)
                         .appendQueryParameter("car_year", GlobalVar.selectedCarYear)
+                        .appendQueryParameter("idservice", selectedIdService[0])
 
 
 
@@ -284,7 +293,7 @@ public class OrderActivity extends AppCompatActivity {
 
 
                 //URL url = new URL(URLServiceRepair );
-
+                Log.e("URl", url.toString());
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("POST");
                 urlConnection.connect();

@@ -400,7 +400,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Uri builtUri = Uri.parse(URLRegister).buildUpon()
 //                        .appendQueryParameter("id", id)
-                        .appendQueryParameter("deviceid", "1")
+                        .appendQueryParameter("deviceid", regId)
                         .appendQueryParameter("name", user.getName())
                         .appendQueryParameter("cellphone", user.getCellphone())
                         .appendQueryParameter("email", user.getEmail())
