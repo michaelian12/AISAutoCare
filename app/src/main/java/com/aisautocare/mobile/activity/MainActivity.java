@@ -57,6 +57,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.SQLOutput;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -97,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Firebase postUser;
     public String regId;
+
+    User user = new User();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -213,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
                 postUser = new Firebase("https://devais-b06d4.firebaseio.com/users/" );
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("type", "1");
+                map.put("regId", regId);
                 postUser.child(auth.getCurrentUser().getUid()).updateChildren(map);
                 Log.i(TAG, "masuk ke hasil Register");
             }
@@ -348,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private String URLRegister = new GlobalVar().hostAPI + "/updatedevice";
+    private String URLRegister = new GlobalVar().hostAPI + "/register";
     public class POSTDeviceid extends AsyncTask<String, Void, List<POSTResponse>> {
 
         private final String LOG_TAG = RepairFragment.GETRepair.class.getSimpleName();
@@ -386,14 +390,34 @@ public class MainActivity extends AppCompatActivity {
                 sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
                 String id = sharedPreferences.getString("id", "");
                 Log.i(TAG, "id setelah register"+ id);
+//                Log.i(TAG, sharedPreferences.getAll().get("name").toString());
+
+                user.setName(sharedPreferences.getString("name",""));
+                user.setCellphone(sharedPreferences.getString("phone",""));
+                user.setUid(auth.getCurrentUser().getUid());
+                user.setEmail(sharedPreferences.getString("email",""));
+                user.setType("1");
+
                 Uri builtUri = Uri.parse(URLRegister).buildUpon()
-                        .appendQueryParameter("id", id)
-                        .appendQueryParameter("device_id", regId)
+//                        .appendQueryParameter("id", id)
+                        .appendQueryParameter("deviceid", "1")
+                        .appendQueryParameter("name", user.getName())
+                        .appendQueryParameter("cellphone", user.getCellphone())
+                        .appendQueryParameter("email", user.getEmail())
+                        .appendQueryParameter("type", user.getType())
+                        .appendQueryParameter("email", user.getEmail())
+                        .appendQueryParameter("address","")
+                        .appendQueryParameter("latitude", "")
+                        .appendQueryParameter("longitude", "")
+                        .appendQueryParameter("ref_area_id", "14")
+                        .appendQueryParameter("ref_occupation_id", "1")
+                        .appendQueryParameter("uid", user.getUid())
+
                         .build();
 
                 URL url = new URL(builtUri.toString());
 
-
+                Log.i(TAG, "URL register " + url);
                 //URL url = new URL(URLServiceRepair );
 
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -453,10 +477,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<POSTResponse> responses) {
-
+            //Log.i(TAG, responses.get(0).toString());
             if (responses != null) {
                 //repairs.clear();
                 //repairs.addAll(services);
+                SharedPreferences sharedPreferences;
+                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+//                                    String id = responses.get(0).getId();
+//                                    editor.putString("id", id);
+                editor.putString("idCustomer", responses.get(0).getId());
+                editor.commit();
                 System.out.println("responses ketika set adapter : " + responses.toString());
 //                if (Integer.valueOf(responses.get(0).getApi_status()) == 1) {
 //                    finish();

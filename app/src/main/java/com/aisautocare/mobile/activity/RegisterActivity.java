@@ -112,7 +112,20 @@ public class RegisterActivity extends AppCompatActivity {
                                     Toast.makeText(RegisterActivity.this, "Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
-                                    new RegisterActivity.POSTOrder().execute("");
+                                    //new RegisterActivity.POSTOrder().execute("");
+                                    Intent returnIntent = new Intent(RegisterActivity.this, MainActivity.class);
+                                    returnIntent.putExtra("register", "1");
+                                    SharedPreferences sharedpreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+//                                    String id = responses.get(0).getId();
+//                                    editor.putString("id", id);
+                                    editor.putString("name", name.getText().toString());
+                                    editor.putString("phone", phone.getText().toString());
+                                    editor.putString("email", email.getText().toString());
+                                    editor.commit();
+                                    uid = auth.getCurrentUser().getUid();
+                                    returnIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(returnIntent);
                                 }
                             }
                         });

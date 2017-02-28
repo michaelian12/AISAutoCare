@@ -1,7 +1,9 @@
 package com.aisautocare.mobile.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -26,6 +28,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,11 +65,13 @@ public class OrderActivity extends AppCompatActivity {
     private Context mContext;
     private Place place;
 
+    private FirebaseAuth auth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
-
+        auth = FirebaseAuth.getInstance();
         /* Get Intent */
         String service = getIntent().getStringExtra("service");
 
@@ -151,7 +156,22 @@ public class OrderActivity extends AppCompatActivity {
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new OrderActivity.POSTOrder().execute("");
+                if (address.getText().toString().contains("belum")){
+                    new AlertDialog.Builder(OrderActivity.this)
+                            .setTitle("Alamat belum dipilih")
+                            .setMessage("Silahkan pilih alamat anda terlebih dahulu.")
+
+                            .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                } else {
+                    new OrderActivity.POSTOrder().execute("");
+                }
+
                 //finish();
 
             }
@@ -218,8 +238,8 @@ public class OrderActivity extends AppCompatActivity {
                 order.setCustomer_id("1");
                 order.setOrder_date(dateFormat.format(date));
                 order.setOrder_time(timeFormat.format(date));
-                order.setService_date("2003-02-01");
-                order.setService_time("00:00:00");
+                order.setService_date(dateFormat.format(date));
+                order.setService_time(timeFormat.format(date));
                 order.setService_location(address.getText().toString());
                 order.setLatitude(String.valueOf(place.getLatLng().latitude));
                 order.setLongitude(String.valueOf(place.getLatLng().longitude));
@@ -232,8 +252,12 @@ public class OrderActivity extends AppCompatActivity {
                 order.setStatus("1");
                 order.setMethod("3");
                 order.setPayment_status("1");
+
+                SharedPreferences sharedPreferences;
+                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
+                String idCustomer = sharedPreferences.getString("idCustomer", "");
                 Uri builtUri = Uri.parse(URLOrder).buildUpon()
-                        .appendQueryParameter("customer_id", order.getCustomer_id())
+                        .appendQueryParameter("customer_id", idCustomer)
                         .appendQueryParameter("order_date", order.getOrder_date())
                         .appendQueryParameter("order_time", order.getOrder_time())
                         .appendQueryParameter("service_date", order.getService_date())
@@ -248,6 +272,12 @@ public class OrderActivity extends AppCompatActivity {
                         .appendQueryParameter("status", order.getStatus())
                         .appendQueryParameter("method", order.getMethod())
                         .appendQueryParameter("payment_status", order.getPayment_status())
+                        .appendQueryParameter("car_manufacture", GlobalVar.selectedCar)
+                        .appendQueryParameter("car_manufacture_type", GlobalVar.selectedCarType)
+                        .appendQueryParameter("car_year", GlobalVar.selectedCarYear)
+
+
+
                         .build();
 
                 URL url = new URL(builtUri.toString());

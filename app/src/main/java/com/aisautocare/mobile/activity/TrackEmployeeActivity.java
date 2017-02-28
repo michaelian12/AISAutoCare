@@ -154,7 +154,7 @@ public class TrackEmployeeActivity extends AppCompatActivity implements OnMapRea
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng start = new LatLng(-6.8869372,107.6149806);
+        LatLng start = new LatLng(Double.valueOf(getIntent().getStringExtra("latBengkel")), Double.valueOf(getIntent().getStringExtra("lonBengkel")));
         LatLng end = new LatLng(GlobalVar.selectedLat,GlobalVar.selectedLon);
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start, 15.0f));

@@ -7,6 +7,10 @@ package com.aisautocare.mobile;
 public class GlobalVar {
     public String hostAPI = "http://119.235.250.107/API/public/api";
     public static boolean isVehicleSelected = false;
+    public static String selectedCar;
+    public static String selectedCarType;
+    public static String selectedCarYear;
+
     public static double selectedLat;
     public static double selectedLon;
     public static final String MyPREFERENCES = "MyPrefs" ;

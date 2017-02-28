@@ -85,7 +85,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String total = data.getString("total");
             String lamaPerjalanan = data.getString("lama_perjalanan");
 
-
+            String latBengkel = data.getString("latBengkel");
+            String lonBengkel = data.getString("lonBengkel");
+            Log.e(TAG, "data: " + data);
             Log.e(TAG, "title: " + title);
             Log.e(TAG, "message: " + message);
             Log.e(TAG, "isBackground: " + isBackground);
@@ -103,6 +105,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     pushNotification.putExtra("nama", nama);
                     pushNotification.putExtra("total", total);
                     pushNotification .putExtra("lama_perjalanan", lamaPerjalanan);
+                    pushNotification .putExtra("latBengkel", latBengkel);
+                    pushNotification .putExtra("lonBengkel", lonBengkel);
 
                     LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 

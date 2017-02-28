@@ -37,14 +37,14 @@ public class WaitOrderActivity extends AppCompatActivity {
 
         cancelButton = (Button) findViewById(R.id.wait_order_cancel_button);
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
-                startActivity(intent);
-            }
-        }, 5000);
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Intent intent = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
+//                startActivity(intent);
+//            }
+//        }, 5000);
         //new WaitOrderActivity.WaitSplash().execute();
     }
 

@@ -13,6 +13,7 @@ import android.widget.Button;
 
 import info.androidhive.firebasenotifications.R;
 
+import com.aisautocare.mobile.GlobalVar;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import java.util.ArrayList;
@@ -147,6 +148,8 @@ public class AddVehicleActivity extends AppCompatActivity {
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("MerkType", CAR_MANUFACTURER_TYPE[selectedManufactureType]);
                 returnIntent.putExtra("Merk", CAR_MANUFACTURER[selectedManufacture]);
+                GlobalVar.selectedCar = CAR_MANUFACTURER[selectedManufacture];
+                GlobalVar.selectedCarType = CAR_MANUFACTURER_TYPE[selectedManufactureType];
                 setResult(1, returnIntent);
                 finish();
             }
