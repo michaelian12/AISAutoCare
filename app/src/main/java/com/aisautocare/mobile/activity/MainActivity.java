@@ -100,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
     public String regId;
 
     User user = new User();
+    private String idCustomer;
+    private String uid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -211,6 +214,9 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG, "kedeetek blm login");
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                     finish();
+                }else{
+                    uid = auth.getCurrentUser().getUid();
+                    new MainActivity.GETidbyuid().execute("");
                 }
             }
         };
@@ -219,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         result = getIntent().getStringExtra("register");
         if ( result != null){
             if(result.equalsIgnoreCase("1")){
-                new MainActivity.POSTDeviceid().execute("");
+                new MainActivity.POSTRegister().execute("");
                 postUser = new Firebase("https://devais-b06d4.firebaseio.com/users/" );
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("type", "1");
@@ -360,7 +366,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private String URLRegister = new GlobalVar().hostAPI + "/register";
-    public class POSTDeviceid extends AsyncTask<String, Void, List<POSTResponse>> {
+    public class POSTRegister extends AsyncTask<String, Void, List<POSTResponse>> {
 
         private final String LOG_TAG = RepairFragment.GETRepair.class.getSimpleName();
 
@@ -498,6 +504,277 @@ public class MainActivity extends AppCompatActivity {
 //                                    editor.putString("id", id);
                 editor.putString("idCustomer", responses.get(0).getId());
                 editor.commit();
+                System.out.println("responses ketika set adapter : " + responses.toString());
+//                if (Integer.valueOf(responses.get(0).getApi_status()) == 1) {
+//                    finish();
+//                    Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    getApplicationContext().startActivity(intent);
+//                } else {
+//                    Log.e("AIS", "Error POST Order");
+//                    Log.e("AIS", "API Message : " + responses.get(0).getApi_message().toString());
+//                }
+                //rcAdapter = new RecyclerViewAdapterBerita(getActivity(), movies);
+                //adapter = new ServiceRecyclerViewAdapter();
+
+                //rcAdapter.notifyDataSetChanged();
+
+                //recyclerView.setAdapter(adapter);
+                //adapter.notifyDataSetChanged();
+                //progressBar.setVisibility(View.GONE);
+                //swipeContainer.setRefreshing(false);
+
+                //adapter.setLoaded();
+
+                //pageBerita++;
+//                Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                getApplicationContext().startActivity(intent);
+            }
+        }
+    }
+    public class GETidbyuid extends AsyncTask<String, Void, List<POSTResponse>> {
+        private String URLRegister = new GlobalVar().hostAPI + "/customerbyuid";
+        private final String LOG_TAG = MainActivity.class.getSimpleName();
+
+        private List<POSTResponse> getRepairDataFromJson(String jsonStr) throws JSONException, NoSuchFieldException, IllegalAccessException {
+            //jsonStr = jsonStr.substring(23);
+//            jsonStr = jsonStr.substring(23, jsonStr.length()-3);
+//            System.out.println("JSON STR : " + jsonStr);
+            JSONObject movieJson = new JSONObject(jsonStr);
+            //JSONArray movieArray = movieJson.getJSONArray();
+//            System.out.println("movie json : " + movieJson  );
+//            System.out.println("itemsarray : " + movieArray  );
+            // System.out.println(" Data JSON Items" + jsonStr);
+            List<POSTResponse> results = new ArrayList<>();
+            JSONObject berita = movieJson;
+            POSTResponse beritaModel = new POSTResponse(berita);
+            results.add(beritaModel);
+            return results;
+        }
+
+        @Override
+        protected List<POSTResponse> doInBackground(String... params) {
+
+            if (params.length == 0) {
+                return null;
+            }
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            String jsonStr = null;
+
+            try {
+
+                Uri builtUri = Uri.parse(URLRegister).buildUpon()
+                        .appendQueryParameter("uid", auth.getCurrentUser().getUid())
+                        .build();
+
+
+                URL url = new URL(builtUri.toString());
+
+                Log.i(TAG, "url uid " + url);
+                //URL url = new URL(URLServiceRepair );
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    return null;
+                }
+                jsonStr = buffer.toString();
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error ", e);
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
+                }
+            }
+
+            try {
+                System.out.println("DATA BALIKAN " + jsonStr);
+                return getRepairDataFromJson(jsonStr);
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+
+            // This will only happen if there was an error getting or parsing the forecast.
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<POSTResponse> responses) {
+
+            if (responses != null) {
+                //repairs.clear();
+                //repairs.addAll(services);
+                System.out.println("responses ketika set adapter : " + responses.toString());
+                idCustomer = responses.get(0).getId();
+                new MainActivity.POSTDeviceid().execute("");
+
+//                if (Integer.valueOf(responses.get(0).getApi_status()) == 1) {
+//                    finish();
+//                    Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    getApplicationContext().startActivity(intent);
+//                } else {
+//                    Log.e("AIS", "Error POST Order");
+//                    Log.e("AIS", "API Message : " + responses.get(0).getApi_message().toString());
+//                }
+                //rcAdapter = new RecyclerViewAdapterBerita(getActivity(), movies);
+                //adapter = new ServiceRecyclerViewAdapter();
+
+                //rcAdapter.notifyDataSetChanged();
+
+                //recyclerView.setAdapter(adapter);
+                //adapter.notifyDataSetChanged();
+                //progressBar.setVisibility(View.GONE);
+                //swipeContainer.setRefreshing(false);
+
+                //adapter.setLoaded();
+
+                //pageBerita++;
+//                Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                getApplicationContext().startActivity(intent);
+            }
+        }
+    }
+    public class POSTDeviceid extends AsyncTask<String, Void, List<POSTResponse>> {
+        private String URLRegister = new GlobalVar().hostAPI + "/updatedevice";
+        private final String LOG_TAG = MainActivity.class.getSimpleName();
+
+        private List<POSTResponse> getRepairDataFromJson(String jsonStr) throws JSONException, NoSuchFieldException, IllegalAccessException {
+            //jsonStr = jsonStr.substring(23);
+//            jsonStr = jsonStr.substring(23, jsonStr.length()-3);
+//            System.out.println("JSON STR : " + jsonStr);
+            JSONObject movieJson = new JSONObject(jsonStr);
+            //JSONArray movieArray = movieJson.getJSONArray();
+//            System.out.println("movie json : " + movieJson  );
+//            System.out.println("itemsarray : " + movieArray  );
+            // System.out.println(" Data JSON Items" + jsonStr);
+            List<POSTResponse> results = new ArrayList<>();
+            JSONObject berita = movieJson;
+            POSTResponse beritaModel = new POSTResponse(berita);
+            results.add(beritaModel);
+            return results;
+        }
+
+        @Override
+        protected List<POSTResponse> doInBackground(String... params) {
+
+            if (params.length == 0) {
+                return null;
+            }
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            String jsonStr = null;
+
+            try {
+
+                Uri builtUri = Uri.parse(URLRegister).buildUpon()
+                        .appendQueryParameter("id", idCustomer)
+                        .appendQueryParameter("deviceid", regId)
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+
+
+                //URL url = new URL(URLServiceRepair );
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("POST");
+                urlConnection.connect();
+
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    return null;
+                }
+                jsonStr = buffer.toString();
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error ", e);
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
+                }
+            }
+
+            try {
+                System.out.println("DATA BALIKAN " + jsonStr);
+                return getRepairDataFromJson(jsonStr);
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+
+            // This will only happen if there was an error getting or parsing the forecast.
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<POSTResponse> responses) {
+
+            if (responses != null) {
+                //repairs.clear();
+                //repairs.addAll(services);
                 System.out.println("responses ketika set adapter : " + responses.toString());
 //                if (Integer.valueOf(responses.get(0).getApi_status()) == 1) {
 //                    finish();
