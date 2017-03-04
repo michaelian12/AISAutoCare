@@ -148,7 +148,7 @@ public class OrderActivity extends AppCompatActivity {
         addressLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent  intentLocPick = new Intent(OrderActivity.this, LocationPickerActivity.class);
+                Intent  intentLocPick = new Intent(OrderActivity.this, LocationActivity.class);
                 startActivityForResult(intentLocPick,1);
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 //                try {
