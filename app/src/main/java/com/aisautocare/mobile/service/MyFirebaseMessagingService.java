@@ -2,15 +2,18 @@ package com.aisautocare.mobile.service;
 
 import android.content.Context;
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.activity.ConfirmOrderActivity;
 import com.aisautocare.mobile.activity.WaitOrderActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -81,12 +84,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String imageUrl = data.getString("image");
             String timestamp = data.getString("timestamp");
             JSONObject payload = data.getJSONObject("payload");
-            String nama = data.getString("nama");
-            String total = data.getString("total");
-            String lamaPerjalanan = data.getString("lama_perjalanan");
 
-            String latBengkel = data.getString("latBengkel");
-            String lonBengkel = data.getString("lonBengkel");
+            JSONObject bengkel = data.getJSONObject("bengkel");
+            JSONArray service = data.getJSONArray("service");
+
             Log.e(TAG, "data: " + data);
             Log.e(TAG, "title: " + title);
             Log.e(TAG, "message: " + message);
@@ -95,44 +96,53 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.e(TAG, "imageUrl: " + imageUrl);
             Log.e(TAG, "timestamp: " + timestamp);
 
+            GlobalVar.bengkelLat = Double.valueOf(bengkel.getString("latitude"));
+            GlobalVar.bengkelLon = Double.valueOf(bengkel.getString("longitude"));
 
 
-            if (nama.equalsIgnoreCase("sukiyem")){
-                if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
-                    // app is in foreground, broadcast the push message
-                    Intent pushNotification = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
-                    pushNotification.putExtra("message", message);
-                    pushNotification.putExtra("nama", nama);
-                    pushNotification.putExtra("total", total);
-                    pushNotification .putExtra("lama_perjalanan", lamaPerjalanan);
-                    pushNotification .putExtra("latBengkel", latBengkel);
-                    pushNotification .putExtra("lonBengkel", lonBengkel);
 
-                    LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
-                    // play notification sound
-                    NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-                    notificationUtils.playNotificationSound();
-                    Log.e(TAG,  "NOTIFIKASI DITERIMA AKAN DIARAHKAN KE CONFIRM ORDER");
-                    pushNotification.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getApplicationContext().startActivity(pushNotification);
+            if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+                // app is in foreground, broadcast the push message
+                Intent pushNotification = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
+                pushNotification.putExtra("message", message);
+                pushNotification .putExtra("latBengkel", bengkel.getString("latitude"));
+                pushNotification .putExtra("lonBengkel", bengkel.getString("longitude"));
+                pushNotification .putExtra("namaBengkel", bengkel.getString("name"));
+                pushNotification .putExtra("alamatBengkel", bengkel.getString("address"));
+                pushNotification .putExtra("hpBengkel", bengkel.getString("phone"));
+                pushNotification .putExtra("namaLayanan", service.getJSONObject(0).getString("name") + " " + service.getJSONObject(0).getString("sub"));
+                pushNotification .putExtra("hargaLayanan", service.getJSONObject(0).getString("price") );
+
+
+
+
+
+
+                LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
+
+                // play notification sound
+                NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+                notificationUtils.playNotificationSound();
+                Log.e(TAG,  "NOTIFIKASI DITERIMA AKAN DIARAHKAN KE CONFIRM ORDER");
+                pushNotification.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(pushNotification);
+            } else {
+                // app is in background, show the notification in notification tray
+                Intent resultIntent = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
+                resultIntent.putExtra("message", message);
+
+                // check for image attachment
+                if (TextUtils.isEmpty(imageUrl)) {
+                    showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
                 } else {
-                    // app is in background, show the notification in notification tray
-                    Intent resultIntent = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
-                    resultIntent.putExtra("message", message);
-                    resultIntent.putExtra("nama", nama);
-                    resultIntent.putExtra("total", total);
-                    resultIntent.putExtra("lama_perjalanan", lamaPerjalanan);
-
-                    // check for image attachment
-                    if (TextUtils.isEmpty(imageUrl)) {
-                        showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
-                    } else {
-                        // image is present, show notification with image
-                        showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl);
-                    }
+                    // image is present, show notification with image
+                    showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl);
                 }
             }
+
+
+
 
 
         } catch (JSONException e) {

@@ -114,6 +114,13 @@ public class MainActivity extends AppCompatActivity {
         btnAddVehicle = (LinearLayout) findViewById(R.id.btnAddVehicle);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setVisibility(View.INVISIBLE);
+        if (getIntent().getStringExtra("finish") != null){
+            Log.i(TAG, "SAKITTTT JIWAAAA");
+            final Dialog dialog = new Dialog(this);
+            dialog.setContentView(R.layout.dialog_rating);
+            dialog.setTitle("Penilaian");
+            dialog.show();
+        }
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -390,6 +397,8 @@ public class MainActivity extends AppCompatActivity {
                 sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
                 String id = sharedPreferences.getString("id", "");
                 Log.i(TAG, "id setelah register"+ id);
+                Log.i(TAG, "regid yang akan dikirim "+ regId);
+
 //                Log.i(TAG, sharedPreferences.getAll().get("name").toString());
 
                 user.setName(sharedPreferences.getString("name",""));

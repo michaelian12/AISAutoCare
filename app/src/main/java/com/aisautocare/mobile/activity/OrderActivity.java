@@ -32,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -55,7 +56,7 @@ public class OrderActivity extends AppCompatActivity {
     private LinearLayout subServiceLayout, addressLayout, dateLayout, paymentMethodLayout;
 
     // Text View
-    private TextView subService, address, date, paymentMethod;
+    private TextView subLayanan, address, date, paymentMethod;
 
     // Button
     private Button orderButton;
@@ -87,7 +88,7 @@ public class OrderActivity extends AppCompatActivity {
         paymentMethodLayout = (LinearLayout) findViewById(R.id.order_payment_method_layout);
 
         /* Text View */
-        subService = (TextView) findViewById(R.id.order_sub_service_text_view);
+        subLayanan = (TextView) findViewById(R.id.order_sub_service_text_view);
         address = (TextView) findViewById(R.id.order_address_text_view);
         date = (TextView) findViewById(R.id.order_date_text_view);
         paymentMethod = (TextView) findViewById(R.id.order_payment_method_text_view);
@@ -115,7 +116,7 @@ public class OrderActivity extends AppCompatActivity {
             idService = new String[]{"32", "33"};
         }
 
-        this.subService.setText(this.subService.getText() + " : " + subService[0]);
+        subLayanan.setText(subLayanan.getText() + " : " + subService[0]);
         final String[] finalSubService = subService;
 
         /* On Click Listener */
@@ -137,7 +138,7 @@ public class OrderActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         alert.dismiss();
-                        OrderActivity.this.subService.setText(finalSubService[i]);
+                        subLayanan.setText(finalSubService[i]);
                         selectedIdService[0] = finalIdService[i];
                     }
                 });
@@ -164,9 +165,11 @@ public class OrderActivity extends AppCompatActivity {
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (address.getText().toString().contains("belum")){
+
+                if (address.getText().toString().contains("belum") | subLayanan.getText().toString().toLowerCase().contains("pilih")){
+
                     new AlertDialog.Builder(OrderActivity.this)
-                            .setTitle("Alamat belum dipilih")
+                            .setTitle("Alamat belum dipilih atau Sub Layanan")
                             .setMessage("Silahkan pilih alamat anda terlebih dahulu.")
 
                             .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -264,6 +267,7 @@ public class OrderActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences;
                 sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
                 String idCustomer = sharedPreferences.getString("idCustomer", "");
+                System.out.println("SELECTED SERVIVCE " + selectedIdService[0]);
                 Uri builtUri = Uri.parse(URLOrder).buildUpon()
                         .appendQueryParameter("customer_id", idCustomer)
                         .appendQueryParameter("order_date", order.getOrder_date())

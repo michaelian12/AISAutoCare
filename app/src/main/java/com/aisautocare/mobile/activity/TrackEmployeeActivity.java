@@ -1,15 +1,20 @@
 package com.aisautocare.mobile.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextPaint;
@@ -21,7 +26,9 @@ import android.widget.Button;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.aisautocare.mobile.GlobalVar;
 import com.akexorcist.googledirection.DirectionCallback;
@@ -38,6 +45,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.snapshot.DoubleNode;
+import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -48,6 +56,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +76,10 @@ public class TrackEmployeeActivity extends AppCompatActivity implements OnMapRea
 //    private LinearLayout layoutButtons;
     private Firebase trackFirebase;
     private Marker customerLoc;
+    private ImageView callPhone;
+    private TextView namaMechanic, namaMechanicEmployee, hpMechanic;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,8 +88,50 @@ public class TrackEmployeeActivity extends AppCompatActivity implements OnMapRea
         /* Set Toolbar */
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        namaMechanic = (TextView) findViewById(R.id.track_mechanic_name);
+        namaMechanicEmployee = (TextView) findViewById(R.id.nama_montir_track);
+        hpMechanic = (TextView) findViewById(R.id.track_employee_mechanic_phone_text_view);
+        callPhone = (ImageView) findViewById(R.id.call_mechanic);
+        namaMechanic.setText(getIntent().getStringExtra("namaBengkel"));
+        namaMechanicEmployee.setText(getIntent().getStringExtra("namaBengkel"));
+        hpMechanic.setText(getIntent().getStringExtra("hpBengkel"));
+        callPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("cell phone clicked");
+                if (ContextCompat.checkSelfPermission(TrackEmployeeActivity.this, Manifest.permission.CALL_PHONE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(TrackEmployeeActivity.this, new String[]{Manifest.permission.CALL_PHONE},
+                            1);
+                }else{
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    String hp = getIntent().getStringExtra("hpBengkel");
+                    if (hp.substring(0,1) != "0"){
+                        hp = "0" + hp;
+                    }
+                    callIntent.setData(Uri.parse("tel:"+getIntent().getStringExtra("hpBengkel")));
+
+                    if (ActivityCompat.checkSelfPermission(TrackEmployeeActivity.this,
+                            Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(callIntent);
+                }
+
+            }
+        });
+
+
 
         arriveButton = (Button) findViewById(R.id.track_arrive_button);
+        arriveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(TrackEmployeeActivity.this, RatingActivity.class);
+                startActivity(intent);
+            }
+        });
 //        finishButton = (Button) findViewById(R.id.track_finish_button);
         timer = (LinearLayout) findViewById(R.id.timer);
 //        layoutButtons = (LinearLayout) findViewById(R.id.layout_button_track);
@@ -154,7 +210,7 @@ public class TrackEmployeeActivity extends AppCompatActivity implements OnMapRea
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng start = new LatLng(Double.valueOf(getIntent().getStringExtra("latBengkel")), Double.valueOf(getIntent().getStringExtra("lonBengkel")));
+        LatLng start = new LatLng(GlobalVar.bengkelLat, GlobalVar.bengkelLon);
         LatLng end = new LatLng(GlobalVar.selectedLat,GlobalVar.selectedLon);
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start, 15.0f));

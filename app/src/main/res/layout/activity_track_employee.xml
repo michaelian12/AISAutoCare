@@ -45,6 +45,7 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/track_mechanic_name"
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
@@ -53,6 +54,8 @@
                                 android:textColor="@color/primary_text" />
 
                             <TextView
+                                android:visibility="gone"
+                                android:id="@+id/track_price"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Rp 79.000"/>
@@ -84,6 +87,7 @@
                                 android:paddingLeft="24dp">
 
                                 <TextView
+                                    android:id="@+id/nama_montir_track"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="Gunawan Effendi"
@@ -105,11 +109,14 @@
                                 android:orientation="horizontal">
 
                                 <ImageView
+
+                                    android:visibility="gone"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:src="@drawable/ic_message" />
 
                                 <ImageView
+                                    android:id="@+id/call_mechanic"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="16dp"

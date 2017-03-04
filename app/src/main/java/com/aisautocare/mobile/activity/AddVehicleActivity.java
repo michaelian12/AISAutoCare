@@ -133,7 +133,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         });
 
         /* Set Vehicle Year Spinner */
-        for (int i = 1950; i <= thisYear; i++) {
+        for (int i = 2000; i <= thisYear; i++) {
             years.add(Integer.toString(i));
         }
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, years);

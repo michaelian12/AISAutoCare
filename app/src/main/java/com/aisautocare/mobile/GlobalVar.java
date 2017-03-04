@@ -10,9 +10,13 @@ public class GlobalVar {
     public static String selectedCar;
     public static String selectedCarType;
     public static String selectedCarYear;
-
+    public static boolean sudahSelesai;
     public static double selectedLat;
     public static double selectedLon;
+
+    public static double bengkelLat;
+    public static double bengkelLon;
+
     public static final String MyPREFERENCES = "MyPrefs" ;
     public static int waktuTempuh = 900; //second
     public boolean isVehicleSelected() {
