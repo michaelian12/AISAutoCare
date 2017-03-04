@@ -148,17 +148,19 @@ public class OrderActivity extends AppCompatActivity {
         addressLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent  intentLocPick = new Intent(OrderActivity.this, LocationPickerActivity.class);
+                startActivityForResult(intentLocPick,1);
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                try {
-                    //menjalankan place picker
-                    startActivityForResult(builder.build(OrderActivity.this), PLACE_PICKER_REQUEST);
-
-                    // check apabila <a title="Solusi Tidak Bisa Download Google Play Services di Android" href="http://www.twoh.co/2014/11/solusi-tidak-bisa-download-google-play-services-di-android/" target="_blank">Google Play Services tidak terinstall</a> di HP
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    //menjalankan place picker
+//                    startActivityForResult(builder.build(OrderActivity.this), PLACE_PICKER_REQUEST);
+//
+//                    // check apabila <a title="Solusi Tidak Bisa Download Google Play Services di Android" href="http://www.twoh.co/2014/11/solusi-tidak-bisa-download-google-play-services-di-android/" target="_blank">Google Play Services tidak terinstall</a> di HP
+//                } catch (GooglePlayServicesRepairableException e) {
+//                    e.printStackTrace();
+//                } catch (GooglePlayServicesNotAvailableException e) {
+//                    e.printStackTrace();
+//                }
             }
         });
 
