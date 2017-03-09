@@ -19,6 +19,7 @@
         android:textSize="16sp" />
 
     <EditText
+        android:visibility="gone"
         android:id="@+id/location_address_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,16 +52,25 @@
                 android:background="@android:color/black"
                 android:padding="16dp"
                 android:textColor="@android:color/white"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:visibility="gone"/>
 
             <ImageView
+
                 android:id="@+id/location_marker_image_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_marker"
-                android:backgroundTint="@color/accent_color"/>
+                android:tint="@color/accent_color"/>
         </LinearLayout>
-
+        <Button
+            android:id="@+id/choose_location_button"
+            android:background="@color/accent_color"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="PILIH LOKASI INI"
+            android:layout_gravity="bottom"
+            />
     </FrameLayout>
 
 </LinearLayout>

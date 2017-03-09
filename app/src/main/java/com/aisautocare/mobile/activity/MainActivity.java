@@ -1,11 +1,13 @@
 package com.aisautocare.mobile.activity;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +16,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -102,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
     User user = new User();
     private String idCustomer;
     private String uid;
-
+    private static final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -233,6 +237,11 @@ public class MainActivity extends AppCompatActivity {
                 postUser.child(auth.getCurrentUser().getUid()).updateChildren(map);
                 Log.i(TAG, "masuk ke hasil Register");
             }
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    PERMISSION_ACCESS_COARSE_LOCATION);
         }
 
 
@@ -640,6 +649,14 @@ public class MainActivity extends AppCompatActivity {
                 //repairs.addAll(services);
                 System.out.println("responses ketika set adapter : " + responses.toString());
                 idCustomer = responses.get(0).getId();
+                SharedPreferences sharedPreferences;
+                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+//                                    String id = responses.get(0).getId();
+//                                    editor.putString("id", id);
+                editor.putString("idCustomer", responses.get(0).getId());
+                editor.commit();
                 new MainActivity.POSTDeviceid().execute("");
 
 //                if (Integer.valueOf(responses.get(0).getApi_status()) == 1) {

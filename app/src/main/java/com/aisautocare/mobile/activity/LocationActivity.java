@@ -10,17 +10,21 @@ import android.location.Location;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.service.FetchAddressIntentService;
 import com.aisautocare.mobile.util.AppUtils;
 import com.google.android.gms.common.ConnectionResult;
@@ -62,6 +66,8 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
     private Toolbar toolbar;
     private TextView search, locationMarkerText;
     private EditText address;
+    private Button chooseLocationButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +84,8 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
         search = (TextView) findViewById(R.id.location_search_text_view);
         address = (EditText) findViewById(R.id.location_address_edit_text);
         locationMarkerText = (TextView) findViewById(R.id.location_text_view);
+        chooseLocationButton = (Button) findViewById(R.id.choose_location_button);
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.location_map_fragment);
@@ -88,7 +96,12 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
                 openAutocompleteActivity();
             }
         });
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
 
+        } else {
+            // Show rationale and request permission.
+        }
         mapFragment.getMapAsync(this);
         mResultReceiver = new AddressResultReceiver(new Handler());
 
@@ -121,13 +134,39 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
         } else {
             Toast.makeText(mContext, "Location not supported in this device", Toast.LENGTH_SHORT).show();
         }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        chooseLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LatLng selectedLocation = mMap.getCameraPosition().target;
+                Intent returnIntent = new Intent();
+//                returnIntent.putExtra("latlng", selectedLocation);
+                returnIntent.putExtra("lat", String.valueOf(selectedLocation.latitude));
+                returnIntent.putExtra("lon", String.valueOf(selectedLocation.longitude));
+
+                //returnIntent.putExtra("Merk", CAR_MANUFACTURER[selectedManufacture]);
+                setResult(1, returnIntent);
+                finish();
+            }
+        });
+        //mMap.setMyLocationEnabled(true);
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "OnMapReady");
         mMap = googleMap;
-
+        mMap.setMyLocationEnabled(true);
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
@@ -144,7 +183,7 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
                     mLocation.setLongitude(mCenterLatLong.longitude);
 
                     startIntentService(mLocation);
-                    locationMarkerText.setText("Lat : " + mCenterLatLong.latitude + "," + "Long : " + mCenterLatLong.longitude);
+                    //locationMarkerText.setText("Lat : " + mCenterLatLong.latitude + "," + "Long : " + mCenterLatLong.longitude);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -179,6 +218,7 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
         Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
         if (mLastLocation != null) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), 15.0f));
             changeMap(mLastLocation);
             Log.d(TAG, "ON connected");
 
@@ -294,14 +334,14 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
             latLong = new LatLng(location.getLatitude(), location.getLongitude());
 
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(latLong).zoom(19f).tilt(70).build();
+                    .target(latLong).zoom(19f).build();
 
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
             mMap.animateCamera(CameraUpdateFactory
                     .newCameraPosition(cameraPosition));
 
-            locationMarkerText.setText("Lat : " + location.getLatitude() + "," + "Long : " + location.getLongitude());
+//            locationMarkerText.setText("Lat : " + location.getLatitude() + "," + "Long : " + location.getLongitude());
             startIntentService(location);
         } else {
             Toast.makeText(getApplicationContext(),
@@ -347,6 +387,7 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
     protected void displayAddressOutput() {
         //  mLocationAddressTextView.setText(mAddressOutput);
         try {
+            Log.i(TAG, "Alamat terikini " + mAreaOutput);
             if (mAreaOutput != null)
                 // mLocationText.setText(mAreaOutput+ "");
 
@@ -424,7 +465,7 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
                 //mLocationText.setText(place.getName() + "");
 
                 CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLong).zoom(19f).tilt(70).build();
+                        .target(latLong).zoom(19f).build();
 
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling

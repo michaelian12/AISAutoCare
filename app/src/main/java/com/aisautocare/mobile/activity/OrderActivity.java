@@ -28,6 +28,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONException;
@@ -65,7 +66,7 @@ public class OrderActivity extends AppCompatActivity {
     private int PLACE_PICKER_REQUEST = 1;
     private Context mContext;
     private Place place;
-
+    private LatLng selectedLocation;
     private FirebaseAuth auth;
     final String[] selectedIdService = {new String()};
     @Override
@@ -194,17 +195,23 @@ public class OrderActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // menangkap hasil balikan dari Place Picker, dan menampilkannya pada TextView
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                place = PlacePicker.getPlace(this, data);
-                GlobalVar.selectedLat = place.getLatLng().latitude;
-                GlobalVar.selectedLon = place.getLatLng().longitude;
-
-                String toastMsg = String.format(
-                        "Place: %s,%s \n" + "Alamat: %s \n", String.valueOf(place.getLatLng().latitude), String.valueOf(place.getLatLng().longitude), place.getAddress());
-                address.setText(toastMsg);
-            }
+        if(resultCode == 1 ){
+            selectedLocation = new LatLng(Double.valueOf(data.getStringExtra("lat")), Double.valueOf(data.getStringExtra("lon")));
+            address.setText(selectedLocation.toString());
+            GlobalVar.selectedLat = Double.valueOf(data.getStringExtra("lat"));
+            GlobalVar.selectedLon = Double.valueOf(data.getStringExtra("lon"));
         }
+//        if (requestCode == PLACE_PICKER_REQUEST) {
+//            if (resultCode == RESULT_OK) {
+//                place = PlacePicker.getPlace(this, data);
+//                GlobalVar.selectedLat = place.getLatLng().latitude;
+//                GlobalVar.selectedLon = place.getLatLng().longitude;
+//
+//                String toastMsg = String.format(
+//                        "Place: %s,%s \n" + "Alamat: %s \n", String.valueOf(place.getLatLng().latitude), String.valueOf(place.getLatLng().longitude), place.getAddress());
+//                address.setText(toastMsg);
+//            }
+//        }
     }
 
     private String URLOrder = new GlobalVar().hostAPI + "/order";
@@ -254,8 +261,8 @@ public class OrderActivity extends AppCompatActivity {
                 order.setService_date(dateFormat.format(date));
                 order.setService_time(timeFormat.format(date));
                 order.setService_location(address.getText().toString());
-                order.setLatitude(String.valueOf(place.getLatLng().latitude));
-                order.setLongitude(String.valueOf(place.getLatLng().longitude));
+                order.setLatitude(String.valueOf(selectedLocation.latitude));
+                order.setLongitude(String.valueOf(selectedLocation.longitude));
 //                order.setLatitude("6");
 //                order.setLongitude("6");
                 order.setArea_id("14");
