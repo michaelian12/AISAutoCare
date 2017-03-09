@@ -47,18 +47,18 @@
                             <TextView
                                 android:id="@+id/track_mechanic_name"
                                 android:layout_width="0dp"
-                                android:layout_weight="1"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:text="Andoyo Motor"
                                 android:textAllCaps="true"
                                 android:textColor="@color/primary_text" />
 
                             <TextView
-                                android:visibility="gone"
                                 android:id="@+id/track_price"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Rp 79.000"/>
+                                android:text="Rp 79.000"
+                                android:visibility="gone" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -110,10 +110,10 @@
 
                                 <ImageView
 
-                                    android:visibility="gone"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/ic_message" />
+                                    android:src="@drawable/ic_message"
+                                    android:visibility="gone" />
 
                                 <ImageView
                                     android:id="@+id/call_mechanic"
@@ -146,12 +146,34 @@
         </ScrollView>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/track_arrive_button"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/accent_color"
-        android:padding="16dp"
-        android:text="Sudah Sampai"
-        android:textStyle="bold" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/track_cancel_button"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:background="@color/accent_color"
+            android:padding="16dp"
+            android:text="Batalkan"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/primary_text" />
+
+        <Button
+            android:id="@+id/track_arrive_button"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:background="@color/accent_color"
+            android:padding="16dp"
+            android:text="Sudah Datang"
+            android:textStyle="bold" />
+    </LinearLayout>
 </LinearLayout>

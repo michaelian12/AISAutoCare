@@ -63,6 +63,7 @@
                 android:src="@drawable/ic_marker"
                 android:tint="@color/accent_color"/>
         </LinearLayout>
+
         <Button
             android:id="@+id/choose_location_button"
             android:background="@color/accent_color"
