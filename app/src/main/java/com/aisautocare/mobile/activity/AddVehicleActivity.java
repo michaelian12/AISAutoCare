@@ -11,10 +11,17 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
+import cz.msebera.android.httpclient.Header;
 import info.androidhive.firebasenotifications.R;
 
 import com.aisautocare.mobile.GlobalVar;
+import com.aisautocare.mobile.util.RestClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -152,6 +159,26 @@ public class AddVehicleActivity extends AppCompatActivity {
                 GlobalVar.selectedCarType = CAR_MANUFACTURER_TYPE[selectedManufactureType];
                 setResult(1, returnIntent);
                 finish();
+            }
+        });
+        RestClient.get("statuses/public_timeline.json", null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // If the response is JSONObject instead of expected JSONArray
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray data) {
+                // Pull out the first event on the public timeline
+                JSONObject firstEvent = null;
+                try {
+                    firstEvent = (JSONObject) data.get(0);
+
+                    String tweetText = firstEvent.getString("text");
+                    System.out.println(tweetText);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
