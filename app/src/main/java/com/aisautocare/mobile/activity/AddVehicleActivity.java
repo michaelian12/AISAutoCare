@@ -52,7 +52,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         vehicleTypeSpinner = (MaterialBetterSpinner) findViewById(R.id.vehicle_type);
         vehicleManufactureSpinner = (MaterialBetterSpinner) findViewById(R.id.vehicle_manufacture_spinner);
         vehicleManufactureTypeSpinner = (MaterialBetterSpinner) findViewById(R.id.vehicle_manufacture_type_spinner);
-        vehicleYearSpinner = (MaterialBetterSpinner) findViewById(R.id.vehicle_year_spinner);
+        //vehicleYearSpinner = (MaterialBetterSpinner) findViewById(R.id.vehicle_year_spinner);
         vehicleSubmitButton = (Button) findViewById(R.id.vehicle_submit_button);
 
         /* Set Toolbar */
@@ -137,7 +137,7 @@ public class AddVehicleActivity extends AppCompatActivity {
             years.add(Integer.toString(i));
         }
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, years);
-        vehicleYearSpinner.setAdapter(arrayAdapter);
+        //vehicleYearSpinner.setAdapter(arrayAdapter);
 
         /* Set Submit Button */
         vehicleSubmitButton.setOnClickListener(new View.OnClickListener() {

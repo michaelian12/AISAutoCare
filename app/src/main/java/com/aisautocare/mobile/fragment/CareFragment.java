@@ -55,6 +55,8 @@ public class CareFragment extends Fragment {
         cares.add(new Service(R.drawable.ic_tire_repair, "Ganti Ban", "Rp 140.000"));
         cares.add(new Service(R.drawable.ic_emergency, "Bengkel Darurat", "Rp 140.000"));
         cares.add(new Service(R.drawable.ic_backup_car, "Mobil Cadangan", "Rp 140.000"));
+        cares.add(new Service(R.drawable.ic_towing, "Derek", "Rp 140.000"));
+
 
         adapter = new ServiceRecyclerViewAdapter(getActivity(), cares);
 

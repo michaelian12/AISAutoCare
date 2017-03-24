@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="Terimakasih telah menggunakan layanan lami. Untuk meningkatkan kualitas pelayanan, silakan memasukkan penilaian dan masukan berikut."
+                android:text="Terimakasih telah menggunakan layanan kami. Untuk meningkatkan kualitas pelayanan, silakan memberikan penilaian dan masukan berikut:"
                 android:textColor="@color/secondary_text"
                 android:textSize="20sp" />
 

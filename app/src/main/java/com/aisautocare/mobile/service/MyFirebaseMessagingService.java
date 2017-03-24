@@ -77,33 +77,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         try {
             JSONObject data = json.getJSONObject("data");
+            if (!data.getString("type").equals("notifGo")){
+                String title = data.getString("title");
+                String message = data.getString("message");
+                boolean isBackground = data.getBoolean("is_background");
+                String imageUrl = data.getString("image");
+                String timestamp = data.getString("timestamp");
+                JSONObject payload = data.getJSONObject("payload");
+                String uidBengkel = data.getString("uid_bengkel");
+                JSONObject bengkel = data.getJSONObject("bengkel");
+                JSONArray service = data.getJSONArray("service");
 
-            String title = data.getString("title");
-            String message = data.getString("message");
-            boolean isBackground = data.getBoolean("is_background");
-            String imageUrl = data.getString("image");
-            String timestamp = data.getString("timestamp");
-            JSONObject payload = data.getJSONObject("payload");
+                Log.e(TAG, "data: " + data);
+                Log.e(TAG, "title: " + title);
+                Log.e(TAG, "message: " + message);
+                Log.e(TAG, "isBackground: " + isBackground);
+                Log.e(TAG, "payload: " + payload.toString());
+                Log.e(TAG, "imageUrl: " + imageUrl);
+                Log.e(TAG, "timestamp: " + timestamp);
 
-            JSONObject bengkel = data.getJSONObject("bengkel");
-            JSONArray service = data.getJSONArray("service");
-
-            Log.e(TAG, "data: " + data);
-            Log.e(TAG, "title: " + title);
-            Log.e(TAG, "message: " + message);
-            Log.e(TAG, "isBackground: " + isBackground);
-            Log.e(TAG, "payload: " + payload.toString());
-            Log.e(TAG, "imageUrl: " + imageUrl);
-            Log.e(TAG, "timestamp: " + timestamp);
-
-            GlobalVar.bengkelLat = Double.valueOf(bengkel.getString("latitude"));
-            GlobalVar.bengkelLon = Double.valueOf(bengkel.getString("longitude"));
-
-
-
-
-            if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
-                // app is in foreground, broadcast the push message
+                GlobalVar.bengkelLat = Double.valueOf(bengkel.getString("latitude"));
+                GlobalVar.bengkelLon = Double.valueOf(bengkel.getString("longitude"));
                 Intent pushNotification = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
                 pushNotification.putExtra("message", message);
                 pushNotification .putExtra("latBengkel", bengkel.getString("latitude"));
@@ -113,6 +107,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 pushNotification .putExtra("hpBengkel", bengkel.getString("phone"));
                 pushNotification .putExtra("namaLayanan", service.getJSONObject(0).getString("name") + " " + service.getJSONObject(0).getString("sub"));
                 pushNotification .putExtra("hargaLayanan", service.getJSONObject(0).getString("price") );
+                pushNotification .putExtra("uidBengkel", uidBengkel );
 
 
 
@@ -121,25 +116,36 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                 LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
-                // play notification sound
-                NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-                notificationUtils.playNotificationSound();
-                Log.e(TAG,  "NOTIFIKASI DITERIMA AKAN DIARAHKAN KE CONFIRM ORDER");
-                pushNotification.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                getApplicationContext().startActivity(pushNotification);
-            } else {
-                // app is in background, show the notification in notification tray
-                Intent resultIntent = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
-                resultIntent.putExtra("message", message);
+                if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+                    // app is in foreground, broadcast the push message
 
-                // check for image attachment
-                if (TextUtils.isEmpty(imageUrl)) {
-                    showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
+                    // play notification sound
+                    NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+                    notificationUtils.playNotificationSound();
+                    Log.e(TAG,  "NOTIFIKASI DITERIMA AKAN DIARAHKAN KE CONFIRM ORDER");
+                    pushNotification.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getApplicationContext().startActivity(pushNotification);
                 } else {
-                    // image is present, show notification with image
-                    showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl);
+                    // app is in background, show the notification in notification tray
+                    Intent resultIntent = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
+                    resultIntent.putExtra("message", message);
+
+                    // check for image attachment
+                    if (TextUtils.isEmpty(imageUrl)) {
+                        showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
+                    } else {
+                        // image is present, show notification with image
+                        showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl);
+                    }
                 }
+            }else{
+                GlobalVar.statusBerangkat = true;
             }
+
+
+
+
+
 
 
 

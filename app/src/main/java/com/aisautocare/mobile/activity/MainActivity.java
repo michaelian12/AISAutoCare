@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -103,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
     private Firebase postUser;
     public String regId;
 
+    private TextView emailNav, nameNav;
+
     User user = new User();
     private String idCustomer;
     private String uid;
@@ -120,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
         pilihKendaraan.setVisibility(View.INVISIBLE);
         btnAddVehicle = (LinearLayout) findViewById(R.id.btnAddVehicle);
         fab = (FloatingActionButton) findViewById(R.id.fab);
+
+
+
         fab.setVisibility(View.INVISIBLE);
         if (getIntent().getStringExtra("finish") != null){
             Log.i(TAG, "SAKITTTT JIWAAAA");
@@ -192,7 +198,9 @@ public class MainActivity extends AppCompatActivity {
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(navItemSelect);
-
+        View hView =  navigationView.getHeaderView(0);
+        nameNav = (TextView) hView.findViewById(R.id.user_name_text_view);
+        emailNav =(TextView) hView.findViewById(R.id.user_email_text_view);
         /* Set View Pager */
         viewPager = (ViewPager) findViewById(R.id.category_viewpager);
         FragmentAdapter adapter = new FragmentAdapter(this, getSupportFragmentManager());
@@ -342,26 +350,26 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.closeDrawer(GravityCompat.START);
 
             switch (menuItem.getItemId()){
-                case R.id.nav_profile:
-                    intent = new Intent(MainActivity.this, ProfileActivity.class);
-                    startActivity(intent);
-                    return true;
-                case R.id.nav_history:
-                    intent = new Intent(MainActivity.this, HistoryActivity.class);
-                    startActivity(intent);
-                    return true;
-                case R.id.nav_garage:
-                    intent = new Intent(MainActivity.this, GarageActivity.class);
-                    startActivity(intent);
-                    return true;
-                case R.id.nav_login:
-                    intent = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    return true;
-                case R.id.nav_register:
-                    intent = new Intent(MainActivity.this, RegisterActivity.class);
-                    startActivity(intent);
-                    return true;
+//                case R.id.nav_profile:
+//                    intent = new Intent(MainActivity.this, ProfileActivity.class);
+//                    startActivity(intent);
+//                    return true;
+//                case R.id.nav_history:
+//                    intent = new Intent(MainActivity.this, HistoryActivity.class);
+//                    startActivity(intent);
+//                    return true;
+//                case R.id.nav_garage:
+//                    intent = new Intent(MainActivity.this, GarageActivity.class);
+//                    startActivity(intent);
+//                    return true;
+//                case R.id.nav_login:
+//                    intent = new Intent(MainActivity.this, LoginActivity.class);
+//                    startActivity(intent);
+//                    return true;
+//                case R.id.nav_register:
+//                    intent = new Intent(MainActivity.this, RegisterActivity.class);
+//                    startActivity(intent);
+//                    return true;
                 case R.id.nav_logout:
                     Toast.makeText(MainActivity.this, getString(R.string.auth_logout), Toast.LENGTH_LONG).show();
                     auth.signOut();
@@ -557,6 +565,14 @@ public class MainActivity extends AppCompatActivity {
             // System.out.println(" Data JSON Items" + jsonStr);
             List<POSTResponse> results = new ArrayList<>();
             JSONObject berita = movieJson;
+            System.out.println("nama b get id" +berita.getString("name"));
+            try {
+                nameNav.setText(berita.getString("name"));
+                emailNav.setText(berita.getString("email"));
+            }catch (Exception e){
+
+            }
+
             POSTResponse beritaModel = new POSTResponse(berita);
             results.add(beritaModel);
             return results;
@@ -656,6 +672,8 @@ public class MainActivity extends AppCompatActivity {
 //                                    String id = responses.get(0).getId();
 //                                    editor.putString("id", id);
                 editor.putString("idCustomer", responses.get(0).getId());
+                GlobalVar.idCustomerLogged = responses.get(0).getId();
+
                 editor.commit();
                 new MainActivity.POSTDeviceid().execute("");
 

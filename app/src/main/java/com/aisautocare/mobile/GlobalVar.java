@@ -5,6 +5,9 @@ package com.aisautocare.mobile;
  */
 
 public class GlobalVar {
+    public static String selectedSubService;
+    public static String selectedService;
+    public static String idCustomerLogged;
     public String hostAPI = "http://119.235.250.107/API/public/api";
     public static boolean isVehicleSelected = false;
     public static String selectedCar;
@@ -13,6 +16,8 @@ public class GlobalVar {
     public static boolean sudahSelesai;
     public static double selectedLat;
     public static double selectedLon;
+    public static String idOrder;
+    public static boolean statusBerangkat= false;
 
     public static double bengkelLat;
     public static double bengkelLon;

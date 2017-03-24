@@ -75,7 +75,7 @@ public class OrderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order);
         auth = FirebaseAuth.getInstance();
         /* Get Intent */
-        String service = getIntent().getStringExtra("service");
+        final String service = getIntent().getStringExtra("service");
 
         /* Set Toolbar */
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -115,6 +115,9 @@ public class OrderActivity extends AppCompatActivity {
         } else if (service.toLowerCase().contains("cadangan")) {
             subService = new String[]{"By Driver", "No Driver"};
             idService = new String[]{"32", "33"};
+        }else if (service.toLowerCase().contains("derek")) {
+            subService = new String[]{"Derek Mobil", "Derek Motor"};
+            idService = new String[]{"35", "36"};
         }
 
         subLayanan.setText(subLayanan.getText() + " : " + subService[0]);
@@ -168,7 +171,8 @@ public class OrderActivity extends AppCompatActivity {
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                GlobalVar.selectedSubService = subLayanan.getText().toString();
+                GlobalVar.selectedService = service.toLowerCase();
                 if (address.getText().toString().contains("belum") | subLayanan.getText().toString().toLowerCase().contains("pilih")){
 
                     new AlertDialog.Builder(OrderActivity.this)
@@ -297,9 +301,6 @@ public class OrderActivity extends AppCompatActivity {
                         .appendQueryParameter("car_manufacture_type", GlobalVar.selectedCarType)
                         .appendQueryParameter("car_year", GlobalVar.selectedCarYear)
                         .appendQueryParameter("idservice", selectedIdService[0])
-
-
-
                         .build();
 
                 URL url = new URL(builtUri.toString());
@@ -369,6 +370,7 @@ public class OrderActivity extends AppCompatActivity {
                 //repairs.clear();
                 //repairs.addAll(services);
                 System.out.println("responses ketika set adapter : " + responses.toString());
+                GlobalVar.idOrder = responses.get(0).getId();
 //                if (Integer.valueOf(responses.get(0).getApi_status()) == 1) {
 //                    finish();
 //                    Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);

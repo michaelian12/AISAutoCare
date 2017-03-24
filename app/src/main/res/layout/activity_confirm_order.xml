@@ -28,15 +28,16 @@
                     android:id="@+id/confrim_order_mechanic_image"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
+
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_account" />
+                    android:src="@drawable/ic_wrench" />
 
                 <TextView
                     android:id="@+id/confirm_order_garage_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Andoyo Motor"
+                    android:text="AIS AKI"
                     android:textColor="@color/primary_text"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -71,7 +72,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Informasi Montir"
+                        android:text="Informasi Bengkel"
                         android:textAllCaps="true"
                         android:textColor="@color/primary_text" />
 
@@ -90,6 +91,7 @@
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:layout_width="48dp"
                             android:layout_height="48dp"
+                            android:visibility="gone"
                             android:src="@drawable/ic_profile" />
 
                         <LinearLayout
@@ -105,6 +107,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Gunawan Effendi"
                                 android:textColor="@color/primary_text"
+                                android:visibility="gone"
                                 android:textStyle="bold" />
                             <TextView
                                 android:id="@+id/confirm_order_mechanic_address_text_view"
@@ -146,29 +149,31 @@
                         android:layout_marginTop="8dp"
                         android:background="@color/divider" /> <!-- divider -->
 
+
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginTop="4dp"
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/confirm_order_service_text_view"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Ganti Aki"
+                            android:text="Harga Jasa : Cek Aki"
                             android:textColor="@color/primary_text"
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/text_service_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Rp 70.000"
+                            android:text="Rp. -"
                             android:textColor="@color/primary_text"
-                            android:textStyle="bold"
-                            android:visibility="gone"/>
-
+                            android:textStyle="bold"/>
                     </LinearLayout>
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -180,17 +185,40 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Jasa Antar (4.3 KM)"
+                            android:text="Biaya antar (4.3 KM)"
                             android:textColor="@color/primary_text"
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/text_distance_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Rp 9.000"
+                            android:text="Rp. -"
                             android:textColor="@color/primary_text"
-                            android:textStyle="bold"
-                            android:visibility="gone"/>
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/confirm_order_app_text_view"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Biaya Aplikasi"
+                            android:textColor="@color/primary_text"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/text_app_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Rp. -"
+                            android:textColor="@color/primary_text"
+                            android:textStyle="bold"/>
                     </LinearLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -208,11 +236,11 @@
                     android:padding="16dp">
 
                     <TextView
+                        android:id="@+id/text_total"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Subtotal"
-                        android:textAllCaps="true"
                         android:textColor="@color/primary_text"
                         android:textStyle="bold" />
 
@@ -220,7 +248,7 @@
                         android:id="@+id/confirm_order_price_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Rp 79.000"
+                        android:text="Rp -"
                         android:textColor="@color/primary_text"
                         android:textStyle="bold" />
                 </LinearLayout>

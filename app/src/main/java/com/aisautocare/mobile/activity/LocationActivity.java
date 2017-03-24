@@ -79,6 +79,7 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
         /* Set Toolbar */
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle("Pencarian Lokasi");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         search = (TextView) findViewById(R.id.location_search_text_view);

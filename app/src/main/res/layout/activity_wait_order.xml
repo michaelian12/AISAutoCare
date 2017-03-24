@@ -35,6 +35,29 @@
             android:layout_height="wrap_content"
             android:text="Mencari montir yang tersedia"
             android:textSize="20dp" />
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/layout_confirmation_extend"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/button_yes_extend_range"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:background="@color/accent_color"
+                android:text="Ya"
+                android:textStyle="bold"
+                android:layout_marginRight="10dp"/>
+            <Button
+                android:id="@+id/button_no_extend_range"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:background="@color/accent_color"
+                android:text="Tidak"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
     </LinearLayout>
 
     <Button
