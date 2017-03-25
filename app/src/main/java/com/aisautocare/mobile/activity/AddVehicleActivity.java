@@ -1,7 +1,9 @@
 package com.aisautocare.mobile.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -66,6 +68,7 @@ public class AddVehicleActivity extends AppCompatActivity {
     private int refVehicleTypeId;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +106,11 @@ public class AddVehicleActivity extends AppCompatActivity {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        pd.show();
+                        try {
+                            pd.show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -243,6 +250,17 @@ public class AddVehicleActivity extends AppCompatActivity {
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
                         pd.hide();
+
+                        try {
+                            SharedPreferences sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("idVehicleSelected", response.getString("id"));
+                            editor.commit();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        System.out.println(response);
                         Intent returnIntent = new Intent();
                         returnIntent.putExtra("Merk", vehicleBrands.get(selectedManufacture).getName());
                         returnIntent.putExtra("MerkType", vehicleTypes.get(selectedManufactureType).getType());

@@ -11,8 +11,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -36,45 +34,34 @@ import android.widget.Toast;
 
 import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.adapter.FragmentAdapter;
+import com.aisautocare.mobile.app.Config;
 import com.aisautocare.mobile.fragment.RepairFragment;
-import com.aisautocare.mobile.model.Order;
 import com.aisautocare.mobile.model.POSTResponse;
 import com.aisautocare.mobile.model.User;
+import com.aisautocare.mobile.util.NotificationUtils;
+import com.aisautocare.mobile.util.RestClient;
 import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
-
-
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessaging;
-
-import info.androidhive.firebasenotifications.R;
-import com.aisautocare.mobile.app.Config;
-import com.aisautocare.mobile.util.NotificationUtils;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.SQLOutput;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import static android.R.attr.order;
+import cz.msebera.android.httpclient.Header;
+import info.androidhive.firebasenotifications.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -251,6 +238,73 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     PERMISSION_ACCESS_COARSE_LOCATION);
         }
+
+        // cek mobil udh dipilih apa blm
+        SharedPreferences sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
+        String value = sharedPreferences.getString("idVehicleSelected", "");
+        System.out.println("ada mobel dengan id " + value);
+
+        // kalo ga kosong tampilin kendaraan
+        if (!value.equals("")) {
+            System.out.println("ada mobil broo");
+            String link = "/getvehiclebyid?id=" + value;
+
+            RestClient.get(link, null, new JsonHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    super.onStart();
+//                    pd.show();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                    System.out.println("error" + responseString);
+//                    pd.hide();
+                    Toast.makeText(MainActivity.this, "Gagal mendapatkan data", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+                    // Pull out the first event on the public timeline
+//                    pd.hide();
+                    System.out.println("sukses ngirim broo");
+                    try {
+//                        JSONObject object = data.getJSONObject("data");
+
+                        System.out.println(data.getString("brand"));
+                        data.getString("name");
+//
+                        selectedVehicle = (LinearLayout) findViewById(R.id.selected_vehicle);
+//
+                        LayoutInflater inflater;
+                        inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//
+                        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.view_selected_vehicle, null);
+                        TextView vehicleManufacture = (TextView) layout.findViewById(R.id.selected_vehicle_manufacture);
+                        TextView vehicleManufactureType = (TextView) layout.findViewById(R.id.selected_vehicle_manufacture_type);
+////                        System.out.println("MERK "  + data.getStringExtra("Merk"));
+                        vehicleManufacture.setText(data.getString("brand"));
+                        vehicleManufactureType.setText(data.getString("name"));
+                        selectedVehicle.removeAllViews();
+                        selectedVehicle.addView(layout);
+                        pilihKendaraan.setVisibility(View.VISIBLE);
+                        btnAddVehicle.removeAllViews();
+//
+                        GlobalVar.isVehicleSelected = true;
+                        System.out.println("bisa sampe sini");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+//                    pd.hide();
+                }
+            });
+        }
+
+        Log.d(TAG, value);
+
+
 
 
     }
