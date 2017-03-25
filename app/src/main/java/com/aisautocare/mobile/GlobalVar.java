@@ -8,7 +8,7 @@ public class GlobalVar {
     public static String selectedSubService;
     public static String selectedService;
     public static String idCustomerLogged;
-    public String hostAPI = "http://119.235.250.107/API/public/api";
+    public static String hostAPI = "http://119.235.250.107/API/public/api";
     public static boolean isVehicleSelected = false;
     public static String selectedCar;
     public static String selectedCarType;

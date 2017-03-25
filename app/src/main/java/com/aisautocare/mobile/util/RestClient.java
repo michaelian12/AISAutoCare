@@ -1,5 +1,6 @@
 package com.aisautocare.mobile.util;
 
+import com.aisautocare.mobile.GlobalVar;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -9,7 +10,7 @@ import com.loopj.android.http.RequestParams;
  */
 
 public class RestClient {
-    private static final String BASE_URL = "https://api.twitter.com/1/";
+    private static final String BASE_URL = GlobalVar.hostAPI;
 
     private static AsyncHttpClient client = new AsyncHttpClient();
 
