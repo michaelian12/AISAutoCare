@@ -1,10 +1,8 @@
 package com.aisautocare.mobile.activity;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,12 +10,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.model.VehicleBrand;
 import com.aisautocare.mobile.model.VehicleType;
 import com.aisautocare.mobile.util.RestClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.json.JSONArray;
@@ -54,7 +55,7 @@ public class AddVehicleActivity extends AppCompatActivity {
     private MaterialBetterSpinner vehicleTypeSpinner;
     private MaterialBetterSpinner vehicleManufactureSpinner;
     private MaterialBetterSpinner vehicleManufactureTypeSpinner;
-    private MaterialBetterSpinner vehicleYearSpinner;
+    private EditText vehicleYearEditText;
 
     private Button vehicleSubmitButton;
 
@@ -62,6 +63,7 @@ public class AddVehicleActivity extends AppCompatActivity {
     private int selectedManufactureType;
     private int selectedManufacture;
     private ProgressDialog pd;
+    private int refVehicleTypeId;
 
 
     @Override
@@ -72,7 +74,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         vehicleTypeSpinner = (MaterialBetterSpinner) findViewById(R.id.vehicle_type);
         vehicleManufactureSpinner = (MaterialBetterSpinner) findViewById(R.id.vehicle_manufacture_spinner);
         vehicleManufactureTypeSpinner = (MaterialBetterSpinner) findViewById(R.id.vehicle_manufacture_type_spinner);
-        //vehicleYearSpinner = (MaterialBetterSpinner) findViewById(R.id.vehicle_year_spinner);
+        vehicleYearEditText = (EditText) findViewById(R.id.vehicle_year_edit_text);
         vehicleSubmitButton = (Button) findViewById(R.id.vehicle_submit_button);
 
         /* Set Toolbar */
@@ -105,38 +107,39 @@ public class AddVehicleActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONArray data) {
-                        // If the response is JSONObject instead of expected JSONArray
-                        pd.hide();
-                    }
-
-                    @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                         super.onFailure(statusCode, headers, responseString, throwable);
                         System.out.println("error" + responseString);
+                        pd.hide();
+                        Toast.makeText(AddVehicleActivity.this, "Gagal mendapatkan data", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
                         // Pull out the first event on the public timeline
-                        JSONObject firstEvent = null;
+                        pd.hide();
                         try {
                             JSONArray arrayBrands = data.getJSONArray("data");
+
+                            vehicleBrands.clear();
                             brandNames.clear();
+
+                            vehicleManufactureSpinner.setAdapter(null);
+                            vehicleManufactureTypeSpinner.setAdapter(null);
+
                             for (int i = 0; i < arrayBrands.length(); i++){
                                 JSONObject brand = arrayBrands.getJSONObject(i);
                                 vehicleBrands.add(new VehicleBrand(brand));
                                 brandNames.add(vehicleBrands.get(i).getName());
-
                             }
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, brandNames);
-                            vehicleManufactureSpinner.clearListSelection();
 
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, brandNames);
                             vehicleManufactureSpinner.setAdapter(arrayAdapter);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
                         pd.hide();
                     }
                 });
@@ -144,13 +147,11 @@ public class AddVehicleActivity extends AppCompatActivity {
         });
 
         /* Set Vehicle Manufacture Spinner */
-//        ArrayAdapter<String> brandSpinnerAdapter = new ArrayAdapter<VehicleBrand>(this, android.R.layout.simple_dropdown_item_1line, brandNames);
-//        brandSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        vehicleManufactureSpinner.setAdapter(brandSpinnerAdapter);
-
         vehicleManufactureSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                selectedManufacture = i;
 
                 String link = "/vehicletype?ref_brand_id=" + vehicleBrands.get(i).getId();
 
@@ -159,15 +160,7 @@ public class AddVehicleActivity extends AppCompatActivity {
                     @Override
                     public void onStart() {
                         super.onStart();
-
-
                         pd.show();
-                    }
-
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONArray data) {
-                        // If the response is JSONObject instead of expected JSONArray
-
                     }
 
                     @Override
@@ -175,59 +168,37 @@ public class AddVehicleActivity extends AppCompatActivity {
                         super.onFailure(statusCode, headers, responseString, throwable);
                         System.out.println("error" + responseString);
                         pd.hide();
+                        Toast.makeText(AddVehicleActivity.this, "Gagal mendapatkan data", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
                         // Pull out the first event on the public timeline
-                        JSONObject firstEvent = null;
+                        pd.hide();
                         try {
                             JSONArray arrayType = data.getJSONArray("data");
-                            typeNames.clear();
+
                             vehicleTypes.clear();
+                            typeNames.clear();
+
+                            vehicleManufactureTypeSpinner.setAdapter(null);
+
                             for (int i = 0; i < arrayType.length(); i++){
                                 JSONObject type = arrayType.getJSONObject(i);
                                 vehicleTypes.add(new VehicleType(type));
                                 typeNames.add(vehicleTypes.get(i).getType());
-
-
-
                             }
-                            System.out.println(typeNames);
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, typeNames);
-                            vehicleManufactureTypeSpinner.clearListSelection();
-                            vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
 
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, typeNames);
+                            vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
                         pd.hide();
                     }
                 });
-            }
-        });
-
-
-        /* Set Vehicle Manufacturer Model Spinner */
-
-        vehicleManufactureTypeSpinner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                if (chooseBefore == -1){
-//                    new AlertDialog.Builder(AddVehicleActivity.this)
-//                            .setTitle("Merk Belum Dipilih")
-//                            .setMessage("Silahkan merk terlebih dahulu.")
-//
-//                            .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    // do nothing
-//                                }
-//                            })
-//                            .setIcon(android.R.drawable.ic_dialog_alert)
-//                            .show();
-//                }
-
             }
         });
 
@@ -235,15 +206,11 @@ public class AddVehicleActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 selectedManufactureType = i;
+                refVehicleTypeId = Integer.parseInt(vehicleTypes.get(i).getId());
             }
         });
 
-        /* Set Vehicle Year Spinner */
-        for (int i = 2000; i <= thisYear; i++) {
-            years.add(Integer.toString(i));
-        }
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, years);
-        //vehicleYearSpinner.setAdapter(arrayAdapter);
+
 
         /* Set Submit Button */
         vehicleSubmitButton.setOnClickListener(new View.OnClickListener() {
@@ -251,13 +218,40 @@ public class AddVehicleActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                String[] result = new String[0];
 //                result[0] = CAR_MANUFACTURER_TYPE[selectedManufactureType];
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("MerkType", CAR_MANUFACTURER_TYPE[selectedManufactureType]);
-                returnIntent.putExtra("Merk", CAR_MANUFACTURER[selectedManufacture]);
-                GlobalVar.selectedCar = CAR_MANUFACTURER[selectedManufacture];
-                GlobalVar.selectedCarType = CAR_MANUFACTURER_TYPE[selectedManufactureType];
-                setResult(1, returnIntent);
-                finish();
+                RequestParams params = new RequestParams();
+                params.put("user_id", GlobalVar.idCustomerLogged);
+                params.put("ref_vehicle_type_id", refVehicleTypeId);
+                params.put("note", "");
+                params.put("year", vehicleYearEditText.getText());
+
+                RestClient.post("/addvehicle", params, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        pd.show();
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        super.onFailure(statusCode, headers, responseString, throwable);
+                        System.out.println("error" + responseString);
+                        pd.hide();
+                        Toast.makeText(AddVehicleActivity.this, "Gagal mengirim data", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        pd.hide();
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("Merk", vehicleBrands.get(selectedManufacture).getName());
+                        returnIntent.putExtra("MerkType", vehicleTypes.get(selectedManufactureType).getType());
+                        GlobalVar.selectedCar = vehicleBrands.get(selectedManufacture).getName();
+                        GlobalVar.selectedCarType = vehicleTypes.get(selectedManufactureType).getType();
+                        setResult(1, returnIntent);
+                        finish();
+                    }
+                });
             }
         });
 
