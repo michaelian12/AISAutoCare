@@ -100,10 +100,10 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         }else{
             total.setText("Total");
         }
-//        garageName.setText(getIntent().getStringExtra("namaBengkel"));
-//        mechanicName.setText(getIntent().getStringExtra("namaBengkel"));
-//        mechanicPhone.setText(getIntent().getStringExtra("hpBengkel"));
-//        mechanicAddress.setText(getIntent().getStringExtra("alamatBengkel"));
+        garageName.setText(getIntent().getStringExtra("namaBengkel"));
+        mechanicName.setText(getIntent().getStringExtra("namaBengkel"));
+        mechanicPhone.setText(getIntent().getStringExtra("hpBengkel"));
+        mechanicAddress.setText(getIntent().getStringExtra("alamatBengkel"));
 
 
 

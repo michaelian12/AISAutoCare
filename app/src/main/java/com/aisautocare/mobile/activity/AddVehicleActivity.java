@@ -1,11 +1,13 @@
 package com.aisautocare.mobile.activity;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -59,6 +61,8 @@ public class AddVehicleActivity extends AppCompatActivity {
     private int chooseBefore = -1;
     private int selectedManufactureType;
     private int selectedManufacture;
+    private ProgressDialog pd;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,9 @@ public class AddVehicleActivity extends AppCompatActivity {
         /* Set Vehicle Type Spinner */
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, VEHICLE_TYPE);
         vehicleTypeSpinner.setAdapter(arrayAdapter);
+        pd = new ProgressDialog(AddVehicleActivity.this);
+
+        pd.setMessage("loading");
         vehicleTypeSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -92,9 +99,15 @@ public class AddVehicleActivity extends AppCompatActivity {
 
                 RestClient.get(link, null, new JsonHttpResponseHandler() {
                     @Override
+                    public void onStart() {
+                        super.onStart();
+                        pd.show();
+                    }
+
+                    @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONArray data) {
                         // If the response is JSONObject instead of expected JSONArray
-
+                        pd.hide();
                     }
 
                     @Override
@@ -109,17 +122,22 @@ public class AddVehicleActivity extends AppCompatActivity {
                         JSONObject firstEvent = null;
                         try {
                             JSONArray arrayBrands = data.getJSONArray("data");
-
+                            brandNames.clear();
                             for (int i = 0; i < arrayBrands.length(); i++){
                                 JSONObject brand = arrayBrands.getJSONObject(i);
                                 vehicleBrands.add(new VehicleBrand(brand));
                                 brandNames.add(vehicleBrands.get(i).getName());
-                                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, brandNames);
-                                vehicleManufactureSpinner.setAdapter(arrayAdapter);
+
                             }
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, brandNames);
+                            vehicleManufactureSpinner.clearListSelection();
+
+                            vehicleManufactureSpinner.setAdapter(arrayAdapter);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        pd.hide();
                     }
                 });
             }
@@ -134,9 +152,18 @@ public class AddVehicleActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                String link = GlobalVar.hostAPI + "/vehicletype?ref_brand_id=" + vehicleBrands.get(i).getId();
+                String link = "/vehicletype?ref_brand_id=" + vehicleBrands.get(i).getId();
 
+                Log.i("addvehicle", "alamat tipe brand " + link);
                 RestClient.get(link, null, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+
+
+                        pd.show();
+                    }
+
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONArray data) {
                         // If the response is JSONObject instead of expected JSONArray
@@ -147,6 +174,7 @@ public class AddVehicleActivity extends AppCompatActivity {
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                         super.onFailure(statusCode, headers, responseString, throwable);
                         System.out.println("error" + responseString);
+                        pd.hide();
                     }
 
                     @Override
@@ -155,52 +183,28 @@ public class AddVehicleActivity extends AppCompatActivity {
                         JSONObject firstEvent = null;
                         try {
                             JSONArray arrayType = data.getJSONArray("data");
-
+                            typeNames.clear();
+                            vehicleTypes.clear();
                             for (int i = 0; i < arrayType.length(); i++){
                                 JSONObject type = arrayType.getJSONObject(i);
                                 vehicleTypes.add(new VehicleType(type));
                                 typeNames.add(vehicleTypes.get(i).getType());
 
-                                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, typeNames);
-                                vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
+
+
                             }
+                            System.out.println(typeNames);
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, typeNames);
+                            vehicleManufactureTypeSpinner.clearListSelection();
+                            vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
+
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        pd.hide();
                     }
                 });
-
-//                selectedManufacture = i;
-//
-//                if (i == 0 ){
-//                    CAR_MANUFACTURER_TYPE = new String[]{"Camry", "Altis", "Vios", "Agya", "Etios Valco", "Yaris", "Yaris Heykers", "Kijang Innova", "Kijang", "Sienta", "Alphard", "Avanza", "Cayla", "NAV1", "Venturer", "Vellfire", "Veloz", "Fortuner", "Land Cruiser", "Rush", "Hiace", "Hilux", "Toyota 86"};
-//                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
-//                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
-//                } else if (i == 1){
-//                    CAR_MANUFACTURER_TYPE = new String[]{"Accord","BR-V","Brio","City","Civic","CR-V","CR-Z","Stream","Freed"};
-//                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
-//                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
-//                } else if (i == 2){
-//                    CAR_MANUFACTURER_TYPE = new String[]{"Ayla","Ceria","Charade","Classy","Espasss","Feroza","Granmax","Luxio","Rocky","Sigra","Hijet","Taft","Sirion","Taruna","Xenia","YRV","Zebra"};
-//                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
-//                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
-//                } else if (i == 3){
-//                    CAR_MANUFACTURER_TYPE = new String[]{"Aerio","APV","Baleno","Carry","Ertiga","Escudo","Esteem","Forza","Futura","Grand Vitara","Jimny","Karimun","Katana","Sidekick","Splash","Swift","SX-4","Vitara"};
-//                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
-//                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
-//                } else if (i == 4){
-//                    CAR_MANUFACTURER_TYPE = new String[]{"Colt","Delica","Galant","Grandis","Kuda","L300","Lancer","Maven","Mirage","Outlander","Pajero","Strada","Triton"};
-//                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
-//                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
-//                }else if (i == 5){
-//                    CAR_MANUFACTURER_TYPE = new String[]{"Terrano","X-Trail","Serena","Grand Livinia","March"};
-//                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, CAR_MANUFACTURER_TYPE);
-//                    vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
-//                }
-//                if (chooseBefore != i)
-//                    vehicleManufactureTypeSpinner.setSelection(0);
-//
-//                chooseBefore = i;
             }
         });
 
@@ -210,19 +214,19 @@ public class AddVehicleActivity extends AppCompatActivity {
         vehicleManufactureTypeSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (chooseBefore == -1){
-                    new AlertDialog.Builder(AddVehicleActivity.this)
-                            .setTitle("Merk Belum Dipilih")
-                            .setMessage("Silahkan merk terlebih dahulu.")
-
-                            .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // do nothing
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
-                }
+//                if (chooseBefore == -1){
+//                    new AlertDialog.Builder(AddVehicleActivity.this)
+//                            .setTitle("Merk Belum Dipilih")
+//                            .setMessage("Silahkan merk terlebih dahulu.")
+//
+//                            .setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    // do nothing
+//                                }
+//                            })
+//                            .setIcon(android.R.drawable.ic_dialog_alert)
+//                            .show();
+//                }
 
             }
         });
