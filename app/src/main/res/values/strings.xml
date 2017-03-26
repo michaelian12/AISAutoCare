@@ -7,6 +7,7 @@
     <string name="activity_history">Riwayat</string>
     <string name="activity_garage">Garasi</string>
     <string name="activity_add_vehicle">Tambah Kendaraan</string>
+    <string name="activity_edit_vehicle">Ubah Kendaraan</string>
     <string name="activity_order">Pesanan</string>
 
     <!-- Title for fragments. [CHAR LIMIT=20] -->

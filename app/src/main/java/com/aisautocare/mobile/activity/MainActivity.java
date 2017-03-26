@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -283,6 +284,15 @@ public class MainActivity extends AppCompatActivity {
                         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.view_selected_vehicle, null);
                         TextView vehicleManufacture = (TextView) layout.findViewById(R.id.selected_vehicle_manufacture);
                         TextView vehicleManufactureType = (TextView) layout.findViewById(R.id.selected_vehicle_manufacture_type);
+                        Button editVehicle = (Button) layout.findViewById(R.id.edit_vehicle_button);
+
+                        editVehicle.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(MainActivity.this, EditVehicleActivity.class);
+                                startActivity(intent);
+                            }
+                        });
 ////                        System.out.println("MERK "  + data.getStringExtra("Merk"));
                         vehicleManufacture.setText(data.getString("brand"));
                         vehicleManufactureType.setText(data.getString("name"));

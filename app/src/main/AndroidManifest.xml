@@ -175,7 +175,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.aisautocare.mobile.activity.MainActivity" />
         </activity>
-        <activity android:name="com.aisautocare.mobile.activity.LocationActivity"></activity>
+        <activity android:name="com.aisautocare.mobile.activity.LocationActivity" />
+        <activity
+            android:name="com.aisautocare.mobile.activity.EditVehicleActivity"
+            android:label="@string/activity_edit_vehicle"
+            android:parentActivityName="com.aisautocare.mobile.activity.MainActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.aisautocare.mobile.activity.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_add_vehicle"
+    android:id="@+id/activity_edit_vehicle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.aisautocare.mobile.activity.AddVehicleActivity">
+    tools:context="com.aisautocare.mobile.activity.EditVehicleActivity">
 
     <include layout="@layout/toolbar" />
 
@@ -18,7 +18,7 @@
         android:padding="16dp">
 
         <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
-            android:id="@+id/add_vehicle_type_spinner"
+            android:id="@+id/edit_vehicle_type_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/choose_type"
@@ -26,7 +26,7 @@
             app:met_primaryColor="@color/accent_color" />
 
         <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
-            android:id="@+id/add_vehicle_manufacture_spinner"
+            android:id="@+id/edit_vehicle_manufacture_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/choose_manufacturer"
@@ -34,7 +34,7 @@
             app:met_primaryColor="@color/accent_color" />
 
         <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
-            android:id="@+id/add_vehicle_manufacture_type_spinner"
+            android:id="@+id/edit_vehicle_manufacture_type_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/choose_manufacturer_type"
@@ -43,7 +43,7 @@
 
         <EditText
             android:paddingTop="16dp"
-            android:id="@+id/add_vehicle_year_edit_text"
+            android:id="@+id/edit_vehicle_year_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Isi tahun Keluaran"
@@ -52,11 +52,10 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/add_vehicle_submit_button"
+        android:id="@+id/edit_vehicle_submit_button"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/accent_color"
         android:text="Simpan"
         android:textStyle="bold" />
-
 </LinearLayout>

@@ -55,8 +55,8 @@ public class AddVehicleActivity extends AppCompatActivity {
     private int thisYear = Calendar.getInstance().get(Calendar.YEAR);
 
     private MaterialBetterSpinner vehicleTypeSpinner;
-    private MaterialBetterSpinner vehicleManufactureSpinner;
-    private MaterialBetterSpinner vehicleManufactureTypeSpinner;
+    private MaterialBetterSpinner vehicleBrandSpinner;
+    private MaterialBetterSpinner vehicleBrandTypeSpinner;
     private EditText vehicleYearEditText;
 
     private Button vehicleSubmitButton;
@@ -74,11 +74,11 @@ public class AddVehicleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_vehicle);
 
-        vehicleTypeSpinner = (MaterialBetterSpinner) findViewById(R.id.vehicle_type);
-        vehicleManufactureSpinner = (MaterialBetterSpinner) findViewById(R.id.vehicle_manufacture_spinner);
-        vehicleManufactureTypeSpinner = (MaterialBetterSpinner) findViewById(R.id.vehicle_manufacture_type_spinner);
-        vehicleYearEditText = (EditText) findViewById(R.id.vehicle_year_edit_text);
-        vehicleSubmitButton = (Button) findViewById(R.id.vehicle_submit_button);
+        vehicleTypeSpinner = (MaterialBetterSpinner) findViewById(R.id.add_vehicle_type_spinner);
+        vehicleBrandSpinner = (MaterialBetterSpinner) findViewById(R.id.add_vehicle_manufacture_spinner);
+        vehicleBrandTypeSpinner = (MaterialBetterSpinner) findViewById(R.id.add_vehicle_manufacture_type_spinner);
+        vehicleYearEditText = (EditText) findViewById(R.id.add_vehicle_year_edit_text);
+        vehicleSubmitButton = (Button) findViewById(R.id.add_vehicle_submit_button);
 
         /* Set Toolbar */
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -131,8 +131,8 @@ public class AddVehicleActivity extends AppCompatActivity {
                             vehicleBrands.clear();
                             brandNames.clear();
 
-                            vehicleManufactureSpinner.setAdapter(null);
-                            vehicleManufactureTypeSpinner.setAdapter(null);
+                            vehicleBrandSpinner.setAdapter(null);
+                            vehicleBrandTypeSpinner.setAdapter(null);
 
                             for (int i = 0; i < arrayBrands.length(); i++){
                                 JSONObject brand = arrayBrands.getJSONObject(i);
@@ -141,7 +141,7 @@ public class AddVehicleActivity extends AppCompatActivity {
                             }
 
                             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, brandNames);
-                            vehicleManufactureSpinner.setAdapter(arrayAdapter);
+                            vehicleBrandSpinner.setAdapter(arrayAdapter);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -154,7 +154,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         });
 
         /* Set Vehicle Manufacture Spinner */
-        vehicleManufactureSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        vehicleBrandSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -188,7 +188,7 @@ public class AddVehicleActivity extends AppCompatActivity {
                             vehicleTypes.clear();
                             typeNames.clear();
 
-                            vehicleManufactureTypeSpinner.setAdapter(null);
+                            vehicleBrandTypeSpinner.setAdapter(null);
 
                             for (int i = 0; i < arrayType.length(); i++){
                                 JSONObject type = arrayType.getJSONObject(i);
@@ -197,7 +197,7 @@ public class AddVehicleActivity extends AppCompatActivity {
                             }
 
                             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, typeNames);
-                            vehicleManufactureTypeSpinner.setAdapter(arrayAdapter);
+                            vehicleBrandTypeSpinner.setAdapter(arrayAdapter);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -209,7 +209,7 @@ public class AddVehicleActivity extends AppCompatActivity {
             }
         });
 
-        vehicleManufactureTypeSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        vehicleBrandTypeSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 selectedManufactureType = i;
