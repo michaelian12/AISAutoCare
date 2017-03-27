@@ -1,10 +1,14 @@
 package com.aisautocare.mobile.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +19,7 @@ import com.aisautocare.mobile.model.VehicleBrand;
 import com.aisautocare.mobile.model.VehicleType;
 import com.aisautocare.mobile.util.RestClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.json.JSONArray;
@@ -26,19 +31,31 @@ import java.util.ArrayList;
 import cz.msebera.android.httpclient.Header;
 import info.androidhive.firebasenotifications.R;
 
+import static android.R.attr.value;
+
 public class EditVehicleActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
 
-    private MaterialBetterSpinner vehicleTypeSpinner, vehicleBrandSpinner, vehicleBrandTypeSpinner;
+    private MaterialBetterSpinner vehicleTypeSpinner, vehicleBrandSpinner, vehicleModelSpinner;
     private EditText vehicleYearEditText;
     private Button vehicleSubmitButton;
 
     private static String[] VEHICLE_TYPE = {"Mobil", "Motor"};
     private ArrayList<VehicleBrand> vehicleBrands = new ArrayList<VehicleBrand>();
     private ArrayList<String> brandNames = new ArrayList<String>();
-    private ArrayList<VehicleType> vehicleTypes = new ArrayList<VehicleType>();
-    private ArrayList<String> typeNames = new ArrayList<String>();
+    private ArrayList<VehicleType> vehicleModel = new ArrayList<VehicleType>();
+    private ArrayList<String> modelNames = new ArrayList<String>();
+
+    /* Spinner adapter */
+    private ArrayAdapter<String> arrayTypeAdapter;
+    private ArrayAdapter<String> arrayBrandAdapter;
+    private ArrayAdapter<String> arrayModelAdapter;
+
+    private ProgressDialog pd;
+    private String idModel;
+
+    private int selectedBrand, selectedModel;
 
     /* vehicle data variables */
     String wheel;
@@ -59,198 +76,303 @@ public class EditVehicleActivity extends AppCompatActivity {
 
         vehicleTypeSpinner = (MaterialBetterSpinner) findViewById(R.id.edit_vehicle_type_spinner);
         vehicleBrandSpinner = (MaterialBetterSpinner) findViewById(R.id.edit_vehicle_manufacture_spinner);
-        vehicleBrandTypeSpinner = (MaterialBetterSpinner) findViewById(R.id.edit_vehicle_manufacture_type_spinner);
+        vehicleModelSpinner = (MaterialBetterSpinner) findViewById(R.id.edit_vehicle_manufacture_type_spinner);
         vehicleYearEditText = (EditText) findViewById(R.id.edit_vehicle_year_edit_text);
         vehicleSubmitButton = (Button) findViewById(R.id.edit_vehicle_submit_button);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, VEHICLE_TYPE);
-        vehicleTypeSpinner.setAdapter(arrayAdapter);
+        pd = new ProgressDialog(EditVehicleActivity.this);
+        pd.setMessage("Mendapatkan data kendaraan");
 
         /* Get vehicle id */
         SharedPreferences sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
-        final String value = sharedPreferences.getString("idVehicleSelected", "");
-        System.out.println("ada mobel dengan id " + value);
+        final String id = sharedPreferences.getString("idVehicleSelected", "");
+        System.out.println("ada mobil dengan id " + id);
+
+        arrayTypeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, VEHICLE_TYPE);
+        vehicleTypeSpinner.setAdapter(arrayTypeAdapter);
+
+        /* Set spinnner OnClickListener */
+        vehicleTypeSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String link = GlobalVar.hostAPI;
+
+                if (position == 0) {
+                    link = "/vehiclebrand?wheel=4";
+                } else if (position == 1) {
+                    link = "/vehiclebrand?wheel=2";
+                }
+
+                RestClient.get(link, null, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        pd.show();
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        super.onFailure(statusCode, headers, responseString, throwable);
+                        System.out.println("error" + responseString);
+                        pd.hide();
+                        Toast.makeText(EditVehicleActivity.this, "Gagal mendapatkan data merk kendaraan", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+                        try {
+                            JSONArray arrayBrands = data.getJSONArray("data");
+
+                            vehicleBrands.clear();
+                            brandNames.clear();
+
+                            vehicleBrandSpinner.setAdapter(null);
+                            vehicleModelSpinner.setAdapter(null);
+
+                            for (int i = 0; i < arrayBrands.length(); i++) {
+                                JSONObject brand = arrayBrands.getJSONObject(i);
+                                vehicleBrands.add(new VehicleBrand(brand));
+                                brandNames.add(vehicleBrands.get(i).getName());
+                            }
+
+                            arrayBrandAdapter = new ArrayAdapter<String>(EditVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, brandNames);
+                            vehicleBrandSpinner.setAdapter(arrayBrandAdapter);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        pd.hide();
+                    }
+                });
+            }
+        });
+
+        vehicleBrandSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedBrand = i;
+                String link = "/vehicletype?ref_brand_id=" + vehicleBrands.get(i).getId();
+
+                RestClient.get(link, null, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        pd.show();
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        super.onFailure(statusCode, headers, responseString, throwable);
+                        System.out.println("error" + responseString);
+                        pd.hide();
+                        Toast.makeText(EditVehicleActivity.this, "Gagal mendapatkan data model kendaraan", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+                        try {
+                            JSONArray arrayType = data.getJSONArray("data");
+
+                            vehicleModel.clear();
+                            modelNames.clear();
+
+                            vehicleModelSpinner.setAdapter(null);
+
+                            for (int i = 0; i < arrayType.length(); i++){
+                                JSONObject type = arrayType.getJSONObject(i);
+                                vehicleModel.add(new VehicleType(type));
+                                modelNames.add(vehicleModel.get(i).getType());
+                            }
+
+                            arrayModelAdapter = new ArrayAdapter<String>(EditVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, modelNames);
+                            vehicleModelSpinner.setAdapter(arrayModelAdapter);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        pd.hide();
+                    }
+                });
+            }
+        });
+
+        vehicleModelSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedModel = i;
+                idModel = vehicleModel.get(i).getId();
+            }
+        });
+
+        /* Submit button OnClickListener */
+        vehicleSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Fill params
+                RequestParams params = new RequestParams();
+                params.put("id", value);
+                params.put("user_id", GlobalVar.idCustomerLogged);
+                params.put("ref_vehicle_type_id", idModel);
+                params.put("year", vehicleYearEditText.getText());
+
+                RestClient.get("/updatevehicle", params, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        super.onFailure(statusCode, headers, responseString, throwable);
+                        System.out.println("error" + responseString);
+                        pd.hide();
+                        Toast.makeText(EditVehicleActivity.this, "Gagal mengubah data kendaraan", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("Merk", vehicleBrands.get(selectedBrand).getName());
+                        returnIntent.putExtra("MerkType", vehicleModel.get(selectedModel).getType());
+                        GlobalVar.selectedCar = vehicleBrands.get(selectedBrand).getName();
+                        GlobalVar.selectedCarType = vehicleModel.get(selectedModel).getType();
+                        setResult(1, returnIntent);
+                        finish();
+                    }
+                });
+            }
+        });
 
         /* Vehicle id validation not empty */
-        if (!value.equals("")) {
-            System.out.println("ada mobil broo");
-            String link = "/getvehiclebyid?id=" + value;
-
-            /* Get vehicle data */
-            RestClient.get(link, null, new JsonHttpResponseHandler() {
-                @Override
-                public void onStart() {
-                    super.onStart();
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    super.onFailure(statusCode, headers, responseString, throwable);
-                    System.out.println("error" + responseString);
-                    Toast.makeText(EditVehicleActivity.this, "Gagal mendapatkan data tipe kendaraan", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
-
-                    try {
-                        wheel = data.getString("wheel");
-                        idBrand = data.getString("brand_id");
-                        idType = data.getString("ref_vehicle_type_id");
-                        year = data.getString("year");
-
-                        /* Set vehicle type spinner */
-                        if (wheel == "4") {
-                            vehicleTypeSpinner.setSelection(0);
-                        } else if (data.getString("wheel") == "2") {
-                            vehicleTypeSpinner.setSelection(1);
-                        }
-
-//                        vehicleBrandSpinner.setSelection();
-//                        vehicleBrandTypeSpinner.setSelection();
-//                        vehicleYearEditText.setText();
-
-                        System.out.println("bisa sampe sini");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } // end if
-
-        /* Initialize brands data */
-        RestClient.get("/vehiclebrand?wheel=" + wheel, null, new JsonHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                super.onStart();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                System.out.println("error" + responseString);
-                Toast.makeText(EditVehicleActivity.this, "Gagal mendapatkan data merk kendaraan", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
-                /* Set vehicle brand spinner */
-                try {
-                    JSONArray arrayBrands = data.getJSONArray("data");
-
-                    int selectedBrand = 0;
-
-                    for (int i = 0; i < arrayBrands.length(); i++) {
-                        JSONObject brand = arrayBrands.getJSONObject(i);
-                        vehicleBrands.add(new VehicleBrand(brand));
-                        if (idBrand == vehicleBrands.get(i).getId()) {
-                            selectedBrand = i;
-                        }
-                        brandNames.add(vehicleBrands.get(i).getName());
-                    }
-
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(EditVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, brandNames);
-                    vehicleBrandSpinner.setAdapter(arrayAdapter);
-                    vehicleBrandSpinner.setSelection(selectedBrand);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        /* Initialize brand types data */
-        RestClient.get("vehicletype?ref_brand_id=" + idBrand, null, new JsonHttpResponseHandler() {
-            @Override
-            public void onStart() {
-                super.onStart();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                System.out.println("error" + responseString);
-                Toast.makeText(EditVehicleActivity.this, "Gagal mendapatkan data model kendaraan", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
-                /* Set vehicle brand type spinner */
-                try {
-                    JSONArray arrayType = data.getJSONArray("data");
-
-                    int selectedType = 0;
-
-                    for (int i = 0; i < arrayType.length(); i++) {
-                        JSONObject brand = arrayType.getJSONObject(i);
-                        vehicleTypes.add(new VehicleType(brand));
-                        if (idBrand == vehicleTypes.get(i).getId()) {
-                            selectedType = i;
-                        }
-                        typeNames.add(vehicleTypes.get(i).getType());
-                    }
-
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(EditVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, brandNames);
-                    vehicleBrandTypeSpinner.setAdapter(arrayAdapter);
-                    vehicleBrandTypeSpinner.setSelection(selectedType);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        /* Set vehicle year edit text */
-        vehicleYearEditText.setText(year);
-
-//        vehicleSubmitButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String link = "/getvehiclebyid?id=" + value;
-//                RestClient.get(link, null, new JsonHttpResponseHandler() {
-//                    @Override
-//                    public void onStart() {
-//                        super.onStart();
-//                    }
+//        if (!id.equals("")) {
+//            String link = "/getvehiclebyid?id=" + id;
 //
-//                    @Override
-//                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                        super.onFailure(statusCode, headers, responseString, throwable);
-//                        System.out.println("error" + responseString);
-//                        Toast.makeText(EditVehicleActivity.this, "Gagal merubah data", Toast.LENGTH_SHORT).show();
-//                    }
+//            /* Get vehicle data */
+//            RestClient.get(link, null, new JsonHttpResponseHandler() {
+//                @Override
+//                public void onStart() {
+//                    super.onStart();
+//                }
 //
-//                    @Override
-//                    public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
-//                        // Update vehicle data
-//                        RequestParams params = new RequestParams();
-//                        params.put("user_id", GlobalVar.idCustomerLogged);
-//                        params.put("ref_vehicle_type_id", refVehicleTypeId);
-//                        params.put("note", "");
-//                        params.put("year", vehicleYearEditText.getText());
-//                        System.out.println("sukses ngirim broo");
+//                @Override
+//                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                    super.onFailure(statusCode, headers, responseString, throwable);
+//                    System.out.println("error" + responseString);
+//                    Toast.makeText(EditVehicleActivity.this, "Gagal mendapatkan data tipe kendaraan", Toast.LENGTH_SHORT).show();
+//                }
 //
-//                        try {
-////                        JSONObject object = data.getJSONObject("data");
+//                @Override
+//                public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+//                    try {
+//                        wheel = data.getString("wheel");
+//                        idBrand = data.getString("brand_id");
+//                        idType = data.getString("ref_vehicle_type_id");
+//                        year = data.getString("year");
 //
-//
-//                            data.getString("brand");
-//                            data.getString("name");
-//                            data.getString("year");
-//
-//                            vehicleTypeSpinner.setSelection();
-//                            vehicleBrandSpinner.setSelection();
-//                            vehicleBrandTypeSpinner.setSelection();
-//                            vehicleYearEditText.setText();
-//
-//                            System.out.println("bisa sampe sini");
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
+//                        /* Set vehicle type spinner */
+//                        if (wheel == "4") {
+//                            vehicleTypeSpinner.setSelection(0);
+//                            System.out.println("spinnernya di set mobil");
+//                        } else if (wheel == "2") {
+//                            vehicleTypeSpinner.setSelection(1);
+//                            System.out.println("spinnernya di set motor");
 //                        }
 //
+//                        /* Initialize brands data */
+//                        RestClient.get("/vehiclebrand?wheel=" + wheel, null, new JsonHttpResponseHandler() {
+//                            @Override
+//                            public void onStart() {
+//                                super.onStart();
+//                            }
+//
+//                            @Override
+//                            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                                super.onFailure(statusCode, headers, responseString, throwable);
+//                                System.out.println("error" + responseString);
+//                                Toast.makeText(EditVehicleActivity.this, "Gagal mendapatkan data merk kendaraan", Toast.LENGTH_SHORT).show();
+//                            }
+//
+//                            @Override
+//                            public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+//                                try {
+//                                    JSONArray arrayBrands = data.getJSONArray("data");
+////
+//                                    int selectedBrand = 0;
+//
+//                                    for (int i = 0; i < arrayBrands.length(); i++) {
+//                                        JSONObject brand = arrayBrands.getJSONObject(i);
+//                                        vehicleBrands.add(new VehicleBrand(brand));
+//                                        if (idBrand == vehicleBrands.get(i).getId()) {
+//                                            selectedBrand = i;
+//                                        }
+//                                        brandNames.add(vehicleBrands.get(i).getName());
+//                                    }
+//
+//                                    ArrayAdapter<String> arrayBrandAdapter = new ArrayAdapter<String>(EditVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, brandNames);
+//                                    vehicleBrandSpinner.setAdapter(arrayBrandAdapter);
+//
+//                                    /* Set vehicle brand spinner */
+//                                    vehicleBrandSpinner.setSelection(selectedBrand);
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//
+//                        /* Initialize brand types data */
+//                        RestClient.get("vehicletype?ref_brand_id=" + idBrand, null, new JsonHttpResponseHandler() {
+//                            @Override
+//                            public void onStart() {
+//                                super.onStart();
+//                            }
+//
+//                            @Override
+//                            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                                super.onFailure(statusCode, headers, responseString, throwable);
+//                                System.out.println("error" + responseString);
+//                                Toast.makeText(EditVehicleActivity.this, "Gagal mendapatkan data model kendaraan", Toast.LENGTH_SHORT).show();
+//                            }
+//
+//                            @Override
+//                            public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+//                                try {
+//                                    JSONArray arrayType = data.getJSONArray("data");
+//
+//                                    int selectedType = 0;
+//
+//                                    for (int i = 0; i < arrayType.length(); i++) {
+//                                        JSONObject brand = arrayType.getJSONObject(i);
+//                                        vehicleTypes.add(new VehicleType(brand));
+//                                        if (idType == vehicleTypes.get(i).getId()) {
+//                                            selectedType = i;
+//                                        }
+//                                        typeNames.add(vehicleTypes.get(i).getType());
+//                                    }
+//
+//                                    ArrayAdapter<String> arrayTypeAdapter = new ArrayAdapter<String>(EditVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, typeNames);
+//                                    vehicleBrandTypeSpinner.setAdapter(arrayTypeAdapter);
+//
+//                                    /* Set vehicle brand type spinner */
+//                                    vehicleBrandTypeSpinner.setSelection(selectedType);
+//
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//
+//                        /* Initialize vehicle year data */
+//                        vehicleYearEditText.setText(year);
+//
+//                        pd.hide();
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
 //                    }
-//                });
-//            }
-//        });
+//                }
+//            });
+//        } // end if
     }
 }

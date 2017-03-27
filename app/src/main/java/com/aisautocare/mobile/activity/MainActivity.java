@@ -243,11 +243,11 @@ public class MainActivity extends AppCompatActivity {
         // cek mobil udh dipilih apa blm
         SharedPreferences sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
         String value = sharedPreferences.getString("idVehicleSelected", "");
-        System.out.println("ada mobel dengan id " + value);
+//        System.out.println("ada mobel dengan id " + value);
 
         // kalo ga kosong tampilin kendaraan
         if (!value.equals("")) {
-            System.out.println("ada mobil broo");
+//            System.out.println("ada mobil broo");
             String link = "/getvehiclebyid?id=" + value;
 
             RestClient.get(link, null, new JsonHttpResponseHandler() {
@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
                     // Pull out the first event on the public timeline
 //                    pd.hide();
-                    System.out.println("sukses ngirim broo");
+//                    System.out.println("sukses ngirim broo");
                     try {
 //                        JSONObject object = data.getJSONObject("data");
 
@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 Intent intent = new Intent(MainActivity.this, EditVehicleActivity.class);
-                                startActivity(intent);
+                                startActivityForResult(intent, 1);
                             }
                         });
 ////                        System.out.println("MERK "  + data.getStringExtra("Merk"));
@@ -302,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
                         btnAddVehicle.removeAllViews();
 //
                         GlobalVar.isVehicleSelected = true;
-                        System.out.println("bisa sampe sini");
+//                        System.out.println("bisa sampe sini");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
