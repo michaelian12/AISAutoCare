@@ -2,6 +2,7 @@ package com.aisautocare.mobile.activity;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -98,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
     private String idCustomer;
     private String uid;
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
+
+    private ProgressDialog pd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -314,9 +317,9 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, value);
 
-
-
-
+        pd = new ProgressDialog(this);
+        pd.setMessage("Menjangkau Server");
+        pd.show();
     }
 
     @Override
@@ -611,6 +614,7 @@ public class MainActivity extends AppCompatActivity {
 //                Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                getApplicationContext().startActivity(intent);
+                pd.hide();
             }
         }
     }
@@ -901,6 +905,7 @@ public class MainActivity extends AppCompatActivity {
 //                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                getApplicationContext().startActivity(intent);
             }
+            pd.hide();
         }
     }
 

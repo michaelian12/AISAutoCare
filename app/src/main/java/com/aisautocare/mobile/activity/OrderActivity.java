@@ -101,6 +101,7 @@ public class OrderActivity extends AppCompatActivity {
         String[] subService = new String[0];
         String[] idService = new String[0];
         if (service.toLowerCase().contains("aki")) {
+
             subService = new String[]{"Cek", "Ganti", "Stroom Aki"};
             idService = new String[]{"10", "12", "13"};
         } else if (service.toLowerCase().contains("cuci")) {

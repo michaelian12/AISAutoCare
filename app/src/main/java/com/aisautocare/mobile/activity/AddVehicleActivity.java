@@ -91,6 +91,8 @@ public class AddVehicleActivity extends AppCompatActivity {
         pd = new ProgressDialog(AddVehicleActivity.this);
 
         pd.setMessage("loading");
+
+        pd.setCanceledOnTouchOutside(false);
         vehicleTypeSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

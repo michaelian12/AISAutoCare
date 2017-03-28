@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -90,7 +91,159 @@ public class EditVehicleActivity extends AppCompatActivity {
 
         arrayTypeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, VEHICLE_TYPE);
         vehicleTypeSpinner.setAdapter(arrayTypeAdapter);
+        SharedPreferences shared = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
+        String idCustomer = (shared.getString("idCustomer", ""));
+        String link = "/getvehiclebyuserid?user_id=" + idCustomer;
+//        vehicleTypeSpinner.setSelected(true);
+        vehicleTypeSpinner.setListSelection(1);
+//        vehicleTypeSpinner.setSelection(1);
+        vehicleTypeSpinner.setText("Mobil");
+        try {
+            pd.show();
+        }catch (Exception e){
+            System.out.println(e);
+        }
 
+        RestClient.post(link, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                pd.show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                System.out.println("error" + responseString);
+                pd.hide();
+                Toast.makeText(EditVehicleActivity.this, "Gagal mendapatkan data merk kendaraan", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+                JSONObject arrayBrands = data;
+                try {
+                    System.out.println("bisa try");
+                    String link = "";
+                    if (data.getString("wheel").equals("4")){
+                        System.out.println("masuk if");
+//                        vehicleTypeSpinner.setSelection(0);
+                        vehicleTypeSpinner.setText("Mobil");
+                        link = "/vehiclebrand?wheel=4";
+                        vehicleBrandSpinner.setText(data.getString("brand"));
+                        vehicleModelSpinner.setText(data.getString("name"));
+                        vehicleYearEditText.setText(data.getString("year"));
+                    }else{
+//                        vehicleTypeSpinner.setSelection(1);
+                        vehicleTypeSpinner.setText("Motor");
+                        link = "/vehiclebrand?wheel=2";
+                    }
+                    RestClient.get(link, null, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onStart()   {
+                            super.onStart();
+                            pd.show();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            super.onFailure(statusCode, headers, responseString, throwable);
+                            System.out.println("error" + responseString);
+                            pd.hide();
+                            Toast.makeText(EditVehicleActivity.this, "Gagal mendapatkan data merk kendaraan", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+                            try {
+                                JSONArray arrayBrands = data.getJSONArray("data");
+
+                                vehicleBrands.clear();
+                                brandNames.clear();
+
+                                vehicleBrandSpinner.setAdapter(null);
+                                vehicleModelSpinner.setAdapter(null);
+
+                                for (int i = 0; i < arrayBrands.length(); i++) {
+                                    JSONObject brand = arrayBrands.getJSONObject(i);
+                                    vehicleBrands.add(new VehicleBrand(brand));
+                                    brandNames.add(vehicleBrands.get(i).getName());
+                                }
+
+                                arrayBrandAdapter = new ArrayAdapter<String>(EditVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, brandNames);
+                                vehicleBrandSpinner.setAdapter(arrayBrandAdapter);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            pd.hide();
+                        }
+                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                vehicleBrands.clear();
+                brandNames.clear();
+
+                String link = null;
+                try {
+                    link = "/vehicletype?ref_brand_id=" + data.getString("ref_brand_id");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                RestClient.get(link, null, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        pd.show();
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        super.onFailure(statusCode, headers, responseString, throwable);
+                        System.out.println("error" + responseString);
+                        pd.hide();
+                        Toast.makeText(EditVehicleActivity.this, "Gagal mendapatkan data model kendaraan", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+                        try {
+                            JSONArray arrayType = data.getJSONArray("data");
+
+                            vehicleModel.clear();
+                            modelNames.clear();
+
+                            vehicleModelSpinner.setAdapter(null);
+
+                            for (int i = 0; i < arrayType.length(); i++){
+                                JSONObject type = arrayType.getJSONObject(i);
+                                vehicleModel.add(new VehicleType(type));
+                                modelNames.add(vehicleModel.get(i).getType());
+                            }
+
+                            arrayModelAdapter = new ArrayAdapter<String>(EditVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, modelNames);
+                            vehicleModelSpinner.setAdapter(arrayModelAdapter);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        pd.hide();
+                    }
+                });
+
+                Log.i("edit avct ", "data ORi " + data);
+
+                arrayBrandAdapter = new ArrayAdapter<String>(EditVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, brandNames);
+                vehicleBrandSpinner.setAdapter(arrayBrandAdapter);
+
+                pd.hide();
+            }
+        });
         /* Set spinnner OnClickListener */
         vehicleTypeSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -105,7 +258,7 @@ public class EditVehicleActivity extends AppCompatActivity {
 
                 RestClient.get(link, null, new JsonHttpResponseHandler() {
                     @Override
-                    public void onStart() {
+                    public void onStart()   {
                         super.onStart();
                         pd.show();
                     }
