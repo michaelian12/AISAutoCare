@@ -227,8 +227,12 @@ public class AddVehicleActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                String[] result = new String[0];
 //                result[0] = CAR_MANUFACTURER_TYPE[selectedManufactureType];
+                SharedPreferences sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
+                String user_id = sharedPreferences.getString("idCustomer", "");
+
                 RequestParams params = new RequestParams();
-                params.put("user_id", GlobalVar.idCustomerLogged);
+//                params.put("user_id", GlobalVar.idCustomerLogged);
+                params.put("user_id", user_id);
                 params.put("ref_vehicle_type_id", refVehicleTypeId);
                 params.put("note", "");
                 params.put("year", vehicleYearEditText.getText());
@@ -274,7 +278,5 @@ public class AddVehicleActivity extends AppCompatActivity {
                 });
             }
         });
-
-
     }
 }

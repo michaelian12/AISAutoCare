@@ -93,6 +93,7 @@ public class EditVehicleActivity extends AppCompatActivity {
         vehicleTypeSpinner.setAdapter(arrayTypeAdapter);
         SharedPreferences shared = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
         String idCustomer = (shared.getString("idCustomer", ""));
+        System.out.println("id customer tuh " + idCustomer);
         String link = "/getvehiclebyuserid?user_id=" + idCustomer;
 //        vehicleTypeSpinner.setSelected(true);
         vehicleTypeSpinner.setListSelection(1);
@@ -386,6 +387,8 @@ public class EditVehicleActivity extends AppCompatActivity {
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+                        System.out.println(data);
+
                         Intent returnIntent = new Intent();
                         returnIntent.putExtra("Merk", vehicleBrands.get(selectedBrand).getName());
                         returnIntent.putExtra("MerkType", vehicleModel.get(selectedModel).getType());

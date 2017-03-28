@@ -1,7 +1,6 @@
 package com.aisautocare.mobile.activity;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,7 +12,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -69,26 +67,28 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private BroadcastReceiver mRegistrationBroadcastReceiver;
-    private TextView txtRegId, txtMessage;
+
+//    private TextView txtRegId, txtMessage;
+
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
-    private LinearLayout btnAddVehicle;
-    private LinearLayout selectedVehicle;
+    private Button chooseVehicleButton;
+    private LinearLayout headerLayout;
+//    private LinearLayout selectedVehicle;
+
+
     private TextView pilihKendaraan;
     private LinearLayout tambahKendaraan;
 
-    private static int RESULT_ADD_VEHICLE=1;
-    private static int RESULT_REGISTER=2;
-
-    private FloatingActionButton fab;
+    private static int RESULT_ADD_VEHICLE = 1;
+    private static int RESULT_REGISTER = 2;
 
     private FirebaseAuth.AuthStateListener authListener;
     private FirebaseAuth auth;
-
 
     private Firebase postUser;
     public String regId;
@@ -101,73 +101,11 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
 
     private ProgressDialog pd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //txtRegId = (TextView) findViewById(R.id.txt_reg_id);
-        //txtMessage = (TextView) findViewById(R.id.txt_push_message);
-        selectedVehicle = (LinearLayout) findViewById(R.id.selected_vehicle);
-        //selectedVehicle.removeViewInLayout();
-        pilihKendaraan = (TextView) findViewById(R.id.tvChooseVehicle);
-        pilihKendaraan.setVisibility(View.INVISIBLE);
-        btnAddVehicle = (LinearLayout) findViewById(R.id.btnAddVehicle);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-
-
-
-        fab.setVisibility(View.INVISIBLE);
-        if (getIntent().getStringExtra("finish") != null){
-            Log.i(TAG, "SAKITTTT JIWAAAA");
-            final Dialog dialog = new Dialog(this);
-            dialog.setContentView(R.layout.dialog_rating);
-            dialog.setTitle("Penilaian");
-            dialog.show();
-        }
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), TrackEmployeeActivity.class);
-
-                startActivityForResult(intent, 1);
-            }
-        });
-
-        btnAddVehicle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AddVehicleActivity.class);
-
-                startActivityForResult(intent, 1);
-            }
-        });
-        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-
-                // checking for type intent filter
-                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
-                    // gcm successfully registered
-                    // now subscribe to `global` topic to receive app wide notifications
-                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
-
-                    displayFirebaseRegId();
-
-                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
-                    // new push notification is received
-
-                    String message = intent.getStringExtra("message");
-
-                    Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
-
-                    //txtMessage.setText(message);
-                }
-            }
-        };
-
-        displayFirebaseRegId();
-
 
         /* Set Toolbar */
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -186,20 +124,113 @@ public class MainActivity extends AppCompatActivity {
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
-
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(navItemSelect);
-        View hView =  navigationView.getHeaderView(0);
+        View hView = navigationView.getHeaderView(0);
         nameNav = (TextView) hView.findViewById(R.id.user_name_text_view);
-        emailNav =(TextView) hView.findViewById(R.id.user_email_text_view);
+        emailNav = (TextView) hView.findViewById(R.id.user_email_text_view);
+
         /* Set View Pager */
         viewPager = (ViewPager) findViewById(R.id.category_viewpager);
         FragmentAdapter adapter = new FragmentAdapter(this, getSupportFragmentManager());
         viewPager.setAdapter(adapter);
-
-        // Find the tab layout that shows the tabs
         tabLayout = (TabLayout) findViewById(R.id.category_tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        headerLayout = (LinearLayout) findViewById(R.id.header_layout);
+        chooseVehicleButton = (Button) findViewById(R.id.choose_vehicle_button);
+//        selectedVehicle = (LinearLayout) findViewById(R.id.selected_vehicle_layout);
+
+        Log.i(TAG, "ini muncul ga?");
+        /* Check Vehicle */
+        SharedPreferences sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
+        String value = sharedPreferences.getString("idVehicleSelected", "");
+        Log.i(TAG, "id vehicle nya = " + value);
+
+        // show vehicle if not empty
+        if (!value.equals("")) {
+            RestClient.get("/getvehiclebyid?id=" + value, null, new JsonHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    super.onStart();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                    System.out.println("error" + responseString);
+                    Toast.makeText(MainActivity.this, "Gagal mendapatkan data kendaraan", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+                    try {
+//                        JSONObject object = data.getJSONObject("data");
+
+//                        System.out.println(data.getString("brand"));
+//                        data.getString("name");
+
+//                        selectedVehicle = (LinearLayout) findViewById(R.id.selected_vehicle);
+
+                        LayoutInflater inflater;
+                        inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.view_selected_vehicle, null);
+                        TextView vehicleBrand = (TextView) layout.findViewById(R.id.selected_vehicle_brand_text_view);
+                        TextView vehicleModel = (TextView) layout.findViewById(R.id.selected_vehicle_model_text_view);
+                        Button editVehicleButton = (Button) layout.findViewById(R.id.change_vehicle_button);
+
+                        editVehicleButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(MainActivity.this, EditVehicleActivity.class);
+                                startActivityForResult(intent, 1);
+                            }
+                        });
+
+                        vehicleBrand.setText(data.getString("brand"));
+                        vehicleModel.setText(data.getString("name"));
+                        headerLayout.removeAllViews();
+                        headerLayout.addView(layout);
+//                        selectedVehicle.removeAllViews();
+//                        selectedVehicle.addView(layout);
+//                        pilihKendaraan.setVisibility(View.VISIBLE);
+//                        chooseVehicleButton.removeAllViews();
+
+                        GlobalVar.isVehicleSelected = true;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+
+        /* Notification */
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // checking for type intent filter
+                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+                    // gcm successfully registered
+                    // now subscribe to `global` topic to receive app wide notifications
+                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
+                    displayFirebaseRegId();
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                    // new push notification is received
+                    String message = intent.getStringExtra("message");
+                    Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
+                    //txtMessage.setText(message);
+                }
+            }
+        };
+
+        chooseVehicleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AddVehicleActivity.class);
+                startActivityForResult(intent, 1);
+            }
+        });
 
         auth = FirebaseAuth.getInstance();
 
@@ -214,22 +245,23 @@ public class MainActivity extends AppCompatActivity {
                 if (user == null) {
                     // user auth state is changed - user is null
                     // launch login activity
-                    Log.i(TAG, "kedeetek blm login");
+                    Log.i(TAG, "kedetek blm login");
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                     finish();
-                }else{
+                } else {
                     uid = auth.getCurrentUser().getUid();
                     new MainActivity.GETidbyuid().execute("");
                 }
             }
         };
+
         Firebase.setAndroidContext(this);
         String result = "";
         result = getIntent().getStringExtra("register");
-        if ( result != null){
-            if(result.equalsIgnoreCase("1")){
+        if (result != null) {
+            if (result.equalsIgnoreCase("1")) {
                 new MainActivity.POSTRegister().execute("");
-                postUser = new Firebase("https://devais-b06d4.firebaseio.com/users/" );
+                postUser = new Firebase("https://devais-b06d4.firebaseio.com/users/");
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("type", "1");
                 map.put("regId", regId);
@@ -243,77 +275,7 @@ public class MainActivity extends AppCompatActivity {
                     PERMISSION_ACCESS_COARSE_LOCATION);
         }
 
-        // cek mobil udh dipilih apa blm
-        SharedPreferences sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
-        String value = sharedPreferences.getString("idVehicleSelected", "");
-//        System.out.println("ada mobel dengan id " + value);
 
-        // kalo ga kosong tampilin kendaraan
-        if (!value.equals("")) {
-//            System.out.println("ada mobil broo");
-            String link = "/getvehiclebyid?id=" + value;
-
-            RestClient.get(link, null, new JsonHttpResponseHandler() {
-                @Override
-                public void onStart() {
-                    super.onStart();
-//                    pd.show();
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    super.onFailure(statusCode, headers, responseString, throwable);
-                    System.out.println("error" + responseString);
-//                    pd.hide();
-                    Toast.makeText(MainActivity.this, "Gagal mendapatkan data", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
-                    // Pull out the first event on the public timeline
-//                    pd.hide();
-//                    System.out.println("sukses ngirim broo");
-                    try {
-//                        JSONObject object = data.getJSONObject("data");
-
-                        System.out.println(data.getString("brand"));
-                        data.getString("name");
-//
-                        selectedVehicle = (LinearLayout) findViewById(R.id.selected_vehicle);
-//
-                        LayoutInflater inflater;
-                        inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//
-                        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.view_selected_vehicle, null);
-                        TextView vehicleManufacture = (TextView) layout.findViewById(R.id.selected_vehicle_manufacture);
-                        TextView vehicleManufactureType = (TextView) layout.findViewById(R.id.selected_vehicle_manufacture_type);
-                        Button editVehicle = (Button) layout.findViewById(R.id.edit_vehicle_button);
-
-                        editVehicle.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent intent = new Intent(MainActivity.this, EditVehicleActivity.class);
-                                startActivityForResult(intent, 1);
-                            }
-                        });
-////                        System.out.println("MERK "  + data.getStringExtra("Merk"));
-                        vehicleManufacture.setText(data.getString("brand"));
-                        vehicleManufactureType.setText(data.getString("name"));
-                        selectedVehicle.removeAllViews();
-                        selectedVehicle.addView(layout);
-                        pilihKendaraan.setVisibility(View.VISIBLE);
-                        btnAddVehicle.removeAllViews();
-//
-                        GlobalVar.isVehicleSelected = true;
-//                        System.out.println("bisa sampe sini");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-//                    pd.hide();
-                }
-            });
-        }
 
         Log.d(TAG, value);
 
@@ -324,28 +286,41 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
         Log.i(TAG, "On result code " + resultCode);
-        if (resultCode == RESULT_ADD_VEHICLE ) {//
-            selectedVehicle = (LinearLayout) findViewById(R.id.selected_vehicle);
+
+        if (resultCode == RESULT_ADD_VEHICLE) {//
+//            selectedVehicle = (LinearLayout) findViewById(R.id.selected_vehicle);
 
             LayoutInflater inflater;
             inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.view_selected_vehicle, null);
-            TextView vehicleManufacture = (TextView) layout.findViewById(R.id.selected_vehicle_manufacture);
-            TextView vehicleManufactureType = (TextView) layout.findViewById(R.id.selected_vehicle_manufacture_type);
-            System.out.println("MERK "  + data.getStringExtra("Merk"));
-            vehicleManufacture.setText(data.getStringExtra("Merk"));
-            vehicleManufactureType.setText(data.getStringExtra("MerkType"));
-            selectedVehicle.removeAllViews();
-            selectedVehicle.addView(layout);
-            pilihKendaraan.setVisibility(View.VISIBLE);
-            btnAddVehicle.removeAllViews();
+            TextView vehicleBrand = (TextView) layout.findViewById(R.id.selected_vehicle_brand_text_view);
+            TextView vehicleModel = (TextView) layout.findViewById(R.id.selected_vehicle_model_text_view);
+            Button editVehicleButton = (Button) layout.findViewById(R.id.change_vehicle_button);
+
+            editVehicleButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MainActivity.this, EditVehicleActivity.class);
+                    startActivityForResult(intent, 1);
+                }
+            });
+
+//            System.out.println("MERK " + data.getStringExtra("Merk"));
+
+            vehicleBrand.setText(data.getStringExtra("Merk"));
+            vehicleModel.setText(data.getStringExtra("MerkType"));
+            headerLayout.removeAllViews();
+            headerLayout.addView(layout);
+//            selectedVehicle.removeAllViews();
+//            selectedVehicle.addView(layout);
+//            pilihKendaraan.setVisibility(View.VISIBLE);
+//            btnAddVehicle.removeAllViews();
 
             GlobalVar.isVehicleSelected = true;
-        } else if (resultCode == RESULT_REGISTER){
+        } else if (resultCode == RESULT_REGISTER) {
 
 
 //            final Dialog dialog = new Dialog(this);
@@ -364,9 +339,9 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "Firebase reg id: " + regId);
 
         //if (!TextUtils.isEmpty(regId));
-            //txtRegId.setText("Firebase Reg Id: " + regId);
+        //txtRegId.setText("Firebase Reg Id: " + regId);
         //else
-            //txtRegId.setText("Firebase Reg Id is not received yet!");
+        //txtRegId.setText("Firebase Reg Id is not received yet!");
     }
 
     @Override
@@ -407,7 +382,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     NavigationView.OnNavigationItemSelectedListener navItemSelect = new NavigationView.OnNavigationItemSelectedListener() {
-
         Intent intent;
 
         @Override
@@ -416,7 +390,7 @@ public class MainActivity extends AppCompatActivity {
             menuItem.setCheckable(true);
             drawerLayout.closeDrawer(GravityCompat.START);
 
-            switch (menuItem.getItemId()){
+            switch (menuItem.getItemId()) {
 //                case R.id.nav_profile:
 //                    intent = new Intent(MainActivity.this, ProfileActivity.class);
 //                    startActivity(intent);
@@ -440,9 +414,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.nav_logout:
                     Toast.makeText(MainActivity.this, getString(R.string.auth_logout), Toast.LENGTH_LONG).show();
                     auth.signOut();
-
                     return true;
-
                 default:
                     return true;
             }
@@ -450,6 +422,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private String URLRegister = new GlobalVar().hostAPI + "/register";
+
     public class POSTRegister extends AsyncTask<String, Void, List<POSTResponse>> {
 
         private final String LOG_TAG = RepairFragment.GETRepair.class.getSimpleName();
@@ -484,17 +457,17 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 SharedPreferences sharedPreferences;
-                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
+                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
                 String id = sharedPreferences.getString("id", "");
-                Log.i(TAG, "id setelah register"+ id);
-                Log.i(TAG, "regid yang akan dikirim "+ regId);
+                Log.i(TAG, "id setelah register" + id);
+                Log.i(TAG, "regid yang akan dikirim " + regId);
 
 //                Log.i(TAG, sharedPreferences.getAll().get("name").toString());
 
-                user.setName(sharedPreferences.getString("name",""));
-                user.setCellphone(sharedPreferences.getString("phone",""));
+                user.setName(sharedPreferences.getString("name", ""));
+                user.setCellphone(sharedPreferences.getString("phone", ""));
                 user.setUid(auth.getCurrentUser().getUid());
-                user.setEmail(sharedPreferences.getString("email",""));
+                user.setEmail(sharedPreferences.getString("email", ""));
                 user.setType("1");
 
                 Uri builtUri = Uri.parse(URLRegister).buildUpon()
@@ -505,7 +478,7 @@ public class MainActivity extends AppCompatActivity {
                         .appendQueryParameter("email", user.getEmail())
                         .appendQueryParameter("type", user.getType())
                         .appendQueryParameter("email", user.getEmail())
-                        .appendQueryParameter("address","")
+                        .appendQueryParameter("address", "")
                         .appendQueryParameter("latitude", "")
                         .appendQueryParameter("longitude", "")
                         .appendQueryParameter("ref_area_id", "14")
@@ -581,7 +554,7 @@ public class MainActivity extends AppCompatActivity {
                 //repairs.clear();
                 //repairs.addAll(services);
                 SharedPreferences sharedPreferences;
-                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
+                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 //                                    String id = responses.get(0).getId();
@@ -618,6 +591,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     public class GETidbyuid extends AsyncTask<String, Void, List<POSTResponse>> {
         private String URLRegister = new GlobalVar().hostAPI + "/customerbyuid";
         private final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -633,11 +607,11 @@ public class MainActivity extends AppCompatActivity {
             // System.out.println(" Data JSON Items" + jsonStr);
             List<POSTResponse> results = new ArrayList<>();
             JSONObject berita = movieJson;
-            System.out.println("nama b get id" +berita.getString("name"));
+            System.out.println("nama b get id" + berita.getString("name"));
             try {
                 nameNav.setText(berita.getString("name"));
                 emailNav.setText(berita.getString("email"));
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
 
@@ -734,7 +708,7 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("responses ketika set adapter : " + responses.toString());
                 idCustomer = responses.get(0).getId();
                 SharedPreferences sharedPreferences;
-                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
+                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 //                                    String id = responses.get(0).getId();
@@ -773,6 +747,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     public class POSTDeviceid extends AsyncTask<String, Void, List<POSTResponse>> {
         private String URLRegister = new GlobalVar().hostAPI + "/updatedevice";
         private final String LOG_TAG = MainActivity.class.getSimpleName();

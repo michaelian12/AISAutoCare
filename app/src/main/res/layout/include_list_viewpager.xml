@@ -23,63 +23,33 @@
                 android:scaleType="center"
                 android:src="@drawable/img_logo" />
         </android.support.v7.widget.Toolbar>
-        <RelativeLayout
+
+        <LinearLayout
+            android:id="@+id/header_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:background="@color/ais_yellow_color"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:background="@color/accent_color"
-                android:padding="10dp">
-
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/btnAddVehicle">
-                    <LinearLayout
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/primary_color"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        android:padding="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="+ Tambah Kendaraan"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/selected_vehicle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    >
-
-
-                </LinearLayout>
-
-            </LinearLayout>
-            <TextView
-                android:id="@+id/tvChooseVehicle"
+            <Button
+                android:id="@+id/choose_vehicle_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pilih Kendaraan"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:padding="5dp"/>
-        </RelativeLayout>
+                android:background="@color/ais_orange_color"
+                android:textColor="@android:color/white"
+                android:padding="16dp"
+                android:text="Pilih Kendaraan" />
+
+            <!--<LinearLayout-->
+                <!--android:id="@+id/selected_vehicle_layout"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="center"-->
+                <!--android:orientation="horizontal" />-->
+        </LinearLayout>
+
         <android.support.design.widget.TabLayout
             android:id="@+id/category_tabs"
             android:layout_width="match_parent"
@@ -93,12 +63,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add"
-        app:layout_anchorGravity="bottom|right|end" />
+
 </android.support.design.widget.CoordinatorLayout>
