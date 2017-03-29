@@ -1,5 +1,6 @@
 package com.aisautocare.mobile.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,18 +20,26 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.fragment.RepairFragment;
 import com.aisautocare.mobile.model.Order;
 import com.aisautocare.mobile.model.POSTResponse;
+import com.aisautocare.mobile.model.ServiceType;
+import com.aisautocare.mobile.model.VehicleBrand;
+import com.aisautocare.mobile.model.VehicleType;
+import com.aisautocare.mobile.util.RestClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -47,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import cz.msebera.android.httpclient.Header;
 import info.androidhive.firebasenotifications.R;
 
 public class OrderActivity extends AppCompatActivity {
@@ -69,6 +79,14 @@ public class OrderActivity extends AppCompatActivity {
     private LatLng selectedLocation;
     private FirebaseAuth auth;
     final String[] selectedIdService = {new String()};
+
+    private ProgressDialog pd;
+
+    /* Initial Value */
+    private String[] subService = new String[0];
+    private String[] idService = new String[0];
+
+    ArrayList<ServiceType> serviceTypes = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,58 +115,128 @@ public class OrderActivity extends AppCompatActivity {
         /* Button */
         orderButton = (Button) findViewById(R.id.order_button);
 
-        /* Initial Value */
-        String[] subService = new String[0];
-        String[] idService = new String[0];
+//      progress dialog
+        pd = new ProgressDialog(this);
+        pd.setCanceledOnTouchOutside(false);
+        pd.setMessage("Loading...");
+
+
+        int idParent = 0;
         if (service.toLowerCase().contains("aki")) {
 
-            subService = new String[]{"Cek", "Ganti", "Stroom Aki"};
-            idService = new String[]{"10", "12", "13"};
+//            subService = new String[]{"Cek", "Ganti", "Stroom Aki"};
+//            idService = new String[]{"10", "12", "13"};
+            idParent = 1;
         } else if (service.toLowerCase().contains("cuci")) {
-            subService = new String[]{"Cuci Cepat", "Cuci Lengkap"};
-            idService = new String[]{"30", "31"};
+//            subService = new String[]{"Cuci Cepat", "Cuci Lengkap"};
+//            idService = new String[]{"30", "31"};
+            idParent = 2;
         } else if (service.toLowerCase().contains("ban")) {
-            subService = new String[]{"Tambal", "Ganti", "Kirim Bensin"};
-            idService = new String[]{"1", "18", "19"};
+//            subService = new String[]{"Tambal", "Ganti", "Kirim Bensin"};
+//            idService = new String[]{"1", "18", "19"};
+            idParent = 3;
         } else if (service.toLowerCase().contains("bengkel")) {
-            subService = new String[]{"Cek Mesin", "Ganto Oli", "Kirim Bensin/BBM"};
-            idService = new String[]{"23", "24", "26"};
+//            subService = new String[]{"Cek Mesin", "Ganto Oli", "Kirim Bensin/BBM"};
+//            idService = new String[]{"23", "24", "26"};
+            idParent = 4;
         } else if (service.toLowerCase().contains("cadangan")) {
-            subService = new String[]{"By Driver", "No Driver"};
-            idService = new String[]{"32", "33"};
+//            subService = new String[]{"By Driver", "No Driver"};
+//            idService = new String[]{"32", "33"};
+            idParent = 5;
         }else if (service.toLowerCase().contains("derek")) {
-            subService = new String[]{"Derek Mobil", "Derek Motor"};
-            idService = new String[]{"35", "36"};
+//            subService = new String[]{"Derek Mobil", "Derek Motor"};
+//            idService = new String[]{"35", "36"};
+            idParent = 34;
         }
 
-        subLayanan.setText(subLayanan.getText() + " : " + subService[0]);
+        SharedPreferences sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
+        String wheel = sharedPreferences.getString("wheel", "");
+
+        RequestParams params = new RequestParams();
+        params.put("parent", idParent);
+        params.put("wheel", wheel );
+        String link = "/getservicetype";
+
+        RestClient.get(link, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                pd.show();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                System.out.println("error" + responseString);
+                pd.hide();
+                Toast.makeText(OrderActivity.this, "Gagal mendapatkan data", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+                // Pull out the first event on the public timeline
+                pd.hide();
+                try {
+                    JSONArray arrayType = data.getJSONArray("data");
+
+
+                    subService = new String[0];
+                    idService = new String[0];
+
+
+                    idService = new String[arrayType.length()];
+                    subService = new String[arrayType.length()];
+                    for (int i = 0; i < arrayType.length(); i++){
+                        JSONObject type = arrayType.getJSONObject(i);
+                        serviceTypes.add(new ServiceType(type));
+                        idService[i] = type.getString("id");
+                        subService[i] = type.getString("sub");
+                        Log.i("Order Act", "subservice ketika perulangan " + subService[i]);
+                    }
+                    subServiceLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            final AlertDialog.Builder alertDialog = new AlertDialog.Builder(OrderActivity.this);
+                            LayoutInflater inflater = getLayoutInflater();
+                            View convertView = (View) inflater.inflate(R.layout.list_view_sub_service, null);
+                            alertDialog.setView(convertView);
+                            alertDialog.setTitle("Pilih Sub Pelayanan");
+                            ListView lv = (ListView) convertView.findViewById(R.id.list_sub_service);
+
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(OrderActivity.this, android.R.layout.simple_list_item_1, subService);
+                            lv.setAdapter(adapter);
+                            final AlertDialog alert = alertDialog.create();
+                            alert.show();
+                            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    alert.dismiss();
+                                    subLayanan.setText(serviceTypes.get(i).getName());
+                                    selectedIdService[0] = idService[i];
+                                }
+                            });
+                        }
+                    });
+
+                    Log.i("Order Act", "idservice setelah perulangan " + idService.toString());
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                pd.hide();
+            }
+        });
+
+
+
+//        subLayanan.setText(subLayanan.getText() + " : " + subService[0]);
         final String[] finalSubService = subService;
 
         /* On Click Listener */
         final String[] finalIdService = idService;
-        subServiceLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final AlertDialog.Builder alertDialog = new AlertDialog.Builder(OrderActivity.this);
-                LayoutInflater inflater = getLayoutInflater();
-                View convertView = (View) inflater.inflate(R.layout.list_view_sub_service, null);
-                alertDialog.setView(convertView);
-                alertDialog.setTitle("Pilih Sub Pelayanan");
-                ListView lv = (ListView) convertView.findViewById(R.id.list_sub_service);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(OrderActivity.this, android.R.layout.simple_list_item_1, finalSubService);
-                lv.setAdapter(adapter);
-                final AlertDialog alert = alertDialog.create();
-                alert.show();
-                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        alert.dismiss();
-                        subLayanan.setText(finalSubService[i]);
-                        selectedIdService[0] = finalIdService[i];
-                    }
-                });
-            }
-        });
+
 
         addressLayout.setOnClickListener(new View.OnClickListener() {
             @Override

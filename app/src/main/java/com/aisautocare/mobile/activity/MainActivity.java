@@ -130,86 +130,12 @@ public class MainActivity extends AppCompatActivity {
         nameNav = (TextView) hView.findViewById(R.id.user_name_text_view);
         emailNav = (TextView) hView.findViewById(R.id.user_email_text_view);
 
-        /* Set View Pager */
-        viewPager = (ViewPager) findViewById(R.id.category_viewpager);
-        FragmentAdapter adapter = new FragmentAdapter(this, getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
-        tabLayout = (TabLayout) findViewById(R.id.category_tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
-        headerLayout = (LinearLayout) findViewById(R.id.header_layout);
-        chooseVehicleButton = (Button) findViewById(R.id.choose_vehicle_button);
-//        selectedVehicle = (LinearLayout) findViewById(R.id.selected_vehicle_layout);
-
-        Log.i(TAG, "ini muncul ga?");
-        /* Check Vehicle */
-        SharedPreferences sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
-        String value = sharedPreferences.getString("idVehicleSelected", "");
-        Log.i(TAG, "id vehicle nya = " + value);
-
-        // show vehicle if not empty
-        if (!value.equals("")) {
-            RestClient.get("/getvehiclebyid?id=" + value, null, new JsonHttpResponseHandler() {
-                @Override
-                public void onStart() {
-                    super.onStart();
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    super.onFailure(statusCode, headers, responseString, throwable);
-                    System.out.println("error" + responseString);
-                    Toast.makeText(MainActivity.this, "Gagal mendapatkan data kendaraan", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
-                    try {
-//                        JSONObject object = data.getJSONObject("data");
-
-//                        System.out.println(data.getString("brand"));
-//                        data.getString("name");
-
-//                        selectedVehicle = (LinearLayout) findViewById(R.id.selected_vehicle);
-
-                        LayoutInflater inflater;
-                        inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-                        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.view_selected_vehicle, null);
-                        TextView vehicleBrand = (TextView) layout.findViewById(R.id.selected_vehicle_brand_text_view);
-                        TextView vehicleModel = (TextView) layout.findViewById(R.id.selected_vehicle_model_text_view);
-                        Button editVehicleButton = (Button) layout.findViewById(R.id.change_vehicle_button);
-
-                        editVehicleButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent intent = new Intent(MainActivity.this, EditVehicleActivity.class);
-                                startActivityForResult(intent, 1);
-                            }
-                        });
-
-                        vehicleBrand.setText(data.getString("brand"));
-                        vehicleModel.setText(data.getString("name"));
-                        headerLayout.removeAllViews();
-                        headerLayout.addView(layout);
-//                        selectedVehicle.removeAllViews();
-//                        selectedVehicle.addView(layout);
-//                        pilihKendaraan.setVisibility(View.VISIBLE);
-//                        chooseVehicleButton.removeAllViews();
-
-                        GlobalVar.isVehicleSelected = true;
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-
         /* Notification */
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 // checking for type intent filter
+                System.out.println("receive broadcast");
                 if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
                     // gcm successfully registered
                     // now subscribe to `global` topic to receive app wide notifications
@@ -223,6 +149,28 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+
+        /* Set View Pager */
+        viewPager = (ViewPager) findViewById(R.id.category_viewpager);
+        FragmentAdapter adapter = new FragmentAdapter(this, getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+        tabLayout = (TabLayout) findViewById(R.id.category_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+        headerLayout = (LinearLayout) findViewById(R.id.header_layout);
+        chooseVehicleButton = (Button) findViewById(R.id.choose_vehicle_button);
+//        selectedVehicle = (LinearLayout) findViewById(R.id.selected_vehicle_layout);
+
+        Log.i(TAG, "ini muncul ga?");
+        /* Check Vehicle */
+//        SharedPreferences sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
+//        String value = sharedPreferences.getString("idCustomer", "");
+//        Log.i(TAG, "id vehicle nya = " + value);
+
+        // show vehicle if not empty
+
+
+
 
         chooseVehicleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -277,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        Log.d(TAG, value);
+//        Log.d(TAG, value);
 
         pd = new ProgressDialog(this);
         pd.setMessage("Menjangkau Server");
@@ -700,7 +648,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(List<POSTResponse> responses) {
+        protected void onPostExecute(final List<POSTResponse> responses) {
 
             if (responses != null) {
                 //repairs.clear();
@@ -710,14 +658,78 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences;
                 sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
 
-                SharedPreferences.Editor editor = sharedPreferences.edit();
+                final SharedPreferences.Editor editor = sharedPreferences.edit();
 //                                    String id = responses.get(0).getId();
 //                                    editor.putString("id", id);
                 editor.putString("idCustomer", responses.get(0).getId());
                 GlobalVar.idCustomerLogged = responses.get(0).getId();
 
-                editor.commit();
+
                 new MainActivity.POSTDeviceid().execute("");
+
+                if (!idCustomer.equals("")) {
+                    RestClient.post("/getvehiclebyuserid?user_id=" + idCustomer, null, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onStart() {
+                            super.onStart();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            super.onFailure(statusCode, headers, responseString, throwable);
+                            System.out.println("error" + responseString);
+                            Toast.makeText(MainActivity.this, "Gagal mendapatkan data kendaraan", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+                            try {
+                                System.out.println("data vehicle " + data);
+
+//                        System.out.println(data.getString("brand"));
+//                        data.getString("name");
+
+//                        selectedVehicle = (LinearLayout) findViewById(R.id.selected_vehicle);
+                                if(!data.getString("api_message").toLowerCase().contains("there")){
+                                    System.out.println("id vehicle " +data.getString("id") );
+                                    editor.putString("idVehicle", data.getString("id"));
+                                    editor.putString("wheel", data.getString("wheel"));
+                                    editor.commit();
+                                    LayoutInflater inflater;
+                                    inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                                    LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.view_selected_vehicle, null);
+                                    TextView vehicleBrand = (TextView) layout.findViewById(R.id.selected_vehicle_brand_text_view);
+                                    TextView vehicleModel = (TextView) layout.findViewById(R.id.selected_vehicle_model_text_view);
+                                    Button editVehicleButton = (Button) layout.findViewById(R.id.change_vehicle_button);
+
+                                    editVehicleButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Intent intent = new Intent(MainActivity.this, EditVehicleActivity.class);
+                                            startActivityForResult(intent, 1);
+                                        }
+                                    });
+
+                                    vehicleBrand.setText(data.getString("brand"));
+                                    vehicleModel.setText(data.getString("name"));
+                                    headerLayout.removeAllViews();
+                                    headerLayout.addView(layout);
+                                }
+
+//                        selectedVehicle.removeAllViews();
+//                        selectedVehicle.addView(layout);
+//                        pilihKendaraan.setVisibility(View.VISIBLE);
+//                        chooseVehicleButton.removeAllViews();
+
+                                GlobalVar.isVehicleSelected = true;
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+                editor.commit();
 
 //                if (Integer.valueOf(responses.get(0).getApi_status()) == 1) {
 //                    finish();

@@ -366,12 +366,17 @@ public class EditVehicleActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Fill params
                 RequestParams params = new RequestParams();
-                params.put("id", value);
+                SharedPreferences sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
+                String idVehicle = sharedPreferences.getString("idVehicle", "");
+                System.out.println("id vehicle pas get di edit" + value);
+                System.out.println("id model " + idModel);
+
+                params.put("id", idVehicle);
                 params.put("user_id", GlobalVar.idCustomerLogged);
                 params.put("ref_vehicle_type_id", idModel);
                 params.put("year", vehicleYearEditText.getText());
-
-                RestClient.get("/updatevehicle", params, new JsonHttpResponseHandler() {
+                System.out.println("parameter update kendaraan " + params);
+                RestClient.post("/updatevehicle", params, new JsonHttpResponseHandler() {
                     @Override
                     public void onStart() {
                         super.onStart();
@@ -387,7 +392,7 @@ public class EditVehicleActivity extends AppCompatActivity {
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
-                        System.out.println(data);
+                        System.out.println("data update kendaraan" +data);
 
                         Intent returnIntent = new Intent();
                         returnIntent.putExtra("Merk", vehicleBrands.get(selectedBrand).getName());
