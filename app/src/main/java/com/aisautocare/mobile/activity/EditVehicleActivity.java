@@ -151,7 +151,6 @@ public class EditVehicleActivity extends AppCompatActivity {
 //                        vehicleModelSpinner.setText(data.getString("name"));
 //                        vehicleYearEditText.setText(data.getString("year"));
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
