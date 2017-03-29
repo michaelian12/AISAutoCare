@@ -143,7 +143,12 @@ public class EditVehicleActivity extends AppCompatActivity {
                         @Override
                         public void onStart()   {
                             super.onStart();
-                            pd.show();
+                            try {
+                                pd.show();
+                            }catch (Exception e){
+
+                            }
+
                         }
 
                         @Override

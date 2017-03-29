@@ -67,28 +67,25 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private BroadcastReceiver mRegistrationBroadcastReceiver;
-
-//    private TextView txtRegId, txtMessage;
-
+    private TextView txtRegId, txtMessage;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private LinearLayout headerLayout;
 
     private Button chooseVehicleButton;
-    private LinearLayout headerLayout;
-//    private LinearLayout selectedVehicle;
-
-
+    private LinearLayout btnAddVehicle;
+    private LinearLayout selectedVehicle;
     private TextView pilihKendaraan;
     private LinearLayout tambahKendaraan;
 
-    private static int RESULT_ADD_VEHICLE = 1;
-    private static int RESULT_REGISTER = 2;
-
+    private static int RESULT_ADD_VEHICLE=1;
+    private static int RESULT_REGISTER=2;
     private FirebaseAuth.AuthStateListener authListener;
     private FirebaseAuth auth;
+
 
     private Firebase postUser;
     public String regId;
@@ -99,13 +96,47 @@ public class MainActivity extends AppCompatActivity {
     private String idCustomer;
     private String uid;
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
-
+    //progress dialog
     private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //txtRegId = (TextView) findViewById(R.id.txt_reg_id);
+        //txtMessage = (TextView) findViewById(R.id.txt_push_message);
+        //selectedVehicle.removeViewInLayout();
+
+
+
+
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                // checking for type intent filter
+                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+                    // gcm successfully registered
+                    // now subscribe to `global` topic to receive app wide notifications
+                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
+
+                    displayFirebaseRegId();
+
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                    // new push notification is received
+
+                    String message = intent.getStringExtra("message");
+
+                    Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
+
+                    //txtMessage.setText(message);
+                }
+            }
+        };
+
+        displayFirebaseRegId();
+
 
         /* Set Toolbar */
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -124,32 +155,12 @@ public class MainActivity extends AppCompatActivity {
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
+
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(navItemSelect);
-        View hView = navigationView.getHeaderView(0);
+        View hView =  navigationView.getHeaderView(0);
         nameNav = (TextView) hView.findViewById(R.id.user_name_text_view);
-        emailNav = (TextView) hView.findViewById(R.id.user_email_text_view);
-
-        /* Notification */
-        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                // checking for type intent filter
-                System.out.println("receive broadcast");
-                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
-                    // gcm successfully registered
-                    // now subscribe to `global` topic to receive app wide notifications
-                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
-                    displayFirebaseRegId();
-                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
-                    // new push notification is received
-                    String message = intent.getStringExtra("message");
-                    Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
-                    //txtMessage.setText(message);
-                }
-            }
-        };
-
+        emailNav =(TextView) hView.findViewById(R.id.user_email_text_view);
         /* Set View Pager */
         viewPager = (ViewPager) findViewById(R.id.category_viewpager);
         FragmentAdapter adapter = new FragmentAdapter(this, getSupportFragmentManager());
@@ -179,7 +190,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, 1);
             }
         });
-
         auth = FirebaseAuth.getInstance();
 
         //get current user
@@ -193,23 +203,22 @@ public class MainActivity extends AppCompatActivity {
                 if (user == null) {
                     // user auth state is changed - user is null
                     // launch login activity
-                    Log.i(TAG, "kedetek blm login");
+                    Log.i(TAG, "kedeetek blm login");
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                     finish();
-                } else {
+                }else{
                     uid = auth.getCurrentUser().getUid();
                     new MainActivity.GETidbyuid().execute("");
                 }
             }
         };
-
         Firebase.setAndroidContext(this);
         String result = "";
         result = getIntent().getStringExtra("register");
-        if (result != null) {
-            if (result.equalsIgnoreCase("1")) {
+        if ( result != null){
+            if(result.equalsIgnoreCase("1")){
                 new MainActivity.POSTRegister().execute("");
-                postUser = new Firebase("https://devais-b06d4.firebaseio.com/users/");
+                postUser = new Firebase("https://devais-b06d4.firebaseio.com/users/" );
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("type", "1");
                 map.put("regId", regId);
@@ -223,20 +232,20 @@ public class MainActivity extends AppCompatActivity {
                     PERMISSION_ACCESS_COARSE_LOCATION);
         }
 
-
-
-//        Log.d(TAG, value);
-
         pd = new ProgressDialog(this);
         pd.setMessage("Menjangkau Server");
         pd.show();
+
+
+
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
         Log.i(TAG, "On result code " + resultCode);
-
         if (resultCode == RESULT_ADD_VEHICLE) {//
 //            selectedVehicle = (LinearLayout) findViewById(R.id.selected_vehicle);
 
@@ -330,6 +339,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     NavigationView.OnNavigationItemSelectedListener navItemSelect = new NavigationView.OnNavigationItemSelectedListener() {
+
         Intent intent;
 
         @Override
@@ -338,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
             menuItem.setCheckable(true);
             drawerLayout.closeDrawer(GravityCompat.START);
 
-            switch (menuItem.getItemId()) {
+            switch (menuItem.getItemId()){
 //                case R.id.nav_profile:
 //                    intent = new Intent(MainActivity.this, ProfileActivity.class);
 //                    startActivity(intent);
@@ -362,7 +372,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.nav_logout:
                     Toast.makeText(MainActivity.this, getString(R.string.auth_logout), Toast.LENGTH_LONG).show();
                     auth.signOut();
+
                     return true;
+
                 default:
                     return true;
             }
@@ -370,7 +382,6 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private String URLRegister = new GlobalVar().hostAPI + "/register";
-
     public class POSTRegister extends AsyncTask<String, Void, List<POSTResponse>> {
 
         private final String LOG_TAG = RepairFragment.GETRepair.class.getSimpleName();
@@ -405,17 +416,17 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 SharedPreferences sharedPreferences;
-                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
+                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
                 String id = sharedPreferences.getString("id", "");
-                Log.i(TAG, "id setelah register" + id);
-                Log.i(TAG, "regid yang akan dikirim " + regId);
+                Log.i(TAG, "id setelah register"+ id);
+                Log.i(TAG, "regid yang akan dikirim "+ regId);
 
 //                Log.i(TAG, sharedPreferences.getAll().get("name").toString());
 
-                user.setName(sharedPreferences.getString("name", ""));
-                user.setCellphone(sharedPreferences.getString("phone", ""));
+                user.setName(sharedPreferences.getString("name",""));
+                user.setCellphone(sharedPreferences.getString("phone",""));
                 user.setUid(auth.getCurrentUser().getUid());
-                user.setEmail(sharedPreferences.getString("email", ""));
+                user.setEmail(sharedPreferences.getString("email",""));
                 user.setType("1");
 
                 Uri builtUri = Uri.parse(URLRegister).buildUpon()
@@ -426,7 +437,7 @@ public class MainActivity extends AppCompatActivity {
                         .appendQueryParameter("email", user.getEmail())
                         .appendQueryParameter("type", user.getType())
                         .appendQueryParameter("email", user.getEmail())
-                        .appendQueryParameter("address", "")
+                        .appendQueryParameter("address","")
                         .appendQueryParameter("latitude", "")
                         .appendQueryParameter("longitude", "")
                         .appendQueryParameter("ref_area_id", "14")
@@ -502,7 +513,7 @@ public class MainActivity extends AppCompatActivity {
                 //repairs.clear();
                 //repairs.addAll(services);
                 SharedPreferences sharedPreferences;
-                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
+                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 //                                    String id = responses.get(0).getId();
@@ -535,11 +546,9 @@ public class MainActivity extends AppCompatActivity {
 //                Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                getApplicationContext().startActivity(intent);
-                pd.hide();
             }
         }
     }
-
     public class GETidbyuid extends AsyncTask<String, Void, List<POSTResponse>> {
         private String URLRegister = new GlobalVar().hostAPI + "/customerbyuid";
         private final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -555,11 +564,11 @@ public class MainActivity extends AppCompatActivity {
             // System.out.println(" Data JSON Items" + jsonStr);
             List<POSTResponse> results = new ArrayList<>();
             JSONObject berita = movieJson;
-            System.out.println("nama b get id" + berita.getString("name"));
+            System.out.println("nama b get id" +berita.getString("name"));
             try {
                 nameNav.setText(berita.getString("name"));
                 emailNav.setText(berita.getString("email"));
-            } catch (Exception e) {
+            }catch (Exception e){
 
             }
 
@@ -648,7 +657,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(final List<POSTResponse> responses) {
+        protected void onPostExecute(List<POSTResponse> responses) {
 
             if (responses != null) {
                 //repairs.clear();
@@ -656,7 +665,7 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("responses ketika set adapter : " + responses.toString());
                 idCustomer = responses.get(0).getId();
                 SharedPreferences sharedPreferences;
-                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
+                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
 
                 final SharedPreferences.Editor editor = sharedPreferences.edit();
 //                                    String id = responses.get(0).getId();
@@ -664,9 +673,8 @@ public class MainActivity extends AppCompatActivity {
                 editor.putString("idCustomer", responses.get(0).getId());
                 GlobalVar.idCustomerLogged = responses.get(0).getId();
 
-
+                editor.commit();
                 new MainActivity.POSTDeviceid().execute("");
-
                 if (!idCustomer.equals("")) {
                     RestClient.post("/getvehiclebyuserid?user_id=" + idCustomer, null, new JsonHttpResponseHandler() {
                         @Override
@@ -756,10 +764,10 @@ public class MainActivity extends AppCompatActivity {
 //                Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                getApplicationContext().startActivity(intent);
+                pd.hide();
             }
         }
     }
-
     public class POSTDeviceid extends AsyncTask<String, Void, List<POSTResponse>> {
         private String URLRegister = new GlobalVar().hostAPI + "/updatedevice";
         private final String LOG_TAG = MainActivity.class.getSimpleName();
