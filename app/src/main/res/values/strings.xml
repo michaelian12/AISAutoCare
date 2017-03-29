@@ -28,8 +28,9 @@
 
     <!-- String values in add vehicle activity. [CHAR LIMIT=20] -->
     <string name="choose_type">Jenis Kendaraan</string>
-    <string name="choose_manufacturer">Pilih Merk</string>
-    <string name="choose_manufacturer_type">Pilih Tipe Merk</string>
+    <string name="choose_manufacturer">Pilih Merk Kendaraan</string>
+    <string name="choose_manufacturer_type">Pilih Model Kendaraan</string>
+    <string name="fill_year">Isi Tahun Keluaran</string>
     <string name="choose_model">Pilih Model</string>
     <string name="choose_year">Pilih Tahun</string>
     <string name="choose_transmission">Pilih Transmisi</string>

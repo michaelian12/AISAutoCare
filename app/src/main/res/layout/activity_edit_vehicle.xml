@@ -21,7 +21,7 @@
             android:id="@+id/edit_vehicle_type_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/choose_type"
+            android:hint="@string/choose_type"/>
             app:met_floatingLabel="normal"
             app:met_primaryColor="@color/accent_color" />
 
@@ -42,13 +42,13 @@
             app:met_primaryColor="@color/accent_color" />
 
         <EditText
-            android:paddingTop="16dp"
             android:id="@+id/edit_vehicle_year_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Isi tahun Keluaran"
-            android:inputType="number"/>
-
+            android:hint="@string/fill_year"
+            android:inputType="number"
+            android:maxLength="4"
+            android:paddingTop="16dp" />
     </LinearLayout>
 
     <Button
