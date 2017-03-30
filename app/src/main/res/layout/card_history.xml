@@ -29,7 +29,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/history_service_date_text_view"
+                        android:id="@+id/history_date_text_view"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -37,7 +37,7 @@
                         tools:text="26 Januari 2017" />
 
                     <TextView
-                        android:id="@+id/history_service_price_text_view"
+                        android:id="@+id/history_price_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
