@@ -186,6 +186,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.aisautocare.mobile.activity.MainActivity" />
         </activity>
+        <activity android:name="com.aisautocare.mobile.activity.HistoryDetailActivity"></activity>
     </application>
 
 </manifest>

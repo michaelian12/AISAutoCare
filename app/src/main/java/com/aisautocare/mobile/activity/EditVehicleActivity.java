@@ -418,6 +418,8 @@ public class EditVehicleActivity extends AppCompatActivity {
 
                 /* If all data full filled */
                 if ((indexSelectedBrand >= 0) && (indexSelectedModel >= 0) && (year != "")) {
+                    pd.setMessage("Menyimpan data kendaraan");
+                    pd.show();
                     SharedPreferences sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
                     String idVehicle = sharedPreferences.getString("idVehicle", "");
                     System.out.println("id vehicle pas get di edit" + idVehicle);
@@ -455,6 +457,7 @@ public class EditVehicleActivity extends AppCompatActivity {
                             GlobalVar.selectedCar = vehicleBrands.get(indexSelectedBrand).getName();
                             GlobalVar.selectedCarType = vehicleModel.get(indexSelectedModel).getType();
                             setResult(1, returnIntent);
+                            pd.hide();
                             finish();
                         }
                     });
