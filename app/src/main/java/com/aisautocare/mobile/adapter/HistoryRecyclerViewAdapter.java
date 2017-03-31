@@ -40,7 +40,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     }
 
     @Override
-    public void onBindViewHolder(HistoryRecyclerViewAdapter.HistoryViewHolder holder, int position) {
+    public void onBindViewHolder(HistoryRecyclerViewAdapter.HistoryViewHolder holder, final int position) {
         holder.serviceImage.setImageResource(histories.get(position).getImageResourceId());
         holder.serviceDate.setText(histories.get(position).getDate());
         holder.servicePrice.setText(histories.get(position).getPrice());
@@ -52,9 +52,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), HistoryDetailActivity.class);
-//                intent.putExtra("icon", applications.get(position).getIconResourceId());
-//                intent.putExtra("name", applications.get(position).getName());
-//                intent.putExtra("developer", applications.get(position).getDeveloper());
+                intent.putExtra("idOrder", histories.get(position).getOrderId());
                 view.getContext().startActivity(intent);
             }
         });

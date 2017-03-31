@@ -51,7 +51,7 @@ public class HistoryActivity extends AppCompatActivity {
 //        System.out.println("id customer di history tuh " + idCustomer);
 
         /* Get Histories Data */
-        RestClient.get("/history_bengkel?customer_id=" + idCustomer, null, new JsonHttpResponseHandler() {
+        RestClient.get("/history_bengkel?list_customer_id=" + idCustomer, null, new JsonHttpResponseHandler() {
             @Override
             public void onStart()   {
                 super.onStart();
@@ -74,11 +74,7 @@ public class HistoryActivity extends AppCompatActivity {
                     for (int i = 0; i < arrayHistory.length(); i++) {
                         JSONObject history = arrayHistory.getJSONObject(i);
                         histories.add(new History(history));
-                        System.out.println(histories.get(i).getVehicleName());
-//                        brandNames.add(vehicleBrands.get(i).getName());
-//                        if (vehicleBrands.get(i).getId().equals(idBrand)) {
-//                            indexSelectedBrand = i;
-//                        }
+//                        System.out.println(histories.get(i).getVehicleName());
                     }
 
                     adapter = new HistoryRecyclerViewAdapter(HistoryActivity.this, histories);
@@ -88,15 +84,6 @@ public class HistoryActivity extends AppCompatActivity {
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
                     recyclerView.setHasFixedSize(true);
 
-//                    arrayBrandAdapter = new ArrayAdapter<String>(EditVehicleActivity.this, android.R.layout.simple_dropdown_item_1line, brandNames);
-//                    vehicleBrandSpinner.setAdapter(arrayBrandAdapter);
-//                    System.out.println(brandNames);
-//                    System.out.println(arrayBrandAdapter);
-//                    System.out.println("panjang array = " + vehicleBrandSpinner.length());
-//                    System.out.println("index selected brand = " + indexSelectedBrand);
-////                            vehicleBrandSpinner.setSelection(indexSelectedBrand);
-//                    vehicleBrandSpinner.setText(brandNames.get(indexSelectedBrand));
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -104,17 +91,5 @@ public class HistoryActivity extends AppCompatActivity {
 //                pd.hide();
             }
         });
-
-//        ArrayList<History> histories = new ArrayList<History>();
-//        histories.add(new History(R.drawable.ic_car, "2 Februari 2017", "Rp 100.000", "Ford Fiesta", "Derek"));
-//        histories.add(new History(R.drawable.ic_car, "26 Januari 2017", "Rp 80.000", "Ford Fiesta", "Ganti Aki"));
-//        histories.add(new History(R.drawable.ic_bike, "14 Januari 2017", "Rp 35.000", "Kawasaki Ninja", "Cuci / Salon"));
-
-//        adapter = new HistoryRecyclerViewAdapter(this, histories);
-//
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        recyclerView.setAdapter(adapter);
-//        recyclerView.setItemAnimator(new DefaultItemAnimator());
-//        recyclerView.setHasFixedSize(true);
     }
 }

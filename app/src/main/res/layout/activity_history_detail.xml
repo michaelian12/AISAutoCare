@@ -128,7 +128,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <android.support.v4.widget.CircleImageView
+                        <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/history_detail_workshop_image_view"
                             android:layout_width="48dp"
                             android:layout_height="48dp"

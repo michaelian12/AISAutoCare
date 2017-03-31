@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 public class History {
 
+    private String orderId; // order id
     private int imageResourceId; // service image
     private String date; // service date
     private String price; // service price
@@ -16,7 +17,8 @@ public class History {
     private String serviceName; // service name
     private String address; // order address
 
-    public History(int imageResourceId, String date, String price, String vehicleName, String serviceName, String address) {
+    public History(String orderId, int imageResourceId, String date, String price, String vehicleName, String serviceName, String address) {
+        this.orderId = orderId;
         this.imageResourceId = imageResourceId;
         this.date = date;
         this.price = price;
@@ -27,11 +29,20 @@ public class History {
 
     public History(JSONObject object) throws JSONException {
 //        this.imageResourceId = object.getString("id");
+        this.orderId = object.getString("order_id");
         this.date = object.getString("order_date");
-        this.price = object.getString("bd");
-        this.vehicleName = object.getString("name");
-        this.serviceName = object.getString("service_sub") + " " + object.getString("service_name");
-        this.address = object.getString("address");
+        this.price = object.getString("vehicle_year"); // sementara ini dulu
+        this.vehicleName = object.getString("brand_name") + " " + object.getString("vehicle_type") + " " + object.getString("vehicle_year");
+        this.serviceName = object.getString("service_sub").trim() + " " + object.getString("service_name").trim();
+        this.address = object.getString("order_service_location");
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public int getImageResourceId() {
