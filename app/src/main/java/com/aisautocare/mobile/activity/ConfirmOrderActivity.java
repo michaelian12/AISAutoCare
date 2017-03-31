@@ -103,16 +103,17 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         if (getIntent().getStringExtra("namaLayanan").toLowerCase().contains("ganti")){
             total.setText("Subtotal (*belum termasuk harga barang. Harga barang akan dikonfirmasikan oleh Bengkel / operator akan dalam waktu 5 menit. Mohon nomor Anda dapat dihubungi)");
 
-            try {
-                hargaJasaValue = Integer.valueOf(getIntent().getStringExtra("hj"));
-            }catch (Exception e){
-                hargaJasaValue = 0;
-            }
-            serviceName.setText("Harga Jasa : " + getIntent().getStringExtra("namaLayanan") );
-            servicePrice.setText("Rp. " + hargaJasaValue);
+
         }else{
             total.setText("Total");
         }
+        try {
+            hargaJasaValue = Integer.valueOf(getIntent().getStringExtra("hj"));
+        }catch (Exception e){
+            hargaJasaValue = 0;
+        }
+        serviceName.setText("Harga Jasa : " + getIntent().getStringExtra("namaLayanan") );
+        servicePrice.setText("Rp. " + hargaJasaValue);
         garageName.setText(getIntent().getStringExtra("namaBengkel"));
         mechanicName.setText(getIntent().getStringExtra("namaBengkel"));
         mechanicPhone.setText(getIntent().getStringExtra("hpBengkel"));
@@ -155,7 +156,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                             distancePriceValue = (((Integer.valueOf(distanceInfo.getValue())/1000)/5 * 10000 )+ 10000);
                             distancePrice.setText("Rp. " + distancePriceValue) ;
                             totalPriceValue = hargaJasaValue + appPriceValue+distancePriceValue;
-                            total.setText("Rp. " + totalPriceValue);
+                            orderPrice.setText("Rp. " + totalPriceValue);
 
                             //orderPrice.setText("RP." + (Double.valueOf(distancePrice.getText().toString().replace("Rp.", "").replace(".", "").replace("Rp", "").replace(" ", "") ).intValue() +  Double.valueOf(servicePrice.getText().toString().replace("Rp.", "").replace(".", "").replace("Rp", "").replace(" ", "")).intValue() + 10000));
 //                            layoutButtons.setVisibility(View.VISIBLE);

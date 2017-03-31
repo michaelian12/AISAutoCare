@@ -216,7 +216,7 @@
                             android:id="@+id/text_app_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Rp. -"
+                            android:text="Rp. 10000"
                             android:textColor="@color/primary_text"
                             android:textStyle="bold"/>
                     </LinearLayout>
