@@ -17,29 +17,41 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Jenis Kendaraan"
+            android:textColor="@color/primary_text"/>
+
+        <Spinner
             android:id="@+id/edit_vehicle_type_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/choose_type"/>
-            app:met_floatingLabel="normal"
-            app:met_primaryColor="@color/accent_color" />
 
-        <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Merk Kendaraan"
+            android:textColor="@color/primary_text"/>
+
+        <Spinner
             android:id="@+id/edit_vehicle_manufacture_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/choose_manufacturer"
-            app:met_floatingLabel="normal"
-            app:met_primaryColor="@color/accent_color" />
+            android:hint="@string/choose_manufacturer"/>
 
-        <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Model Kendaraan"
+            android:textColor="@color/primary_text"/>
+
+        <Spinner
             android:id="@+id/edit_vehicle_manufacture_type_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/choose_manufacturer_type"
-            app:met_floatingLabel="normal"
-            app:met_primaryColor="@color/accent_color" />
+            android:hint="@string/choose_manufacturer_type"/>
 
         <EditText
             android:id="@+id/edit_vehicle_year_edit_text"

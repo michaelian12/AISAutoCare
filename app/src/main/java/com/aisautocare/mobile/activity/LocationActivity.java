@@ -6,16 +6,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -24,7 +25,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.service.FetchAddressIntentService;
 import com.aisautocare.mobile.util.AppUtils;
 import com.google.android.gms.common.ConnectionResult;
@@ -44,6 +44,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import info.androidhive.firebasenotifications.R;
 
@@ -149,8 +154,31 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
             @Override
             public void onClick(View view) {
                 LatLng selectedLocation = mMap.getCameraPosition().target;
+                Double lat = selectedLocation.latitude;
+                Double lon = selectedLocation.longitude;
+
+                Geocoder geocoder;
+                List<Address> addresses = new ArrayList<Address>();
+                geocoder = new Geocoder(LocationActivity.this, Locale.getDefault());
+
+                try {
+                    addresses = geocoder.getFromLocation(lat, lon, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                String address = addresses.get(0).getAddressLine(0)
+                        + ", " + addresses.get(0).getAddressLine(2); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                System.out.println("maksimal " + addresses.get(0).getMaxAddressLineIndex());
+                String city = addresses.get(0).getLocality();
+                String state = addresses.get(0).getAdminArea();
+                String country = addresses.get(0).getCountryName();
+                String postalCode = addresses.get(0).getPostalCode();
+                String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+
                 Intent returnIntent = new Intent();
 //                returnIntent.putExtra("latlng", selectedLocation);
+                returnIntent.putExtra("address", address);
                 returnIntent.putExtra("lat", String.valueOf(selectedLocation.latitude));
                 returnIntent.putExtra("lon", String.valueOf(selectedLocation.longitude));
 

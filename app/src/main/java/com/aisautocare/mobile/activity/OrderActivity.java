@@ -289,8 +289,10 @@ public class OrderActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // menangkap hasil balikan dari Place Picker, dan menampilkannya pada TextView
         if(resultCode == 1 ){
-            selectedLocation = new LatLng(Double.valueOf(data.getStringExtra("lat")), Double.valueOf(data.getStringExtra("lon")));
-            address.setText(selectedLocation.toString());
+//            selectedLocation = new LatLng(Double.valueOf(data.getStringExtra("lat")), Double.valueOf(data.getStringExtra("lon")));
+            String alamat = data.getStringExtra("address");
+//            address.setText(selectedLocation.toString());
+            address.setText(alamat);
             GlobalVar.selectedLat = Double.valueOf(data.getStringExtra("lat"));
             GlobalVar.selectedLon = Double.valueOf(data.getStringExtra("lon"));
         }
