@@ -354,10 +354,10 @@ public class MainActivity extends AppCompatActivity {
 //                    intent = new Intent(MainActivity.this, ProfileActivity.class);
 //                    startActivity(intent);
 //                    return true;
-//                case R.id.nav_history:
-//                    intent = new Intent(MainActivity.this, HistoryActivity.class);
-//                    startActivity(intent);
-//                    return true;
+                case R.id.nav_history:
+                    intent = new Intent(MainActivity.this, HistoryActivity.class);
+                    startActivity(intent);
+                    return true;
 //                case R.id.nav_garage:
 //                    intent = new Intent(MainActivity.this, GarageActivity.class);
 //                    startActivity(intent);

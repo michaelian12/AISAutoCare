@@ -1,6 +1,8 @@
 package com.aisautocare.mobile.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.aisautocare.mobile.model.Garage;
+import com.aisautocare.mobile.activity.HistoryDetailActivity;
 import com.aisautocare.mobile.model.History;
 
 import java.util.ArrayList;
@@ -39,11 +41,23 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 
     @Override
     public void onBindViewHolder(HistoryRecyclerViewAdapter.HistoryViewHolder holder, int position) {
-        holder.vehicleImage.setImageResource(histories.get(position).getImageResourceId());
+        holder.serviceImage.setImageResource(histories.get(position).getImageResourceId());
         holder.serviceDate.setText(histories.get(position).getDate());
         holder.servicePrice.setText(histories.get(position).getPrice());
-        holder.vehicleName.setText(histories.get(position).getVehicleName());
         holder.serviceName.setText(histories.get(position).getServiceName());
+        holder.vehicleName.setText(histories.get(position).getVehicleName());
+        holder.address.setText(histories.get(position).getAddress());
+
+        holder.historyCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), HistoryDetailActivity.class);
+//                intent.putExtra("icon", applications.get(position).getIconResourceId());
+//                intent.putExtra("name", applications.get(position).getName());
+//                intent.putExtra("developer", applications.get(position).getDeveloper());
+                view.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -53,16 +67,19 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 
     public class HistoryViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView vehicleImage;
-        TextView serviceDate, servicePrice, vehicleName, serviceName;
+        CardView historyCard;
+        ImageView serviceImage;
+        TextView serviceDate, servicePrice, serviceName, vehicleName, address;
 
         public HistoryViewHolder(View itemView) {
             super(itemView);
-            vehicleImage = (ImageView) itemView.findViewById(R.id.history_vehicle_image);
-            serviceDate = (TextView) itemView.findViewById(R.id.history_service_date);
-            servicePrice = (TextView) itemView.findViewById(R.id.history_service_price);
-            vehicleName = (TextView) itemView.findViewById(R.id.history_vehicle_name);
-            serviceName = (TextView) itemView.findViewById(R.id.history_service_name);
+            historyCard = (CardView) itemView.findViewById(R.id.card_history);
+            serviceImage = (ImageView) itemView.findViewById(R.id.history_service_image_view);
+            serviceDate = (TextView) itemView.findViewById(R.id.history_date_text_view);
+            servicePrice = (TextView) itemView.findViewById(R.id.history_price_text_view);
+            serviceName = (TextView) itemView.findViewById(R.id.history_service_name_text_view);
+            vehicleName = (TextView) itemView.findViewById(R.id.history_vehicle_name_text_view);
+            address = (TextView) itemView.findViewById(R.id.history_address_text_view);
         }
     }
 }
