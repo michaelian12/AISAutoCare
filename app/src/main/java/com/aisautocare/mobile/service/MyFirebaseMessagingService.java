@@ -86,6 +86,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 String uidBengkel = data.getString("uid_bengkel");
                 JSONObject bengkel = data.getJSONObject("bengkel");
                 JSONArray service = data.getJSONArray("service");
+                JSONArray serviceType = data.getJSONArray("service_type");
+
 
                 Log.e(TAG, "data: " + data);
                 Log.e(TAG, "title: " + title);
@@ -104,9 +106,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 pushNotification .putExtra("namaBengkel", bengkel.getString("name"));
                 pushNotification .putExtra("alamatBengkel", bengkel.getString("address"));
                 pushNotification .putExtra("hpBengkel", bengkel.getString("phone"));
-                pushNotification .putExtra("namaLayanan", service.getJSONObject(0).getString("name") + " " + service.getJSONObject(0).getString("sub"));
-                pushNotification .putExtra("hargaLayanan", service.getJSONObject(0).getString("price") );
+                pushNotification .putExtra("namaLayanan", serviceType.getJSONObject(0).getString("name") + " " + serviceType.getJSONObject(0).getString("sub"));
+                pushNotification .putExtra("hargaLayanan", serviceType.getJSONObject(0).getString("price") );
                 pushNotification .putExtra("uidBengkel", uidBengkel );
+                pushNotification .putExtra("hj", service.getJSONObject(0).getString("hj") );
+                pushNotification .putExtra("hb", service.getJSONObject(0).getString("hb"));
+                pushNotification .putExtra("jp", service.getJSONObject(0).getString("jp") );
+                pushNotification .putExtra("bd", service.getJSONObject(0).getString("bd"));
+
+
 
 
 

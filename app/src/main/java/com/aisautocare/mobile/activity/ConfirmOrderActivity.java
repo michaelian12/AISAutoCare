@@ -58,11 +58,16 @@ public class ConfirmOrderActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private CircleImageView mechanicImage;
-    private TextView garageName, mechanicName, mechanicPhone, orderPrice, orderDistance, mechanicAddress, total, distancePrice, servicePrice, serviceName;
+    private TextView garageName, mechanicName, mechanicPhone, orderPrice, orderDistance, mechanicAddress, total, distancePrice, servicePrice, serviceName, appPrice;
     private Button confirmButton, cancelButton;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     private TextView skip;
+
+    private int totalPriceValue;
+    private int appPriceValue = 10000;
+    private int hargaJasaValue;
+    private int distancePriceValue;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +89,8 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         distancePrice = (TextView) findViewById(R.id.text_distance_price);
         servicePrice = (TextView) findViewById(R.id.text_service_price);
         serviceName = (TextView) findViewById(R.id.confirm_order_service_text_view);
+        appPrice = (TextView) findViewById(R.id.text_app_price);
+        appPrice.setText("Rp. "+ appPriceValue);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,10 +100,16 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                 finish();
             }
         });
-        if (GlobalVar.selectedSubService.toLowerCase().contains("ganti")){
+        if (getIntent().getStringExtra("namaLayanan").toLowerCase().contains("ganti")){
             total.setText("Subtotal (*belum termasuk harga barang. Harga barang akan dikonfirmasikan oleh Bengkel / operator akan dalam waktu 5 menit. Mohon nomor Anda dapat dihubungi)");
-            serviceName.setText("Harga Jasa : " + GlobalVar.selectedService + " " + GlobalVar.selectedSubService);
-            servicePrice.setText("RP. 15.000");
+
+            try {
+                hargaJasaValue = Integer.valueOf(getIntent().getStringExtra("hj"));
+            }catch (Exception e){
+                hargaJasaValue = 0;
+            }
+            serviceName.setText("Harga Jasa : " + getIntent().getStringExtra("namaLayanan") );
+            servicePrice.setText("Rp. " + hargaJasaValue);
         }else{
             total.setText("Total");
         }
@@ -139,7 +152,11 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                             GlobalVar.waktuTempuh = Integer.valueOf(durationInfo.getValue());
                             System.out.println("Jarak dan waktu " + distance + " " + duration);
                             orderDistance.setText("Jasa Dilivery : " + (Double.valueOf(distanceInfo.getValue())/1000) + "Km");
-                            distancePrice.setText("Rp. " + (((Integer.valueOf(distanceInfo.getValue())/1000)/5 * 10000 )+ 10000)) ;
+                            distancePriceValue = (((Integer.valueOf(distanceInfo.getValue())/1000)/5 * 10000 )+ 10000);
+                            distancePrice.setText("Rp. " + distancePriceValue) ;
+                            totalPriceValue = hargaJasaValue + appPriceValue+distancePriceValue;
+                            total.setText("Rp. " + totalPriceValue);
+
                             //orderPrice.setText("RP." + (Double.valueOf(distancePrice.getText().toString().replace("Rp.", "").replace(".", "").replace("Rp", "").replace(" ", "") ).intValue() +  Double.valueOf(servicePrice.getText().toString().replace("Rp.", "").replace(".", "").replace("Rp", "").replace(" ", "")).intValue() + 10000));
 //                            layoutButtons.setVisibility(View.VISIBLE);
                             //animateMarker(mMap, customerLoc, directionPositionList, false, Integer.valueOf(durationInfo.getValue()));

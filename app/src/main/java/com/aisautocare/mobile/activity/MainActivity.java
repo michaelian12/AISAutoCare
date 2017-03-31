@@ -233,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         pd = new ProgressDialog(this);
+        pd.setCanceledOnTouchOutside(false);
         pd.setMessage("Menjangkau Server");
         pd.show();
 
