@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -254,9 +255,15 @@ public class MainActivity extends AppCompatActivity {
             inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.view_selected_vehicle, null);
+            ImageView imageView = (ImageView) layout.findViewById(R.id.image_seleceted_vehicle);
             TextView vehicleBrand = (TextView) layout.findViewById(R.id.selected_vehicle_brand_text_view);
             TextView vehicleModel = (TextView) layout.findViewById(R.id.selected_vehicle_model_text_view);
             Button editVehicleButton = (Button) layout.findViewById(R.id.change_vehicle_button);
+            SharedPreferences sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
+            String wheel = sharedPreferences.getString("wheel", "");
+            if (wheel.equals("2")){
+                imageView.setImageResource(R.drawable.ic_bike);
+            }
 
             editVehicleButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -665,7 +672,7 @@ public class MainActivity extends AppCompatActivity {
                 //repairs.addAll(services);
                 System.out.println("responses ketika set adapter : " + responses.toString());
                 idCustomer = responses.get(0).getId();
-                SharedPreferences sharedPreferences;
+                final SharedPreferences sharedPreferences;
                 sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
 
                 final SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -708,10 +715,14 @@ public class MainActivity extends AppCompatActivity {
                                     inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
                                     LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.view_selected_vehicle, null);
+                                    ImageView imageView = (ImageView) layout.findViewById(R.id.image_seleceted_vehicle);
                                     TextView vehicleBrand = (TextView) layout.findViewById(R.id.selected_vehicle_brand_text_view);
                                     TextView vehicleModel = (TextView) layout.findViewById(R.id.selected_vehicle_model_text_view);
                                     Button editVehicleButton = (Button) layout.findViewById(R.id.change_vehicle_button);
-
+                                    String wheel = sharedPreferences.getString("wheel", "");
+                                    if (wheel.equals("2")){
+                                        imageView.setImageResource(R.drawable.ic_bike);
+                                    }
                                     editVehicleButton.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {

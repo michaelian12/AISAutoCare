@@ -24,6 +24,8 @@ public class GlobalVar {
 
     public static final String MyPREFERENCES = "MyPrefs" ;
     public static int waktuTempuh = 900; //second
+    public static int bengkelID;
+
     public boolean isVehicleSelected() {
         return isVehicleSelected;
     }

@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.service.FetchAddressIntentService;
 import com.aisautocare.mobile.util.AppUtils;
 import com.google.android.gms.common.ConnectionResult;
@@ -167,9 +168,18 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
                     e.printStackTrace();
                 }
 
-                String address = addresses.get(0).getAddressLine(0)
-                        + ", " + addresses.get(0).getAddressLine(2); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                System.out.println("maksimal " + addresses.get(0).getMaxAddressLineIndex());
+                String address = "gagal mendapatkan alamat";
+                try {
+                    address= addresses.get(0).getAddressLine(0)
+                            + ", " + addresses.get(0).getAddressLine(2); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                    System.out.println("maksimal " + addresses.get(0).getMaxAddressLineIndex());
+                }catch (Exception e){
+                    Toast.makeText(getApplicationContext(),
+                            "Gagal mendapatkan alamat.", Toast.LENGTH_SHORT)
+                            .show();
+                }
+
+
                 String city = addresses.get(0).getLocality();
                 String state = addresses.get(0).getAdminArea();
                 String country = addresses.get(0).getCountryName();
@@ -210,6 +220,12 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
                     Location mLocation = new Location("");
                     mLocation.setLatitude(mCenterLatLong.latitude);
                     mLocation.setLongitude(mCenterLatLong.longitude);
+                    try {
+                        mLocation.setLatitude(GlobalVar.selectedLat);
+                        mLocation.setLongitude(GlobalVar.selectedLon);
+                    }catch (Exception e){
+                        Log.i(TAG, "tidak ada lokasi terkini");
+                    }
 
                     startIntentService(mLocation);
                     //locationMarkerText.setText("Lat : " + mCenterLatLong.latitude + "," + "Long : " + mCenterLatLong.longitude);

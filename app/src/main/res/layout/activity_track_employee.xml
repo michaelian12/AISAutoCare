@@ -87,14 +87,6 @@
                                 android:paddingLeft="24dp">
 
                                 <TextView
-                                    android:id="@+id/nama_montir_track"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="Gunawan Effendi"
-                                    android:textColor="@color/primary_text"
-                                    android:textStyle="bold" />
-
-                                <TextView
                                     android:id="@+id/track_employee_mechanic_phone_text_view"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"

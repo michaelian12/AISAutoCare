@@ -1,6 +1,7 @@
 package com.aisautocare.mobile.activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,9 +37,11 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.model.POSTResponse;
+import com.aisautocare.mobile.util.RestClient;
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
 import com.akexorcist.googledirection.constant.AvoidType;
@@ -64,7 +67,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -79,6 +85,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import cz.msebera.android.httpclient.Header;
 import info.androidhive.firebasenotifications.R;
 
 public class TrackEmployeeActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -96,6 +103,9 @@ public class TrackEmployeeActivity extends AppCompatActivity implements OnMapRea
     private TextView namaMechanic, namaMechanicEmployee, hpMechanic;
     private ArrayList<LatLng> directionPositionList;
     private CountDownTimer timerGo;
+
+    //progress dialog
+    private ProgressDialog pd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,12 +116,12 @@ public class TrackEmployeeActivity extends AppCompatActivity implements OnMapRea
         setSupportActionBar(toolbar);
         cancelButton = (Button) findViewById(R.id.track_cancel_button);
         namaMechanic = (TextView) findViewById(R.id.track_mechanic_name);
-        namaMechanicEmployee = (TextView) findViewById(R.id.nama_montir_track);
+//        namaMechanicEmployee = (TextView) findViewById(R.id.nama_montir_track);
         hpMechanic = (TextView) findViewById(R.id.track_employee_mechanic_phone_text_view);
         callPhone = (ImageView) findViewById(R.id.call_mechanic);
-//        namaMechanic.setText(getIntent().getStringExtra("namaBengkel"));
+        namaMechanic.setText(getIntent().getStringExtra("namaBengkel"));
 //        namaMechanicEmployee.setText(getIntent().getStringExtra("namaBengkel"));
-//        hpMechanic.setText(getIntent().getStringExtra("hpBengkel"));
+        hpMechanic.setText(getIntent().getStringExtra("hpBengkel"));
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -174,13 +184,61 @@ public class TrackEmployeeActivity extends AppCompatActivity implements OnMapRea
         });
 
 
+        //set progress dialog
+        pd = new ProgressDialog(TrackEmployeeActivity.this);
+        pd.setMessage("loading");
+        pd.setCanceledOnTouchOutside(false);
+
 
         arriveButton = (Button) findViewById(R.id.track_arrive_button);
         arriveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(TrackEmployeeActivity.this, RatingActivity.class);
-                startActivity(intent);
+
+                String link = "/sendnotiffinish";
+                RequestParams params = new RequestParams();
+
+                params.put("id", GlobalVar.bengkelID);
+                Log.i("Rating", "Log param finish " + params.toString());
+
+                RestClient.get(link, params, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        try {
+                            pd.show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        super.onFailure(statusCode, headers, responseString, throwable);
+                        System.out.println("error" + responseString);
+                        pd.hide();
+                        Toast.makeText(TrackEmployeeActivity.this, "Gagal mendapatkan data", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+                        // Pull out the first event on the public timeline
+                        pd.hide();
+                        try {
+                            JSONArray arrayBrands = data.getJSONArray("data");
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        pd.hide();
+
+                        Intent intent = new Intent(TrackEmployeeActivity.this, RatingActivity.class);
+                        startActivity(intent);
+                    }
+                });
             }
         });
 //        finishButton = (Button) findViewById(R.id.track_finish_button);
@@ -257,10 +315,13 @@ public class TrackEmployeeActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onFinish() {
                 try{
+                    System.out.println("status saat ini " + GlobalVar.statusBerangkat);
                     if (GlobalVar.statusBerangkat){
                         timer.addView(new CircularCountdown(TrackEmployeeActivity.this));
 //                            layoutButtons.setVisibility(View.VISIBLE);
                         animateMarker(mMap, customerLoc, directionPositionList, false, GlobalVar.waktuTempuh);
+                        GlobalVar.statusBerangkat = false;
+                        timerGo.cancel();
                     }else{
                         timerGo.start();
                     }
@@ -472,10 +533,10 @@ public class TrackEmployeeActivity extends AppCompatActivity implements OnMapRea
                 }
             };
             viewHandler.post(updateView);
-            if (currentTime >= maxTime){
-                new TrackEmployeeActivity.NotifCountDown().execute("");
-                viewHandler.removeCallbacksAndMessages(null);
-            }
+//            if (currentTime >= maxTime){
+//                new TrackEmployeeActivity.NotifCountDown().execute("");
+//                viewHandler.removeCallbacksAndMessages(null);
+//            }
         }
 
 
@@ -544,7 +605,7 @@ public class TrackEmployeeActivity extends AppCompatActivity implements OnMapRea
             // System.out.println(" Data JSON Items" + jsonStr);
             List<POSTResponse> results = new ArrayList<>();
             JSONObject berita = movieJson;
-            System.out.println("nama by get id " +berita.getString("name"));
+            //System.out.println("nama by get id " +berita.getString("name"));
 
             POSTResponse beritaModel = new POSTResponse(berita);
             results.add(beritaModel);

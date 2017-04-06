@@ -76,7 +76,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         try {
             JSONObject data = json.getJSONObject("data");
-            if (!data.getString("type").equals("notifGo")){
+            String type = data.getString("type");
+            Log.i("Type", "tyipe : " + type);
+            if (!type.toLowerCase().contains("go")){
                 String title = data.getString("title");
                 String message = data.getString("message");
                 boolean isBackground = data.getBoolean("is_background");
@@ -101,6 +103,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 GlobalVar.bengkelLon = Double.valueOf(bengkel.getString("longitude"));
                 Intent pushNotification = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
                 pushNotification.putExtra("message", message);
+                pushNotification .putExtra("idBengkel", bengkel.getString("id"));
+                GlobalVar.bengkelID= Integer.valueOf(bengkel.getString("id"));
                 pushNotification .putExtra("latBengkel", bengkel.getString("latitude"));
                 pushNotification .putExtra("lonBengkel", bengkel.getString("longitude"));
                 pushNotification .putExtra("namaBengkel", bengkel.getString("name"));
@@ -146,6 +150,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     }
                 }
             }else{
+                Log.e("Confirm Go", "Masuk ke Konfirm go");
                 GlobalVar.statusBerangkat = true;
             }
 

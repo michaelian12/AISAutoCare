@@ -161,7 +161,12 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onStart() {
                 super.onStart();
-                pd.show();
+                try {
+                    pd.show();
+                }catch (Exception e){
+
+                }
+
             }
 
             @Override
@@ -211,7 +216,7 @@ public class OrderActivity extends AppCompatActivity {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                     alert.dismiss();
-                                    subLayanan.setText(serviceTypes.get(i).getName());
+                                    subLayanan.setText(subService[i]);
                                     selectedIdService[0] = idService[i];
                                 }
                             });
@@ -242,6 +247,8 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent  intentLocPick = new Intent(OrderActivity.this, LocationActivity.class);
+                intentLocPick.putExtra("lat", GlobalVar.selectedLat );
+                intentLocPick.putExtra("lon", GlobalVar.selectedLon );
                 startActivityForResult(intentLocPick,1);
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 //                try {
@@ -289,7 +296,7 @@ public class OrderActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // menangkap hasil balikan dari Place Picker, dan menampilkannya pada TextView
         if(resultCode == 1 ){
-//            selectedLocation = new LatLng(Double.valueOf(data.getStringExtra("lat")), Double.valueOf(data.getStringExtra("lon")));
+            selectedLocation = new LatLng(Double.valueOf(data.getStringExtra("lat")), Double.valueOf(data.getStringExtra("lon")));
             String alamat = data.getStringExtra("address");
 //            address.setText(selectedLocation.toString());
             address.setText(alamat);
