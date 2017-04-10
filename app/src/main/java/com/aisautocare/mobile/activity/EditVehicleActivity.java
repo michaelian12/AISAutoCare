@@ -277,7 +277,12 @@ public class EditVehicleActivity extends AppCompatActivity {
                     @Override
                     public void onStart()   {
                         super.onStart();
-                        pd.show();
+                        try {
+                            pd.show();
+                        }catch (Exception e){
+
+                        }
+
                     }
 
                     @Override
@@ -437,6 +442,11 @@ public class EditVehicleActivity extends AppCompatActivity {
             public void onClick(View view) {
                 year = vehicleYearEditText.getText().toString();
 
+                if(vehicleYearEditText.length()>4 || Integer.valueOf(vehicleYearEditText.getText().toString())> 2040){
+                    vehicleYearEditText.setError("Masukan tahun dengan benar");
+                    return;
+                }
+
                 /* If all data full filled */
                 if ((indexSelectedBrand >= 0) && (indexSelectedModel >= 0) && (year != "")) {
                     pd.setMessage("Menyimpan data kendaraan");
@@ -497,5 +507,6 @@ public class EditVehicleActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 }

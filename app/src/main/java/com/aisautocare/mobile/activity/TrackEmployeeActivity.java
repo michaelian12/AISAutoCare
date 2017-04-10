@@ -533,10 +533,7 @@ public class TrackEmployeeActivity extends AppCompatActivity implements OnMapRea
                 }
             };
             viewHandler.post(updateView);
-//            if (currentTime >= maxTime){
-//                new TrackEmployeeActivity.NotifCountDown().execute("");
-//                viewHandler.removeCallbacksAndMessages(null);
-//            }
+
         }
 
 
@@ -587,6 +584,10 @@ public class TrackEmployeeActivity extends AppCompatActivity implements OnMapRea
                     (float) (centerHeight - (Math.cos(progress * 2 * Math.PI) * radius)),
                     handleRadius,
                     progressPaint);
+            if (menit == 0 && detik==0){
+                new TrackEmployeeActivity.NotifCountDown().execute("");
+                viewHandler.removeCallbacksAndMessages(null);
+            }
         }
 
     }

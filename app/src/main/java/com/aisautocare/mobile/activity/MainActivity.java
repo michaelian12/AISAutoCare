@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -258,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
             ImageView imageView = (ImageView) layout.findViewById(R.id.image_seleceted_vehicle);
             TextView vehicleBrand = (TextView) layout.findViewById(R.id.selected_vehicle_brand_text_view);
             TextView vehicleModel = (TextView) layout.findViewById(R.id.selected_vehicle_model_text_view);
-            Button editVehicleButton = (Button) layout.findViewById(R.id.change_vehicle_button);
+            ImageButton editVehicleButton = (ImageButton) layout.findViewById(R.id.change_vehicle_button);
             SharedPreferences sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES, Context.MODE_PRIVATE);
             String wheel = sharedPreferences.getString("wheel", "");
             if (wheel.equals("2")){
@@ -718,7 +719,7 @@ public class MainActivity extends AppCompatActivity {
                                     ImageView imageView = (ImageView) layout.findViewById(R.id.image_seleceted_vehicle);
                                     TextView vehicleBrand = (TextView) layout.findViewById(R.id.selected_vehicle_brand_text_view);
                                     TextView vehicleModel = (TextView) layout.findViewById(R.id.selected_vehicle_model_text_view);
-                                    Button editVehicleButton = (Button) layout.findViewById(R.id.change_vehicle_button);
+                                    ImageButton editVehicleButton = (ImageButton) layout.findViewById(R.id.change_vehicle_button);
                                     String wheel = sharedPreferences.getString("wheel", "");
                                     if (wheel.equals("2")){
                                         imageView.setImageResource(R.drawable.ic_bike);
