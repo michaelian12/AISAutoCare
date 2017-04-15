@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.Rating;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.aisautocare.mobile.GlobalVar;
@@ -61,6 +63,9 @@ public class ConfirmOrderActivity extends AppCompatActivity {
     private TextView garageName, mechanicName, mechanicPhone, orderPrice, orderDistance, mechanicAddress, total, distancePrice, servicePrice, serviceName, appPrice;
     private Button confirmButton, cancelButton;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private RatingBar ReviewRatingBar;
+    private TextView jumlahReview;
+
 
     private TextView skip;
 
@@ -68,6 +73,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
     private int appPriceValue = 10000;
     private int hargaJasaValue;
     private int distancePriceValue;
+    private Double distanceValue;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +96,12 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         servicePrice = (TextView) findViewById(R.id.text_service_price);
         serviceName = (TextView) findViewById(R.id.confirm_order_service_text_view);
         appPrice = (TextView) findViewById(R.id.text_app_price);
+        jumlahReview = (TextView) findViewById(R.id.text_view_total_review_confirm_order);
+        ReviewRatingBar = (RatingBar) findViewById(R.id.rating_bar_confirm_order);
+
+        ReviewRatingBar.setRating(Float.valueOf(getIntent().getStringExtra("rating")));
+        jumlahReview.setText("(" + getIntent().getStringExtra("jumlah_review") +" Ulasan)");
+
         appPrice.setText("Rp. "+ appPriceValue);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,7 +140,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
 //        LatLng start = new LatLng(-7.716980, 110.384301);
         LatLng start = new LatLng(Double.valueOf(getIntent().getStringExtra("latBengkel")), Double.valueOf(getIntent().getStringExtra("lonBengkel")));
   //      LatLng end = new LatLng(-7.750548, 110.385968);
-        LatLng end = new LatLng(GlobalVar.selectedLat,GlobalVar.selectedLon);
+        LatLng end = new LatLng(GlobalVar.orderLat,GlobalVar.orderLon);
 
 
         GoogleDirection.withServerKey("AIzaSyBDv7B62-bLvjbdWZCXyIl4dxiLmSR4vB0")
@@ -141,6 +153,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                     public void onDirectionSuccess(Direction direction, String rawBody) {
                         if (direction.isOK()) {
                             // Do something
+
                             Route route = direction.getRouteList().get(0);
                             Leg leg = route.getLegList().get(0);
 
@@ -152,8 +165,10 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                             final String duration = durationInfo.getValue();
                             GlobalVar.waktuTempuh = Integer.valueOf(durationInfo.getValue());
                             System.out.println("Jarak dan waktu " + distance + " " + duration);
+                            distanceValue = (Double.valueOf(distanceInfo.getValue())/1000);
                             orderDistance.setText("Jasa Dilivery : " + (Double.valueOf(distanceInfo.getValue())/1000) + "Km");
                             distancePriceValue = (((Integer.valueOf(distanceInfo.getValue())/1000)/5 * 10000 )+ 10000);
+
                             distancePrice.setText("Rp. " + distancePriceValue) ;
                             totalPriceValue = hargaJasaValue + appPriceValue+distancePriceValue;
                             orderPrice.setText("Rp. " + totalPriceValue);
@@ -164,6 +179,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
 
                         } else {
                             // Do something
+                            System.out.println("Tidak OK");
                         }
                     }
 
@@ -243,7 +259,8 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                 Uri builtUri = Uri.parse(URLOrder).buildUpon()
                         .appendQueryParameter("uidBengkel", getIntent().getStringExtra("uidBengkel"))
                         .appendQueryParameter("id", GlobalVar.idOrder)
-
+                        .appendQueryParameter("jarak", String.valueOf(distanceValue))
+                        .appendQueryParameter("biaya_jarak", String.valueOf(distancePriceValue))
                         .build();
 
                 URL url = new URL(builtUri.toString());

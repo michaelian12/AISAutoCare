@@ -199,6 +199,8 @@ public class TrackEmployeeActivity extends AppCompatActivity implements OnMapRea
                 RequestParams params = new RequestParams();
 
                 params.put("id", GlobalVar.bengkelID);
+                params.put("order_id", GlobalVar.idOrder);
+
                 Log.i("Rating", "Log param finish " + params.toString());
 
                 RestClient.get(link, params, new JsonHttpResponseHandler() {

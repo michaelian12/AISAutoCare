@@ -43,6 +43,7 @@
                     android:textStyle="bold" />
 
                 <RatingBar
+                    android:id="@+id/rating_bar_confirm_order"
                     style="?android:attr/ratingBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
@@ -53,6 +54,7 @@
                     android:stepSize="0.5" />
 
                 <TextView
+                    android:id="@+id/text_view_total_review_confirm_order"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="(20 Ulasan)" />

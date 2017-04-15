@@ -196,7 +196,7 @@ public class OrderActivity extends AppCompatActivity {
                         serviceTypes.add(new ServiceType(type));
                         idService[i] = type.getString("id");
                         subService[i] = type.getString("sub");
-                        Log.i("Order Act", "subservice ketika perulangan " + subService[i]);
+                        Log.i("Order Act", "subservice ketika perulangan dan id  " + subService[i] + idService[i] );
                     }
                     subServiceLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -218,6 +218,8 @@ public class OrderActivity extends AppCompatActivity {
                                     alert.dismiss();
                                     subLayanan.setText(subService[i]);
                                     selectedIdService[0] = idService[i];
+                                    System.out.println("id yang dipilih " + selectedIdService[0]);
+                                    System.out.println("nama layanan yang dipilih " + subService[i]);
                                 }
                             });
                         }
@@ -283,6 +285,12 @@ public class OrderActivity extends AppCompatActivity {
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
                 } else {
+                    try {
+                        pd.show();
+                    }catch (Exception e){
+
+                    }
+
                     new OrderActivity.POSTOrder().execute("");
                 }
 
@@ -370,7 +378,7 @@ public class OrderActivity extends AppCompatActivity {
                 order.setArea_id("14");
                 order.setIs_emergency("false");
                 order.setLicense_plate("AB100CA");
-                order.setRef_service_id("1");
+                order.setRef_service_id(selectedIdService[0]);
                 order.setStatus("1");
                 order.setMethod("3");
                 order.setPayment_status("1");
@@ -391,7 +399,7 @@ public class OrderActivity extends AppCompatActivity {
                         .appendQueryParameter("area_id", order.getArea_id())
                         .appendQueryParameter("is_emergency", order.getIs_emergency())
                         .appendQueryParameter("license_plate", order.getLicense_plate())
-                        .appendQueryParameter("ref_service_id", order.getRef_service_id())
+                        .appendQueryParameter("ref_service_id", selectedIdService[0])
                         .appendQueryParameter("status", order.getStatus())
                         .appendQueryParameter("method", order.getMethod())
                         .appendQueryParameter("payment_status", order.getPayment_status())
@@ -467,6 +475,7 @@ public class OrderActivity extends AppCompatActivity {
             if (responses != null) {
                 //repairs.clear();
                 //repairs.addAll(services);
+                pd.hide();
                 System.out.println("responses ketika set adapter : " + responses.toString());
                 GlobalVar.idOrder = responses.get(0).getId();
 //                if (Integer.valueOf(responses.get(0).getApi_status()) == 1) {

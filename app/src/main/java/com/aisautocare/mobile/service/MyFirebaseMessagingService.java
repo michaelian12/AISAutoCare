@@ -89,6 +89,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 JSONObject bengkel = data.getJSONObject("bengkel");
                 JSONArray service = data.getJSONArray("service");
                 JSONArray serviceType = data.getJSONArray("service_type");
+                JSONObject review = data.getJSONObject("review");
+                JSONObject order = data.getJSONObject("order");
 
 
                 Log.e(TAG, "data: " + data);
@@ -99,6 +101,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Log.e(TAG, "imageUrl: " + imageUrl);
                 Log.e(TAG, "timestamp: " + timestamp);
 
+
+                GlobalVar.orderLat = Double.valueOf(order.getString("latitude"));
+                GlobalVar.orderLon = Double.valueOf(order.getString("longitude"));
                 GlobalVar.bengkelLat = Double.valueOf(bengkel.getString("latitude"));
                 GlobalVar.bengkelLon = Double.valueOf(bengkel.getString("longitude"));
                 Intent pushNotification = new Intent(getApplicationContext(), ConfirmOrderActivity.class);
@@ -117,13 +122,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 pushNotification .putExtra("hb", service.getJSONObject(0).getString("hb"));
                 pushNotification .putExtra("jp", service.getJSONObject(0).getString("jp") );
                 pushNotification .putExtra("bd", service.getJSONObject(0).getString("bd"));
-
-
-
-
-
-
-
+                System.out.println("Rating dari get string ");
+                pushNotification.putExtra("rating", review.getString("rating"));
+                pushNotification.putExtra("jumlah_review", review.getString("post"));
 
                 LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
