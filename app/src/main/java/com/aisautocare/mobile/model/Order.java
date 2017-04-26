@@ -21,6 +21,53 @@ public class Order {
     private String status;
     private String         method;
     private String payment_status;
+    private String car_manufacture;
+    private String idService;
+
+    public String getIdService() {
+        return idService;
+    }
+
+    public void setIdService(String idService) {
+        this.idService = idService;
+    }
+
+    public String getCar_manufacture() {
+        return car_manufacture;
+    }
+
+    public void setCar_manufacture(String car_manufacture) {
+        this.car_manufacture = car_manufacture;
+    }
+
+    public String getCar_manufacture_type() {
+        return car_manufacture_type;
+    }
+
+    public void setCar_manufacture_type(String car_manufacture_type) {
+        this.car_manufacture_type = car_manufacture_type;
+    }
+
+    public String getCar_year() {
+        return car_year;
+    }
+
+    public void setCar_year(String car_year) {
+        this.car_year = car_year;
+    }
+
+    public String getIdservice() {
+        return idservice;
+    }
+
+    public void setIdservice(String idservice) {
+        this.idservice = idservice;
+    }
+
+    private String car_manufacture_type;
+    private String        car_year;
+    private String idservice;
+
 
     public String getId() {
         return id;

@@ -46,6 +46,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -166,12 +168,19 @@ public class ConfirmOrderActivity extends AppCompatActivity {
                             GlobalVar.waktuTempuh = Integer.valueOf(durationInfo.getValue());
                             System.out.println("Jarak dan waktu " + distance + " " + duration);
                             distanceValue = (Double.valueOf(distanceInfo.getValue())/1000);
-                            orderDistance.setText("Jasa Dilivery : " + (Double.valueOf(distanceInfo.getValue())/1000) + "Km");
+                            orderDistance.setText("Jasa Delivery : " + (Double.valueOf(distanceInfo.getValue())/1000) + "Km");
                             distancePriceValue = (((Integer.valueOf(distanceInfo.getValue())/1000)/5 * 10000 )+ 10000);
+                            DecimalFormat kursIndonesia = (DecimalFormat) DecimalFormat.getCurrencyInstance();
+                            DecimalFormatSymbols formatRp = new DecimalFormatSymbols();
 
-                            distancePrice.setText("Rp. " + distancePriceValue) ;
+                            formatRp.setCurrencySymbol("Rp. ");
+                            formatRp.setMonetaryDecimalSeparator(',');
+                            formatRp.setGroupingSeparator('.');
+                            kursIndonesia.setDecimalFormatSymbols(formatRp);
+
+                            distancePrice.setText(kursIndonesia.format(distancePriceValue)) ;
                             totalPriceValue = hargaJasaValue + appPriceValue+distancePriceValue;
-                            orderPrice.setText("Rp. " + totalPriceValue);
+                            orderPrice.setText(kursIndonesia.format(totalPriceValue));
 
                             //orderPrice.setText("RP." + (Double.valueOf(distancePrice.getText().toString().replace("Rp.", "").replace(".", "").replace("Rp", "").replace(" ", "") ).intValue() +  Double.valueOf(servicePrice.getText().toString().replace("Rp.", "").replace(".", "").replace("Rp", "").replace(" ", "")).intValue() + 10000));
 //                            layoutButtons.setVisibility(View.VISIBLE);

@@ -19,13 +19,13 @@
         android:id="@+id/user_name_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Farrah Khayra"
+        android:text="..."
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
         android:id="@+id/user_email_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="farrahkhayra@gmail.com" />
+        android:text="..." />
 
 </LinearLayout>

@@ -71,16 +71,19 @@
                 android:hint="adakah komentar atau masukan terhadap kami?"
                 android:inputType="textMultiLine"
                 android:padding="16dp" />
+            <Button
+                android:layout_marginTop="10dp"
+                android:id="@+id/rating_submit_button"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/accent_color"
+                android:padding="16dp"
+                android:text="@string/submit"
+                android:textStyle="bold" />
         </LinearLayout>
+
     </ScrollView>
 
-    <Button
-        android:id="@+id/rating_submit_button"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/accent_color"
-        android:padding="16dp"
-        android:text="@string/submit"
-        android:textStyle="bold" />
+
 
 </LinearLayout>

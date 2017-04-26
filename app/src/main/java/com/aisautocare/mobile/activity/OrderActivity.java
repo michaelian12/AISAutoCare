@@ -382,6 +382,12 @@ public class OrderActivity extends AppCompatActivity {
                 order.setStatus("1");
                 order.setMethod("3");
                 order.setPayment_status("1");
+                order.setCar_manufacture(GlobalVar.selectedCar);
+                order.setCar_manufacture_type(GlobalVar.selectedCarType);
+                order.setCar_year(GlobalVar.selectedCarYear);
+                order.setIdservice(selectedIdService[0]);
+
+                GlobalVar.order = order;
 
                 SharedPreferences sharedPreferences;
                 sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
@@ -399,14 +405,14 @@ public class OrderActivity extends AppCompatActivity {
                         .appendQueryParameter("area_id", order.getArea_id())
                         .appendQueryParameter("is_emergency", order.getIs_emergency())
                         .appendQueryParameter("license_plate", order.getLicense_plate())
-                        .appendQueryParameter("ref_service_id", selectedIdService[0])
+                        .appendQueryParameter("ref_service_id", order.getRef_service_id())
                         .appendQueryParameter("status", order.getStatus())
                         .appendQueryParameter("method", order.getMethod())
                         .appendQueryParameter("payment_status", order.getPayment_status())
-                        .appendQueryParameter("car_manufacture", GlobalVar.selectedCar)
-                        .appendQueryParameter("car_manufacture_type", GlobalVar.selectedCarType)
-                        .appendQueryParameter("car_year", GlobalVar.selectedCarYear)
-                        .appendQueryParameter("idservice", selectedIdService[0])
+                        .appendQueryParameter("car_manufacture", order.getCar_manufacture())
+                        .appendQueryParameter("car_manufacture_type", order.getCar_manufacture_type())
+                        .appendQueryParameter("car_year", order.getCar_year())
+                        .appendQueryParameter("idservice", order.getIdservice())
                         .build();
 
                 URL url = new URL(builtUri.toString());

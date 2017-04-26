@@ -74,21 +74,26 @@ public class WaitOrderActivity extends AppCompatActivity {
         keterangan = (TextView) findViewById(R.id.keterangan_wait_text_view);
         progressBar = (ProgressBar) findViewById(R.id.progressBar_wait_order);
         final Handler handler = new Handler();
+        //ngitung semenit
+        long time = System.currentTimeMillis();
+        int seconds = new Date(time).getSeconds();
+        final int sleepSecs = 60 - seconds;
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (GlobalVar.bengkelLat == 0){
-                    symbolFail.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.GONE);
-                    keterangan.setText("Maaf tidak ditemukan bengkel yang tersedia di sekitar anda. Apakah anda ingin memperluas wilayah pencarian ?");
-                    layoutExtendButton.setVisibility(View.VISIBLE);
-                    cancelButton.setVisibility(View.GONE);
-                    new WaitOrderActivity.POSTNotGetMechanic().execute("");
-                    handler.removeCallbacksAndMessages(null);
 
-                }
+                symbolFail.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+                keterangan.setText("Maaf tidak ditemukan bengkel yang tersedia di sekitar anda. Apakah anda ingin memperluas wilayah pencarian ?");
+                layoutExtendButton.setVisibility(View.VISIBLE);
+                cancelButton.setVisibility(View.GONE);
+
+                handler.removeCallbacksAndMessages(null);
+
+
+
             }
-        }, 60000);//60000); //semenit
+        }, sleepSecs * 1000);//60000); //semenit
         noButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,6 +109,9 @@ public class WaitOrderActivity extends AppCompatActivity {
 //                Intent intent = new Intent(WaitOrderActivity.this, MainActivity.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 //                startActivity(intent);
+
+                handler.removeCallbacksAndMessages(null);
+                handler.removeCallbacksAndMessages(null);
                 finish();
             }
         });
@@ -115,6 +123,7 @@ public class WaitOrderActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 keterangan.setText("Mencari montir yang tersedia");
                 cancelButton.setVisibility(View.VISIBLE);
+                new WaitOrderActivity.POSTOrder().execute("");
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -125,9 +134,10 @@ public class WaitOrderActivity extends AppCompatActivity {
                             keterangan.setText("Maaf tidak ditemukan bengkel yang tersedia di sekitar anda. Operator akan menghubungin Anda dalam waktu maksimal 5 menit");
                             cancelButton.setText("Kembali");
                             handler.removeCallbacksAndMessages(null);
+                            new WaitOrderActivity.POSTNotGetMechanic().execute("");
                         }
                     }
-                }, 60000);
+                }, sleepSecs * 1000);
             }
         });
 
@@ -259,12 +269,171 @@ public class WaitOrderActivity extends AppCompatActivity {
 
                 //recyclerView.setAdapter(adapter);
                 //adapter.notifyDataSetChanged();
+                //pro   gressBar.setVisibility(View.GONE);
+                //swipeContainer.setRefreshing(false);
+
+                //adapter.setLoaded();
+
+                //pageBerita++;
+            }
+        }
+    }
+
+
+    public class POSTOrder extends AsyncTask<String, Void, List<POSTResponse>> {
+        private String URLOrder = new GlobalVar().hostAPI + "/order2";
+        private final String LOG_TAG = RepairFragment.GETRepair.class.getSimpleName();
+
+        private List<POSTResponse> getRepairDataFromJson(String jsonStr) throws JSONException, NoSuchFieldException, IllegalAccessException {
+            //jsonStr = jsonStr.substring(23);
+//            jsonStr = jsonStr.substring(23, jsonStr.length()-3);
+//            System.out.println("JSON STR : " + jsonStr);
+            JSONObject movieJson = new JSONObject(jsonStr);
+            //JSONArray movieArray = movieJson.getJSONArray();
+//            System.out.println("movie json : " + movieJson  );
+//            System.out.println("itemsarray : " + movieArray  );
+            // System.out.println(" Data JSON Items" + jsonStr);
+            List<POSTResponse> results = new ArrayList<>();
+            JSONObject berita = movieJson;
+            POSTResponse beritaModel = new POSTResponse(berita);
+            results.add(beritaModel);
+            return results;
+        }
+
+        @Override
+        protected List<POSTResponse> doInBackground(String... params) {
+
+            if (params.length == 0) {
+                return null;
+            }
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            String jsonStr = null;
+
+            try {
+
+                Order order = GlobalVar.order;
+
+                SharedPreferences sharedPreferences;
+                sharedPreferences = getSharedPreferences(GlobalVar.MyPREFERENCES,  Context.MODE_PRIVATE);
+                String idCustomer = sharedPreferences.getString("idCustomer", "");
+                Uri builtUri = Uri.parse(URLOrder).buildUpon()
+                        .appendQueryParameter("customer_id", idCustomer)
+                        .appendQueryParameter("order_date", order.getOrder_date())
+                        .appendQueryParameter("order_time", order.getOrder_time())
+                        .appendQueryParameter("service_date", order.getService_date())
+                        .appendQueryParameter("service_time", order.getService_time())
+                        .appendQueryParameter("service_location", order.getService_location())
+                        .appendQueryParameter("latitude", order.getLatitude())
+                        .appendQueryParameter("longitude", order.getLongitude())
+                        .appendQueryParameter("area_id", order.getArea_id())
+                        .appendQueryParameter("is_emergency", order.getIs_emergency())
+                        .appendQueryParameter("license_plate", order.getLicense_plate())
+                        .appendQueryParameter("ref_service_id", order.getRef_service_id())
+                        .appendQueryParameter("status", order.getStatus())
+                        .appendQueryParameter("method", order.getMethod())
+                        .appendQueryParameter("payment_status", order.getPayment_status())
+                        .appendQueryParameter("car_manufacture", order.getCar_manufacture())
+                        .appendQueryParameter("car_manufacture_type", order.getCar_manufacture_type())
+                        .appendQueryParameter("car_year", order.getCar_year())
+                        .appendQueryParameter("idservice", order.getIdservice())
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+
+
+                //URL url = new URL(URLServiceRepair );
+                Log.e("URl", url.toString());
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("POST");
+                urlConnection.connect();
+
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    return null;
+                }
+                jsonStr = buffer.toString();
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error ", e);
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
+                }
+            }
+
+            try {
+                System.out.println("DATA BALIKAN " + jsonStr);
+                return getRepairDataFromJson(jsonStr);
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+
+            // This will only happen if there was an error getting or parsing the forecast.
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<POSTResponse> responses) {
+
+            if (responses != null) {
+                //repairs.clear();
+                //repairs.addAll(services);
+                System.out.println("responses ketika set adapter : " + responses.toString());
+                GlobalVar.idOrder = responses.get(0).getId();
+//                if (Integer.valueOf(responses.get(0).getApi_status()) == 1) {
+//                    finish();
+//                    Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    getApplicationContext().startActivity(intent);
+//                } else {
+//                    Log.e("AIS", "Error POST Order");
+//                    Log.e("AIS", "API Message : " + responses.get(0).getApi_message().toString());
+//                }
+                //rcAdapter = new RecyclerViewAdapterBerita(getActivity(), movies);
+                //adapter = new ServiceRecyclerViewAdapter();
+
+                //rcAdapter.notifyDataSetChanged();
+
+                //recyclerView.setAdapter(adapter);
+                //adapter.notifyDataSetChanged();
                 //progressBar.setVisibility(View.GONE);
                 //swipeContainer.setRefreshing(false);
 
                 //adapter.setLoaded();
 
                 //pageBerita++;
+                Intent intent = new Intent(getApplicationContext(), WaitOrderActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
             }
         }
     }

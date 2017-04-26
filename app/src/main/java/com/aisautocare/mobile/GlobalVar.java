@@ -1,10 +1,13 @@
 package com.aisautocare.mobile;
 
+import com.aisautocare.mobile.model.Order;
+
 /**
  * Created by ini on 2017/01/21.
  */
 
 public class GlobalVar {
+    public  static Order order;
     public static String selectedSubService;
     public static String selectedService;
     public static String idCustomerLogged;
