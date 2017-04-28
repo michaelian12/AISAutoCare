@@ -37,12 +37,19 @@
                         tools:text="26 Januari 2017" />
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rp"
+                        android:textColor="@color/secondary_text" />
+
+                    <TextView
                         android:id="@+id/history_price_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
+                        android:paddingLeft="4dp"
                         android:textColor="@color/secondary_text"
-                        tools:text="Rp 50.000" />
+                        tools:text="50.000" />
                 </LinearLayout>
 
                 <LinearLayout

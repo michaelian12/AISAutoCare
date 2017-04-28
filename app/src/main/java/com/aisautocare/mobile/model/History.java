@@ -10,16 +10,16 @@ import org.json.JSONObject;
 public class History {
 
     private String orderId; // order id
-    private int imageResourceId; // service image
+    private String wheel; // wheel
     private String date; // service date
     private String price; // service price
     private String vehicleName; // vehicle name
     private String serviceName; // service name
     private String address; // order address
 
-    public History(String orderId, int imageResourceId, String date, String price, String vehicleName, String serviceName, String address) {
+    public History(String orderId, String wheel, String date, String price, String vehicleName, String serviceName, String address) {
         this.orderId = orderId;
-        this.imageResourceId = imageResourceId;
+        this.wheel = wheel;
         this.date = date;
         this.price = price;
         this.vehicleName = vehicleName;
@@ -28,13 +28,13 @@ public class History {
     }
 
     public History(JSONObject object) throws JSONException {
-//        this.imageResourceId = object.getString("id");
-        this.orderId = object.getString("order_id");
+        this.orderId = object.getString("id");
+        this.wheel = object.getString("wheel");
         this.date = object.getString("order_date");
-        this.price = object.getString("vehicle_year"); // sementara ini dulu
-        this.vehicleName = object.getString("brand_name") + " " + object.getString("vehicle_type") + " " + object.getString("vehicle_year");
-        this.serviceName = object.getString("service_sub").trim() + " " + object.getString("service_name").trim();
-        this.address = object.getString("order_service_location");
+        this.price = object.getString("total_harga");
+        this.vehicleName = object.getString("name") + " " + object.getString("type");// + " " + object.getString("vehicle_year");
+        this.serviceName = object.getString("sub").trim();// + " " + object.getString("service_name").trim();
+        this.address = object.getString("service_location");
     }
 
     public String getOrderId() {
@@ -45,12 +45,12 @@ public class History {
         this.orderId = orderId;
     }
 
-    public int getImageResourceId() {
-        return imageResourceId;
+    public String getWheel() {
+        return wheel;
     }
 
-    public void setImageResourceId(int imageResourceId) {
-        this.imageResourceId = imageResourceId;
+    public void setWeel(String wheel) {
+        this.wheel = wheel;
     }
 
     public String getDate() {

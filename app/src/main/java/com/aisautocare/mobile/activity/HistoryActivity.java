@@ -1,5 +1,6 @@
 package com.aisautocare.mobile.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ public class HistoryActivity extends AppCompatActivity {
     private HistoryRecyclerViewAdapter adapter;
 
     private ArrayList<History> histories = new ArrayList<History>();
+    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,19 +52,23 @@ public class HistoryActivity extends AppCompatActivity {
         String idCustomer = sharedPreferences.getString("idCustomer", "");
 //        System.out.println("id customer di history tuh " + idCustomer);
 
+        pd = new ProgressDialog(this);
+        pd.setCanceledOnTouchOutside(false);
+        pd.setMessage("Menjangkau Server");
+
         /* Get Histories Data */
         RestClient.get("/history_bengkel?list_customer_id=" + idCustomer, null, new JsonHttpResponseHandler() {
             @Override
             public void onStart()   {
                 super.onStart();
-//                pd.show();
+                pd.show();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 System.out.println("error" + responseString);
-//                pd.hide();
+                pd.hide();
                 Toast.makeText(HistoryActivity.this, "Gagal mendapatkan riwayat pesanan", Toast.LENGTH_SHORT).show();
             }
 
@@ -88,7 +94,7 @@ public class HistoryActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-//                pd.hide();
+                pd.hide();
             }
         });
     }
