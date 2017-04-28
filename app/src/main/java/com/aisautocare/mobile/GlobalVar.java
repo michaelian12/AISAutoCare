@@ -11,6 +11,7 @@ public class GlobalVar {
     public static String selectedSubService;
     public static String selectedService;
     public static String idCustomerLogged;
+    public static String UPLOAD_URL = "http://119.235.250.107/API/public/upload.php";
     public static String hostAPI = "http://119.235.250.107/API/public/api";
     public static boolean isVehicleSelected = false;
     public static String selectedCar;

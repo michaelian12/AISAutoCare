@@ -58,6 +58,9 @@ dependencies {
 
     //http client async
     compile 'com.loopj.android:android-async-http:1.4.9'
+
+    //upload foto
+    compile 'net.gotev:uploadservice:2.1'
 }
 
 // ADD THIS AT THE BOTTOM

@@ -196,6 +196,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.aisautocare.mobile.activity.HistoryActivity" />
         </activity>
+        <activity
+            android:name="com.aisautocare.mobile.activity.UploadPhotoActivity"
+            android:label="@string/activity_history"
+            android:parentActivityName="com.aisautocare.mobile.activity.HistoryActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.aisautocare.mobile.activity.HistoryActivity" />
+        </activity>
     </application>
 
 </manifest>
