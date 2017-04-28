@@ -363,10 +363,10 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.closeDrawer(GravityCompat.START);
 
             switch (menuItem.getItemId()){
-//                case R.id.nav_profile:
-//                    intent = new Intent(MainActivity.this, ProfileActivity.class);
-//                    startActivity(intent);
-//                    return true;
+                case R.id.nav_profile:
+                    intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                    return true;
                 case R.id.nav_history:
                     intent = new Intent(MainActivity.this, HistoryActivity.class);
                     startActivity(intent);

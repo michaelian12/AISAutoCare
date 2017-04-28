@@ -32,6 +32,10 @@ public class GlobalVar {
     public static Double orderLat;
     public static Double orderLon;
 
+    public static String customerName;
+    public static String customerCellphone;
+    public static String customerEmail;
+
     public boolean isVehicleSelected() {
         return isVehicleSelected;
     }
