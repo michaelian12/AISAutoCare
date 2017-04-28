@@ -1,5 +1,6 @@
 package com.aisautocare.mobile.activity;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,16 +14,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.app.Config;
 import com.aisautocare.mobile.fragment.RepairFragment;
 import com.aisautocare.mobile.model.Order;
 import com.aisautocare.mobile.model.POSTResponse;
+import com.aisautocare.mobile.model.VehicleBrand;
+import com.aisautocare.mobile.util.RestClient;
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
 import com.akexorcist.googledirection.constant.AvoidType;
@@ -35,7 +40,10 @@ import com.akexorcist.googledirection.util.DirectionConverter;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -51,6 +59,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.msebera.android.httpclient.Header;
 import de.hdodenhof.circleimageview.CircleImageView;
 import info.androidhive.firebasenotifications.R;
 
@@ -76,6 +85,7 @@ public class ConfirmOrderActivity extends AppCompatActivity {
     private int hargaJasaValue;
     private int distancePriceValue;
     private Double distanceValue;
+    private ProgressDialog pd;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,13 +114,51 @@ public class ConfirmOrderActivity extends AppCompatActivity {
         ReviewRatingBar.setRating(Float.valueOf(getIntent().getStringExtra("rating")));
         jumlahReview.setText("(" + getIntent().getStringExtra("jumlah_review") +" Ulasan)");
 
+
+        appPriceValue = Integer.valueOf(getIntent().getStringExtra("jp"));
         appPrice.setText("Rp. "+ appPriceValue);
+
+        //progress dialog
+        pd = new ProgressDialog(ConfirmOrderActivity.this);
+        pd.setMessage("loading");
+        pd.setCanceledOnTouchOutside(false);
+
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String link = "/sendcanceltomechanic";
+                RequestParams params = new RequestParams();
+//                params.put("user_id", GlobalVar.idCustomerLogged);
+                params.put("id", GlobalVar.bengkelID);
+                RestClient.get(link, params, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        try {
+                            pd.show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        super.onFailure(statusCode, headers, responseString, throwable);
+                        System.out.println("error" + responseString);
+                        pd.hide();
+                        Toast.makeText(ConfirmOrderActivity.this, "Gagal mendapatkan data", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+                        // Pull out the first event on the public timeline
+                        pd.hide();
+                    }
+                });
                 Intent intent = new Intent(ConfirmOrderActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+
                 finish();
             }
         });
