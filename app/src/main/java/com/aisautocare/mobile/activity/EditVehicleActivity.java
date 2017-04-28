@@ -442,10 +442,14 @@ public class EditVehicleActivity extends AppCompatActivity {
             public void onClick(View view) {
                 year = vehicleYearEditText.getText().toString();
 
-                if(vehicleYearEditText.length()>4 || Integer.valueOf(vehicleYearEditText.getText().toString())> 2040){
+                if(vehicleYearEditText.getText().equals("") || vehicleYearEditText.length()>4 || vehicleYearEditText.length() <4 ){
                     vehicleYearEditText.setError("Masukan tahun dengan benar");
+
                     return;
+
                 }
+
+
 
                 /* If all data full filled */
                 if ((indexSelectedBrand >= 0) && (indexSelectedModel >= 0) && (year != "")) {

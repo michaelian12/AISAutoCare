@@ -60,7 +60,8 @@
             android:hint="@string/fill_year"
             android:inputType="number"
             android:maxLength="4"
-            android:paddingTop="16dp" />
+            android:paddingTop="16dp"
+            />
     </LinearLayout>
 
     <Button

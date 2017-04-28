@@ -188,7 +188,6 @@ public class OrderActivity extends AppCompatActivity {
                     subService = new String[0];
                     idService = new String[0];
 
-
                     idService = new String[arrayType.length()];
                     subService = new String[arrayType.length()];
                     for (int i = 0; i < arrayType.length(); i++){
@@ -335,6 +334,8 @@ public class OrderActivity extends AppCompatActivity {
 //            jsonStr = jsonStr.substring(23, jsonStr.length()-3);
 //            System.out.println("JSON STR : " + jsonStr);
             JSONObject movieJson = new JSONObject(jsonStr);
+
+            GlobalVar.bengkelID = Integer.valueOf(movieJson.getString("bengkel_id"));
             //JSONArray movieArray = movieJson.getJSONArray();
 //            System.out.println("movie json : " + movieJson  );
 //            System.out.println("itemsarray : " + movieArray  );
@@ -343,6 +344,7 @@ public class OrderActivity extends AppCompatActivity {
             JSONObject berita = movieJson;
             POSTResponse beritaModel = new POSTResponse(berita);
             results.add(beritaModel);
+
             return results;
         }
 

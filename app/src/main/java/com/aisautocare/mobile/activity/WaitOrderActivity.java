@@ -15,15 +15,19 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aisautocare.mobile.GlobalVar;
 import com.aisautocare.mobile.fragment.RepairFragment;
 import com.aisautocare.mobile.model.Order;
 import com.aisautocare.mobile.model.POSTResponse;
+import com.aisautocare.mobile.util.RestClient;
 import com.akexorcist.googledirection.model.Line;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import cz.msebera.android.httpclient.Header;
 import info.androidhive.firebasenotifications.R;
 
 /**
@@ -89,6 +94,40 @@ public class WaitOrderActivity extends AppCompatActivity {
                 cancelButton.setVisibility(View.GONE);
 
                 handler.removeCallbacksAndMessages(null);
+
+
+                //ngasih notif cancel ke mekanik karena selama satu menit tidak merespon
+                String link = "/sendcanceltomechanic";
+                RequestParams params = new RequestParams();
+//                params.put("user_id", GlobalVar.idCustomerLogged);
+                params.put("id", GlobalVar.bengkelID);
+
+                RestClient.get(link, params, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        try {
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        super.onFailure(statusCode, headers, responseString, throwable);
+                        System.out.println("error" + responseString);
+
+                        Toast.makeText(WaitOrderActivity.this, "Gagal mendapatkan data", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject data) {
+                        // Pull out the first event on the public timeline
+                        System.out.println(data);
+                    }
+                });
+
 
 
 
